@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f0f2f5;--sf:#e8eaee;--bd:#d0d4dc;
+  --tp:#1a1d24;--ts:#5a6070;--tm:#9298a8;
+  --ac:#3a5aff;--as:rgba(58,90,255,.08)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Noto Sans TC',sans-serif;font-weight:300;
+  background:var(--bg);color:var(--tp);
+  display:flex;flex-direction:column;
+}
+
+/* ── grid background ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(var(--bd) 1px,transparent 1px),
+    linear-gradient(90deg,var(--bd) 1px,transparent 1px);
+  background-size:60px 60px;
+  opacity:.35;pointer-events:none;
+}
+
+/* ── top bar ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:10;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem 3rem;
+  backdrop-filter:blur(12px);
+  background:rgba(240,242,245,.75);
+  border-bottom:1px solid var(--bd);
+}
+.nav-logo{
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  color:var(--tm);letter-spacing:.18em;text-transform:uppercase;
+}
+.nav-links{
+  display:flex;gap:2.2rem;list-style:none;
+}
+.nav-links a{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  color:var(--ts);letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;transition:color .2s;
+}
+.nav-links a:hover{color:var(--ac)}
+
+/* ── main stage ── */
+main{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:0 3rem;position:relative;
+}
+
+.stage{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:center;
+  max-width:1100px;width:100%;
+}
+
+/* left — text */
+.eyebrow{
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  color:var(--tm);letter-spacing:.22em;text-transform:uppercase;
+  margin-bottom:1.4rem;
+  opacity:0;animation:fadeUp .6s .1s forwards;
+}
+.big-name{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(3.5rem,7vw,6.5rem);
+  line-height:.95;margin-bottom:1.8rem;
+  opacity:0;animation:fadeUp .7s .25s forwards;
+}
+.big-name span{color:var(--ac);font-style:italic}
+
+.typewriter-wrap{
+  min-height:2rem;margin-bottom:2.8rem;
+  opacity:0;animation:fadeUp .7s .4s forwards;
+}
+.typewriter{
+  font-family:'DM Mono',monospace;font-size:.85rem;
+  color:var(--ts);letter-spacing:.04em;
+}
+.cursor{
+  display:inline-block;width:2px;height:1em;
+  background:var(--ac);vertical-align:middle;margin-left:2px;
+  animation:blink .9s step-end infinite;
+}
+
+.cta-row{
+  display:flex;gap:1.2rem;align-items:center;
+  opacity:0;animation:fadeUp .7s .55s forwards;
+}
+.btn-enter{
+  display:inline-flex;align-items:center;gap:.7rem;
+  font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;background:var(--ac);
+  border:1px solid var(--ac);padding:.9rem 2rem;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s,color .2s;
+}
+.btn-enter:hover{background:transparent;color:var(--ac)}
+.btn-about{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tp);background:transparent;
+  border:1px solid var(--bd);padding:.9rem 1.8rem;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s;
+}
+.btn-about:hover{background:var(--sf)}
+
+/* right — card */
+.card{
+  background:var(--sf);border:1px solid var(--bd);
+  padding:2.2rem;
+  opacity:0;animation:fadeIn .8s .7s forwards;
+}
+.card-status{
+  display:flex;align-items:center;gap:.6rem;margin-bottom:2rem;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#5aff8a;box-shadow:0 0 8px rgba(90,255,138,.6);
+}
+.card-status span{
+  font-family:'DM Mono',monospace;font-size:.64rem;
+  color:var(--tm);letter-spacing:.1em;
+}
+.card-name{
+  font-family:'DM Serif Display',serif;font-size:1.5rem;
+  margin-bottom:.35rem;
+}
+.card-role{
+  font-family:'DM Mono',monospace;font-size:.64rem;
+  color:var(--ac);letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:1.6rem;
+}
+.tag-wrap{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.6rem}
+.tag{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  padding:.22rem .65rem;border:1px solid var(--bd);
+  color:var(--ts);background:rgba(255,255,255,.4);
+  letter-spacing:.05em;
+}
+.divider{height:1px;background:var(--bd);margin:1.6rem 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;line-height:1}
+.stat-l{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  color:var(--tm);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;
+}
+
+/* ── bottom ticker ── */
+.ticker-wrap{
+  position:fixed;bottom:0;left:0;right:0;
+  border-top:1px solid var(--bd);
+  background:rgba(240,242,245,.85);backdrop-filter:blur(10px);
+  overflow:hidden;height:32px;display:flex;align-items:center;
+}
+.ticker{
+  display:flex;gap:0;
+  white-space:nowrap;
+  animation:ticker 22s linear infinite;
+}
+.ticker-item{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  color:var(--tm);letter-spacing:.12em;text-transform:uppercase;
+  padding:0 2.5rem;border-right:1px solid var(--bd);
+}
+
+/* ── animations ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:none}
+}
+@keyframes fadeIn{
+  from{opacity:0}to{opacity:1}
+}
+@keyframes blink{
+  50%{opacity:0}
+}
+@keyframes ticker{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">LYZ.dev</span>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="portfolio.html">Projects</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="stage">
+    <!-- left -->
+    <div>
+      <div class="eyebrow">Portfolio · 2026</div>
+      <h1 class="big-name">L · Y · <span>Z</span></h1>
+      <div class="typewriter-wrap">
+        <span class="typewriter" id="tw"></span><span class="cursor"></span>
+      </div>
+      <div class="cta-row">
+        <a class="btn-about" href="about.html">關於我</a>
+      </div>
+    </div>
+
+   div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<script>
+const phrases=["深度學習研究者","電機工程系學生","Android App Developer","PCB Circuit Builder","Signal Processing · MATLAB","AI Medical Imaging"];
+let pi=0,ci=0,del=false;
+const tw=document.getElementById('tw');
+function type(){
+  const p=phrases[pi];
+  if(!del){tw.textContent=p.slice(0,++ci);if(ci===p.length){del=true;setTimeout(type,1800);return;}}
+  else{tw.textContent=p.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;}}
+  setTimeout(type,del?40:75);
+}
+setTimeout(type,1000);
+
+const items=["Deep Learning","PyTorch","DenseNet121","Android Studio","Java","MATLAB","FFT · Convolution","Arduino","Bluetooth","PCB Design","Soldering","EAGLE","Streamlit","Python 3.8","CUDA 12.1","App Inventor","Brain Tumor MRI","Signal Processing"];
+const t=document.getElementById('ticker');
+const seg=items.map(i=>`<span class="ticker-item">${i}</span>`).join('');
+t.innerHTML=seg+seg;
+</script>
+</body>
+</html>
