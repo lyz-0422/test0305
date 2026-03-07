@@ -16,7 +16,11 @@ button{cursor:pointer}
 a{text-decoration:none;color:inherit}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.3rem 3rem;backdrop-filter:blur(16px);background:rgba(240,242,245,.85);border-bottom:1px solid var(--bd)}
+.nav-left{display:flex;align-items:center;gap:2rem}
 .nav-logo{font-family:'DM Mono',monospace;font-size:.76rem;color:var(--tm);letter-spacing:.12em;text-transform:uppercase;border:none;background:transparent}
+.nav-home{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;border:none;background:transparent;display:flex;align-items:center;gap:.4rem;transition:color .2s;text-decoration:none}
+.nav-home:hover{color:var(--ac)}
+.nav-divider{width:1px;height:14px;background:var(--bd)}
 .nav-links{display:flex;gap:2.5rem;list-style:none}
 .nav-links button{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;border:none;background:transparent}
 .nav-back{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--ac);letter-spacing:.1em;text-transform:uppercase;border:none;background:transparent;display:none}
@@ -70,7 +74,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content
 .proj-tags{display:flex;gap:.5rem;flex-wrap:wrap}
 .proj-tag{font-family:'DM Mono',monospace;font-size:.6rem;padding:.22rem .62rem;border:1px solid var(--bd);color:var(--ts)}
 .proj-arrow{font-size:1.1rem;color:var(--tm)}
-/* year badge */
 .proj-year{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--ac);padding:.15rem .55rem;margin-bottom:.4rem;display:inline-block}
 
 .contact-h2{font-family:'DM Serif Display',serif;font-size:2.5rem;margin-bottom:1rem}
@@ -109,10 +112,12 @@ td{font-size:.8rem;color:var(--ts);padding:.45rem .8rem;border-bottom:1px solid 
 .scard{background:var(--sf);border:1px solid var(--bd);padding:1.4rem}
 .scard-title{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ac);margin-bottom:1rem}
 .erow{display:flex;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--bd)}
+.erow:last-child{border-bottom:none}
 .erow-k{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--tm)}
 .erow-v{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--ts)}
 .scard-note{font-size:.8rem;color:var(--ts);line-height:1.75}
 .model-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid var(--bd)}
+.model-row:last-child{border-bottom:none}
 .model-row.best{color:var(--ac)}
 .model-name{font-family:'DM Mono',monospace;font-size:.7rem}
 .model-score{font-family:'DM Serif Display',serif;font-size:.95rem}
@@ -125,7 +130,11 @@ td{font-size:.8rem;color:var(--ts);padding:.45rem .8rem;border-bottom:1px solid 
 <body>
 
 <nav>
-  <button class="nav-logo" onclick="showHome()">LYZ.dev</button>
+  <div class="nav-left">
+    <button class="nav-logo" onclick="showHome()">LYZ.dev</button>
+    <div class="nav-divider"></div>
+    <a class="nav-home" href="index.html">← Home</a>
+  </div>
   <ul class="nav-links" id="nav-links">
     <li><button onclick="goTo('about')">about</button></li>
     <li><button onclick="goTo('skills')">skills</button></li>
@@ -463,6 +472,15 @@ function showDetail(key){
     },120);
   }
 }
+
+// handle anchor from index.html (e.g. about.html#projects)
+window.addEventListener('load', () => {
+  const hash = window.location.hash;
+  if(hash && hash !== '#hero'){
+    const target = document.getElementById(hash.slice(1));
+    if(target) setTimeout(()=>target.scrollIntoView({behavior:'smooth'}), 100);
+  }
+});
 </script>
 </body>
 </html>

@@ -58,16 +58,15 @@ nav{
 main{
   flex:1;display:flex;align-items:center;justify-content:center;
   padding:0 3rem;position:relative;
+  margin-top:64px;
 }
 
 .stage{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:5rem;align-items:center;
-  max-width:1100px;width:100%;
+  max-width:660px;
+  width:100%;
 }
 
-/* left — text */
+/* text */
 .eyebrow{
   font-family:'DM Mono',monospace;font-size:.68rem;
   color:var(--tm);letter-spacing:.22em;text-transform:uppercase;
@@ -76,7 +75,7 @@ main{
 }
 .big-name{
   font-family:'DM Serif Display',serif;
-  font-size:clamp(3.5rem,7vw,6.5rem);
+  font-size:clamp(3.5rem,8vw,7rem);
   line-height:.95;margin-bottom:1.8rem;
   opacity:0;animation:fadeUp .7s .25s forwards;
 }
@@ -121,47 +120,6 @@ main{
 }
 .btn-about:hover{background:var(--sf)}
 
-/* right — card */
-.card{
-  background:var(--sf);border:1px solid var(--bd);
-  padding:2.2rem;
-  opacity:0;animation:fadeIn .8s .7s forwards;
-}
-.card-status{
-  display:flex;align-items:center;gap:.6rem;margin-bottom:2rem;
-}
-.dot{
-  width:7px;height:7px;border-radius:50%;
-  background:#5aff8a;box-shadow:0 0 8px rgba(90,255,138,.6);
-}
-.card-status span{
-  font-family:'DM Mono',monospace;font-size:.64rem;
-  color:var(--tm);letter-spacing:.1em;
-}
-.card-name{
-  font-family:'DM Serif Display',serif;font-size:1.5rem;
-  margin-bottom:.35rem;
-}
-.card-role{
-  font-family:'DM Mono',monospace;font-size:.64rem;
-  color:var(--ac);letter-spacing:.12em;text-transform:uppercase;
-  margin-bottom:1.6rem;
-}
-.tag-wrap{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.6rem}
-.tag{
-  font-family:'DM Mono',monospace;font-size:.58rem;
-  padding:.22rem .65rem;border:1px solid var(--bd);
-  color:var(--ts);background:rgba(255,255,255,.4);
-  letter-spacing:.05em;
-}
-.divider{height:1px;background:var(--bd);margin:1.6rem 0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;line-height:1}
-.stat-l{
-  font-family:'DM Mono',monospace;font-size:.58rem;
-  color:var(--tm);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;
-}
-
 /* ── bottom ticker ── */
 .ticker-wrap{
   position:fixed;bottom:0;left:0;right:0;
@@ -185,9 +143,6 @@ main{
   from{opacity:0;transform:translateY(16px)}
   to{opacity:1;transform:none}
 }
-@keyframes fadeIn{
-  from{opacity:0}to{opacity:1}
-}
 @keyframes blink{
   50%{opacity:0}
 }
@@ -202,27 +157,29 @@ main{
 <nav>
   <span class="nav-logo">LYZ.dev</span>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="portfolio.html">Projects</a></li>
+    <li><a href="about.html#hero">Home</a></li>
+    <li><a href="about.html#about">About</a></li>
+    <li><a href="about.html#skills">Skills</a></li>
+    <li><a href="about.html#projects">Projects</a></li>
+    <li><a href="about.html#contact">Contact</a></li>
   </ul>
 </nav>
 
 <main>
   <div class="stage">
-    <!-- left -->
-    <div>
-      <div class="eyebrow">Portfolio · 2026</div>
-      <h1 class="big-name">L · Y · <span>Z</span></h1>
-      <div class="typewriter-wrap">
-        <span class="typewriter" id="tw"></span><span class="cursor"></span>
-      </div>
-      <div class="cta-row">
-        <a class="btn-about" href="about.html">關於我</a>
-      </div>
+    <div class="eyebrow">Portfolio · 2026</div>
+    <h1 class="big-name">L · Y · <span>Z</span></h1>
+    <div class="typewriter-wrap">
+      <span class="typewriter" id="tw"></span><span class="cursor"></span>
     </div>
+    <div class="cta-row">
+      <a class="btn-enter" href="about.html">查看作品集 →</a>
+      <a class="btn-about" href="about.html#about">關於我</a>
+    </div>
+  </div>
+</main>
 
-   div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
 const phrases=["深度學習研究者","電機工程系學生","Android App Developer","PCB Circuit Builder","Signal Processing · MATLAB","AI Medical Imaging"];
