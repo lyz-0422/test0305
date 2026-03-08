@@ -9,477 +9,181 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#faf7f2;
-  --bg2:#f4efe6;
-  --sf:#ede7db;
-  --bd:#d8cfc2;
-  --bd2:#c9bfb0;
-  --tp:#1c1814;
-  --ts:#5c5147;
-  --tm:#9c9080;
-  --ac:#6b4c32;
-  --ac2:#7d5a3c;
-  --as:rgba(107,76,50,.09);
-  --gold:#8a6545;
+  --bg:#faf7f2;--bg2:#f4efe6;--sf:#ede7db;
+  --bd:#d8cfc2;--bd2:#c9bfb0;
+  --tp:#1c1814;--ts:#5c5147;--tm:#9c9080;
+  --ac:#6b4c32;--ac2:#7d5a3c;
+  --as:rgba(107,76,50,.09);--gold:#8a6545;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{scroll-behavior:smooth}
-body{
-  font-family:'Noto Sans TC',sans-serif;font-weight:300;
-  line-height:1.7;color:var(--tp);background:var(--bg);
-  position:relative;
-}
-
-/* noise overlay */
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  opacity:.025;
-}
-
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;line-height:1.7;color:var(--tp);background:var(--bg);position:relative;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
 button{cursor:pointer}
 a{text-decoration:none;color:inherit}
 
-/* ── nav ── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:1.2rem 3rem;
-  backdrop-filter:blur(18px) saturate(1.5);
-  background:rgba(250,247,242,.88);
-  border-bottom:1px solid var(--bd);
-}
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;backdrop-filter:blur(18px) saturate(1.5);background:rgba(250,247,242,.88);border-bottom:1px solid var(--bd);}
 .nav-left{display:flex;align-items:center;gap:2rem}
-.nav-logo{
-  font-family:'DM Mono',monospace;font-size:.72rem;
-  color:var(--tm);letter-spacing:.14em;text-transform:uppercase;
-  border:none;background:transparent;
-}
-.nav-home{
-  font-family:'DM Mono',monospace;font-size:.64rem;
-  color:var(--ts);letter-spacing:.1em;text-transform:uppercase;
-  border:none;background:transparent;
-  display:flex;align-items:center;gap:.4rem;
-  transition:color .2s;text-decoration:none;
-}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;border:none;background:transparent;}
+.nav-home{font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;border:none;background:transparent;display:flex;align-items:center;gap:.4rem;transition:color .2s;text-decoration:none;}
 .nav-home:hover{color:var(--ac)}
 .nav-divider{width:1px;height:14px;background:var(--bd)}
 .nav-links{display:flex;gap:2.2rem;list-style:none}
-.nav-links button{
-  font-family:'DM Mono',monospace;font-size:.65rem;
-  color:var(--ts);letter-spacing:.1em;text-transform:uppercase;
-  border:none;background:transparent;
-  position:relative;padding-bottom:2px;
-  transition:color .2s;
-}
-.nav-links button::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:1px;background:var(--ac);transform:scaleX(0);
-  transform-origin:left;transition:transform .25s ease;
-}
+.nav-links button{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;border:none;background:transparent;position:relative;padding-bottom:2px;transition:color .2s;}
+.nav-links button::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .25s ease;}
 .nav-links button:hover{color:var(--ac)}
 .nav-links button:hover::after{transform:scaleX(1)}
-.nav-back{
-  font-family:'DM Mono',monospace;font-size:.66rem;
-  color:var(--ac);letter-spacing:.1em;text-transform:uppercase;
-  border:1px solid rgba(181,101,29,.3);background:transparent;
-  padding:.35rem .9rem;display:none;transition:background .2s;
-}
+.nav-back{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--ac);letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(181,101,29,.3);background:transparent;padding:.35rem .9rem;display:none;transition:background .2s;}
 .nav-back:hover{background:var(--as)}
 
 #home-view{display:block;position:relative;z-index:1}
 #detail-view{display:none;position:relative;z-index:1}
 
-/* ── sections ── */
-.sec{
-  min-height:100vh;padding:120px 3rem 80px;
-  max-width:1100px;margin:0 auto;
-  display:flex;flex-direction:column;justify-content:center;
-}
+/* ── SECTIONS ── */
+.sec{min-height:100vh;padding:120px 3rem 80px;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;}
 .sec-border{border-top:1px solid var(--bd)}
-.sec-label{
-  font-family:'DM Mono',monospace;font-size:.62rem;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--ac);
-  margin-bottom:2rem;display:flex;align-items:center;gap:1rem;
-}
-.sec-label::before{
-  content:'';display:inline-block;width:28px;height:1px;
-  background:var(--ac);opacity:.6;
-}
-.sec-label::after{
-  content:'';display:inline-block;flex:0 0 1px;
-  height:28px;background:var(--bd);margin-left:.5rem;
-}
+.sec-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ac);margin-bottom:2rem;display:flex;align-items:center;gap:1rem;}
+.sec-label::before{content:'';display:inline-block;width:28px;height:1px;background:var(--ac);opacity:.6;}
+.sec-label::after{content:'';display:inline-block;flex:0 0 1px;height:28px;background:var(--bd);margin-left:.5rem;}
 
 /* ── HERO ── */
-.hero-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:5rem;align-items:center;
-}
-.hero-eyebrow{
-  font-family:'DM Mono',monospace;font-size:.68rem;
-  color:var(--tm);letter-spacing:.18em;text-transform:uppercase;
-  margin-bottom:1.4rem;
-}
-.hero-h1{
-  font-family:'Playfair Display',serif;font-weight:400;
-  font-size:clamp(2.8rem,5.5vw,4.5rem);
-  line-height:1.05;margin-bottom:1.4rem;letter-spacing:.01em;
-}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--tm);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.4rem;}
+.hero-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.8rem,5.5vw,4.5rem);line-height:1.05;margin-bottom:1.4rem;letter-spacing:.01em;}
 .hero-h1 em{font-style:italic;color:var(--ac);font-weight:400}
-.hero-p{
-  font-size:.92rem;color:var(--ts);max-width:380px;
-  line-height:1.95;margin-bottom:2.5rem;
-}
-.hero-cta{
-  display:inline-flex;align-items:center;gap:.75rem;
-  font-family:'DM Mono',monospace;font-size:.68rem;
-  letter-spacing:.12em;text-transform:uppercase;
-  color:var(--tp);border:1px solid var(--bd2);
-  padding:.82rem 1.6rem;background:transparent;
-  transition:background .2s,border-color .2s;
-}
+.hero-p{font-size:.92rem;color:var(--ts);max-width:380px;line-height:1.95;margin-bottom:2.5rem;}
+.hero-cta{display:inline-flex;align-items:center;gap:.75rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tp);border:1px solid var(--bd2);padding:.82rem 1.6rem;background:transparent;transition:background .2s,border-color .2s;}
 .hero-cta:hover{background:var(--sf);border-color:var(--bd2)}
-
-/* hero card */
-.hero-card{
-  background:var(--bg2);border:1px solid var(--bd);
-  padding:2.4rem;position:relative;
-  box-shadow:4px 4px 0 var(--bd);
-}
-.hero-card::before{
-  content:'';position:absolute;top:12px;right:12px;
-  width:32px;height:32px;
-  border-top:1px solid var(--bd2);
-  border-right:1px solid var(--bd2);
-}
-.hero-card::after{
-  content:'';position:absolute;bottom:12px;left:12px;
-  width:32px;height:32px;
-  border-bottom:1px solid var(--bd2);
-  border-left:1px solid var(--bd2);
-}
-.hero-status{
-  display:flex;align-items:center;gap:.65rem;margin-bottom:1.8rem;
-}
-.hero-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:#6dbf7e;
-  box-shadow:0 0 0 3px rgba(109,191,126,.18),0 0 10px rgba(109,191,126,.4);
-}
-.hero-status span{
-  font-family:'DM Mono',monospace;font-size:.66rem;
-  color:var(--tm);letter-spacing:.1em;
-}
-.hero-name{
-  font-family:'Playfair Display',serif;font-size:1.7rem;
-  font-weight:400;margin-bottom:.4rem;
-}
-.hero-role{
-  font-family:'DM Mono',monospace;font-size:.66rem;
-  color:var(--ac);letter-spacing:.12em;text-transform:uppercase;
-  margin-bottom:1.8rem;
-}
+.hero-card{background:var(--bg2);border:1px solid var(--bd);padding:2.4rem;position:relative;box-shadow:4px 4px 0 var(--bd);}
+.hero-card::before{content:'';position:absolute;top:12px;right:12px;width:32px;height:32px;border-top:1px solid var(--bd2);border-right:1px solid var(--bd2);}
+.hero-card::after{content:'';position:absolute;bottom:12px;left:12px;width:32px;height:32px;border-bottom:1px solid var(--bd2);border-left:1px solid var(--bd2);}
+.hero-status{display:flex;align-items:center;gap:.65rem;margin-bottom:1.8rem;}
+.hero-dot{width:7px;height:7px;border-radius:50%;background:#6dbf7e;box-shadow:0 0 0 3px rgba(109,191,126,.18),0 0 10px rgba(109,191,126,.4);}
+.hero-status span{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--tm);letter-spacing:.1em;}
+.hero-name{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;margin-bottom:.4rem;}
+.hero-role{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--ac);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.8rem;}
 .tag-wrap{display:flex;flex-wrap:wrap;gap:.45rem}
-.tag{
-  font-family:'DM Mono',monospace;font-size:.6rem;
-  padding:.22rem .65rem;border:1px solid var(--bd);
-  color:var(--ts);background:rgba(255,255,255,.5);
-  letter-spacing:.06em;
-}
-.hero-divider{
-  height:1px;background:var(--bd);margin:1.8rem 0;
-}
+.tag{font-family:'DM Mono',monospace;font-size:.6rem;padding:.22rem .65rem;border:1px solid var(--bd);color:var(--ts);background:rgba(255,255,255,.5);letter-spacing:.06em;}
+.hero-divider{height:1px;background:var(--bd);margin:1.8rem 0;}
 .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.stat-num{
-  font-family:'Playfair Display',serif;font-size:2rem;
-  font-weight:600;color:var(--ac);line-height:1;
-}
-.stat-label{
-  font-family:'DM Mono',monospace;font-size:.58rem;
-  color:var(--tm);letter-spacing:.1em;text-transform:uppercase;
-  margin-top:.3rem;
-}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--ac);line-height:1;}
+.stat-label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--tm);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;}
 
 /* ── ABOUT ── */
-.about-grid{
-  display:grid;grid-template-columns:1fr 2fr;
-  gap:5rem;align-items:start;
-}
-.about-h2{
-  font-family:'Playfair Display',serif;font-size:3rem;
-  font-weight:300;line-height:1.1;
-}
+.about-grid{display:grid;grid-template-columns:1fr 2fr;gap:5rem;align-items:start;}
+.about-h2{font-family:'Playfair Display',serif;font-size:3rem;font-weight:300;line-height:1.1;}
 .about-h2 em{font-style:italic;color:var(--ac);font-weight:400}
-.about-p{
-  font-size:.92rem;color:var(--ts);line-height:1.95;margin-bottom:1.4rem;
-}
-.hl{
-  display:inline;background:var(--as);
-  border-bottom:1px solid rgba(181,101,29,.4);
-  padding:.05em .3em;
-}
+.about-p{font-size:.92rem;color:var(--ts);line-height:1.95;margin-bottom:1.4rem;}
+.hl{display:inline;background:var(--as);border-bottom:1px solid rgba(181,101,29,.4);padding:.05em .3em;}
 
 /* ── SKILLS ── */
-.skills-h2{
-  font-family:'Playfair Display',serif;font-size:2.6rem;
-  font-weight:300;margin-bottom:3rem;line-height:1.15;
-}
-.skills-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--bd);
-  border:1px solid var(--bd);
-}
-.skill-card{
-  background:var(--bg);padding:2rem;
-  transition:background .2s;
-}
+.skills-h2{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:300;margin-bottom:3rem;line-height:1.15;}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);}
+.skill-card{background:var(--bg);padding:2rem;transition:background .2s;color:inherit;display:block;cursor:pointer;position:relative;}
 .skill-card:hover{background:var(--bg2)}
-.skill-ico{
-  font-size:1.3rem;margin-bottom:1rem;display:block;
-}
-.skill-cat{
-  font-family:'DM Mono',monospace;font-size:.59rem;
-  letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ac);margin-bottom:.5rem;
-}
-.skill-name{
-  font-family:'Playfair Display',serif;
-  font-size:1.15rem;font-weight:400;margin-bottom:.8rem;
-}
-.pill{
-  font-family:'DM Mono',monospace;font-size:.59rem;
-  padding:.2rem .6rem;background:var(--as);
-  color:var(--ac);border:1px solid rgba(181,101,29,.2);
-}
+.skill-ico{font-size:1.3rem;margin-bottom:1rem;display:block;}
+.skill-cat{font-family:'DM Mono',monospace;font-size:.59rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ac);margin-bottom:.5rem;}
+.skill-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;margin-bottom:.8rem;}
+.pill{font-family:'DM Mono',monospace;font-size:.59rem;padding:.2rem .6rem;background:var(--as);color:var(--ac);border:1px solid rgba(181,101,29,.2);}
+
+/* ── EXT LINKS (hover reveal) ── */
+.ext-links{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--bd);opacity:0;max-height:0;overflow:hidden;transition:opacity .25s,max-height .3s ease;pointer-events:none;}
+.skill-card:hover .ext-links{opacity:1;max-height:100px;pointer-events:auto;}
+.ext-btn{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--tm);letter-spacing:.06em;border:1px solid var(--bd);padding:.18rem .55rem;text-decoration:none;background:transparent;transition:color .2s,border-color .2s,background .2s;display:inline-block;}
+.ext-btn:hover{color:var(--ac);border-color:var(--ac);background:var(--as)}
 
 /* ── PROJECTS ── */
-.proj-h2{
-  font-family:'Playfair Display',serif;font-size:2.6rem;
-  font-weight:300;margin-bottom:3rem;line-height:1.15;
-}
-.proj-list{
-  display:flex;flex-direction:column;
-  gap:0;background:var(--bd);border:1px solid var(--bd);
-}
-.proj-row{
-  background:var(--bg);padding:1.6rem 2.2rem;
-  display:grid;grid-template-columns:auto 1fr auto auto;
-  gap:2.2rem;align-items:center;
-  border:none;width:100%;text-align:left;
-  border-bottom:1px solid var(--bd);
-  transition:background .2s;
-}
+.proj-h2{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:300;margin-bottom:3rem;line-height:1.15;}
+.proj-list{display:flex;flex-direction:column;gap:0;background:var(--bd);border:1px solid var(--bd);}
+.proj-row{background:var(--bg);padding:1.6rem 2.2rem;display:grid;grid-template-columns:auto 1fr auto auto;gap:2.2rem;align-items:center;border:none;width:100%;text-align:left;border-bottom:1px solid var(--bd);transition:background .2s;}
 .proj-row:last-child{border-bottom:none}
 .proj-row:hover{background:var(--bg2)}
-.proj-n{
-  font-family:'DM Mono',monospace;font-size:.6rem;
-  color:var(--tm);letter-spacing:.1em;min-width:28px;
-}
-.proj-title{
-  font-family:'Playfair Display',serif;
-  font-size:1.25rem;font-weight:400;margin-bottom:.3rem;
-}
-.proj-desc{
-  font-family:'DM Mono',monospace;font-size:.62rem;
-  color:var(--tm);line-height:1.6;
-}
+.proj-n{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);letter-spacing:.1em;min-width:28px;}
+.proj-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:400;margin-bottom:.3rem;}
+.proj-desc{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--tm);line-height:1.6;}
 .proj-tags{display:flex;gap:.45rem;flex-wrap:wrap}
-.proj-tag{
-  font-family:'DM Mono',monospace;font-size:.58rem;
-  padding:.2rem .6rem;border:1px solid var(--bd);color:var(--ts);
-  background:transparent;
-}
-.proj-arrow{
-  font-size:1rem;color:var(--tm);
-  transition:color .2s,transform .2s;
-}
+.proj-tag{font-family:'DM Mono',monospace;font-size:.58rem;padding:.2rem .6rem;border:1px solid var(--bd);color:var(--ts);background:transparent;}
+.proj-arrow{font-size:1rem;color:var(--tm);transition:color .2s,transform .2s;}
 .proj-row:hover .proj-arrow{color:var(--ac);transform:translate(2px,-2px)}
-.proj-year{
-  font-family:'DM Mono',monospace;font-size:.54rem;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ac);margin-bottom:.35rem;
-  display:flex;align-items:center;gap:.4rem;
-}
-.proj-year::before{
-  content:'';width:16px;height:1px;
-  background:var(--ac);opacity:.5;
-}
+.proj-year{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem;}
+.proj-year::before{content:'';width:16px;height:1px;background:var(--ac);opacity:.5;}
 
 /* ── CONTACT ── */
-.contact-h2{
-  font-family:'Playfair Display',serif;font-size:2.8rem;
-  font-weight:300;margin-bottom:1rem;
-}
+.contact-h2{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:300;margin-bottom:1rem;}
 .contact-h2 em{font-style:italic;color:var(--ac);font-weight:400}
-.contact-p{
-  font-size:.9rem;color:var(--ts);line-height:1.9;margin-bottom:3rem;
-}
+.contact-p{font-size:.9rem;color:var(--ts);line-height:1.9;margin-bottom:3rem;}
 .contact-list{display:flex;flex-direction:column;gap:.8rem}
-.contact-link{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:1.2rem 1.5rem;border:1px solid var(--bd);
-  color:var(--tp);transition:background .2s,border-color .2s;
-  background:var(--bg);
-}
+.contact-link{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border:1px solid var(--bd);color:var(--tp);transition:background .2s,border-color .2s;background:var(--bg);}
 .contact-link:hover{background:var(--bg2);border-color:var(--bd2)}
-.contact-platform{
-  font-family:'DM Mono',monospace;font-size:.6rem;
-  letter-spacing:.15em;text-transform:uppercase;color:var(--tm);
-}
+.contact-platform{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tm);}
 .contact-handle{font-size:.9rem;margin-top:.3rem}
-.contact-arrow{
-  font-size:.9rem;color:var(--tm);
-  transition:color .2s,transform .2s;
-}
+.contact-arrow{font-size:.9rem;color:var(--tm);transition:color .2s,transform .2s;}
 .contact-link:hover .contact-arrow{color:var(--ac);transform:translate(3px,-3px)}
 
-/* ── footer ── */
-footer{
-  border-top:1px solid var(--bd);padding:1.8rem 3rem;
-  max-width:1100px;margin:0 auto;
-  display:flex;justify-content:space-between;align-items:center;
-  position:relative;z-index:1;
-}
-footer span{
-  font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);
-}
-.footer-ornament{
-  font-family:'Playfair Display',serif;
-  font-size:1.2rem;color:var(--bd2);letter-spacing:.3em;
-}
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--bd);padding:1.8rem 3rem;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+footer span{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);}
+.footer-ornament{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--bd2);letter-spacing:.3em;}
 
 /* ── DETAIL ── */
-.detail-inner{
-  max-width:1100px;margin:0 auto;padding:100px 3rem 80px;
-}
-.detail-back-btn{
-  display:inline-flex;align-items:center;gap:.6rem;
-  font-family:'DM Mono',monospace;font-size:.68rem;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:var(--tm);border:none;background:transparent;
-  margin-bottom:3rem;transition:color .2s;padding:0;
-}
+.detail-inner{max-width:1100px;margin:0 auto;padding:100px 3rem 80px;}
+.detail-back-btn{display:inline-flex;align-items:center;gap:.6rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);border:none;background:transparent;margin-bottom:3rem;transition:color .2s;padding:0;}
 .detail-back-btn:hover{color:var(--ac)}
-.detail-header{
-  display:grid;grid-template-columns:1fr auto;
-  gap:3rem;align-items:start;margin-bottom:4rem;
-  border-bottom:1px solid var(--bd);padding-bottom:3rem;
-}
-.detail-num{
-  font-family:'DM Mono',monospace;font-size:.62rem;
-  letter-spacing:.2em;color:var(--ac);margin-bottom:1rem;
-  display:flex;align-items:center;gap:.8rem;
-}
-.detail-num::before{
-  content:'';width:24px;height:1px;background:var(--ac);opacity:.7;
-}
-.detail-h1{
-  font-family:'Playfair Display',serif;font-weight:400;
-  font-size:clamp(2rem,4vw,3.2rem);line-height:1.1;margin-bottom:1.2rem;
-}
+.detail-header{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:start;margin-bottom:4rem;border-bottom:1px solid var(--bd);padding-bottom:3rem;}
+.detail-num{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--ac);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
+.detail-num::before{content:'';width:24px;height:1px;background:var(--ac);opacity:.7;}
+.detail-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2rem,4vw,3.2rem);line-height:1.1;margin-bottom:1.2rem;}
 .detail-h1 em{font-style:italic;color:var(--ac);font-weight:400}
 .detail-sub{font-size:.92rem;color:var(--ts);line-height:1.85;max-width:520px}
-.detail-meta{
-  display:flex;flex-direction:column;gap:1.2rem;min-width:200px;
-}
-.meta-label{
-  font-family:'DM Mono',monospace;font-size:.56rem;
-  letter-spacing:.15em;text-transform:uppercase;
-  color:var(--tm);margin-bottom:.3rem;
-}
+.detail-meta{display:flex;flex-direction:column;gap:1.2rem;min-width:200px;}
+.meta-label{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tm);margin-bottom:.3rem;}
 .meta-val{font-size:.84rem;line-height:1.5}
-.detail-body{
-  display:grid;grid-template-columns:2fr 1fr;gap:4rem;
-}
-.detail-content h3{
-  font-family:'Playfair Display',serif;
-  font-size:1.4rem;font-weight:400;
-  margin:2rem 0 .9rem;color:var(--tp);
-  position:relative;padding-bottom:.6rem;
-}
-.detail-content h3::after{
-  content:'';position:absolute;bottom:0;left:0;
-  width:32px;height:1px;background:var(--ac);opacity:.6;
-}
-.detail-content p{
-  font-size:.9rem;color:var(--ts);line-height:1.95;margin-bottom:1.2rem;
-}
-.step-row{
-  display:flex;align-items:flex-start;gap:.8rem;margin-bottom:.7rem;
-}
-.step-num{
-  font-family:'DM Mono',monospace;font-size:.6rem;
-  color:var(--ac);background:var(--as);
-  border:1px solid rgba(181,101,29,.2);
-  padding:.15rem .5rem;min-width:30px;
-  text-align:center;margin-top:.15rem;flex-shrink:0;
-}
+.detail-body{display:grid;grid-template-columns:2fr 1fr;gap:4rem;}
+.detail-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;margin:2rem 0 .9rem;color:var(--tp);position:relative;padding-bottom:.6rem;}
+.detail-content h3::after{content:'';position:absolute;bottom:0;left:0;width:32px;height:1px;background:var(--ac);opacity:.6;}
+.detail-content p{font-size:.9rem;color:var(--ts);line-height:1.95;margin-bottom:1.2rem;}
+.step-row{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:.7rem;}
+.step-num{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ac);background:var(--as);border:1px solid rgba(181,101,29,.2);padding:.15rem .5rem;min-width:30px;text-align:center;margin-top:.15rem;flex-shrink:0;}
 .step-text{font-size:.88rem;color:var(--ts);line-height:1.75}
 table{width:100%;border-collapse:collapse;margin-bottom:1.4rem}
-th{
-  font-family:'DM Mono',monospace;font-size:.57rem;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ac);text-align:left;
-  padding:.55rem .8rem;border-bottom:2px solid var(--bd);
-}
-td{
-  font-size:.82rem;color:var(--ts);
-  padding:.48rem .8rem;border-bottom:1px solid var(--bd);
-}
-
-/* sidebar */
+th{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);text-align:left;padding:.55rem .8rem;border-bottom:2px solid var(--bd);}
+td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid var(--bd);}
 .sidebar{display:flex;flex-direction:column;gap:1.4rem}
-.scard{
-  background:var(--bg2);border:1px solid var(--bd);
-  padding:1.4rem;position:relative;
-}
-.scard::before{
-  content:'';position:absolute;top:8px;right:8px;
-  width:20px;height:20px;
-  border-top:1px solid var(--bd2);border-right:1px solid var(--bd2);
-}
-.scard-title{
-  font-family:'DM Mono',monospace;font-size:.58rem;
-  letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ac);margin-bottom:1rem;
-}
-.erow{
-  display:flex;justify-content:space-between;
-  padding:.42rem 0;border-bottom:1px solid var(--bd);
-}
+.scard{background:var(--bg2);border:1px solid var(--bd);padding:1.4rem;position:relative;}
+.scard::before{content:'';position:absolute;top:8px;right:8px;width:20px;height:20px;border-top:1px solid var(--bd2);border-right:1px solid var(--bd2);}
+.scard-title{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ac);margin-bottom:1rem;}
+.erow{display:flex;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--bd);}
 .erow:last-child{border-bottom:none}
 .erow-k{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--tm)}
 .erow-v{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ts)}
 .scard-note{font-size:.8rem;color:var(--ts);line-height:1.8}
-
-/* model comparison */
-.model-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.5rem 0;border-bottom:1px solid var(--bd);
-}
+.model-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--bd);}
 .model-row:last-child{border-bottom:none}
 .model-row.best{color:var(--ac)}
 .model-name{font-family:'DM Mono',monospace;font-size:.7rem}
-.model-score{
-  font-family:'Playfair Display',serif;
-  font-size:1.05rem;font-weight:600;
-}
-
-/* progress bars */
+.model-score{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;}
 .bar-wrap{margin-bottom:.9rem}
-.bar-header{
-  display:flex;justify-content:space-between;
-  font-family:'DM Mono',monospace;font-size:.59rem;
-  color:var(--tm);margin-bottom:.35rem;
-}
-.bar-track{
-  height:3px;background:var(--bd);border-radius:2px;overflow:hidden;
-}
-.bar-fill{
-  height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));
-  border-radius:2px;width:0;transition:width 1.3s cubic-bezier(.22,.68,0,1.1);
-}
+.bar-header{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.59rem;color:var(--tm);margin-bottom:.35rem;}
+.bar-track{height:3px;background:var(--bd);border-radius:2px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:2px;width:0;transition:width 1.3s cubic-bezier(.22,.68,0,1.1);}
+
+/* ── SKILL DETAIL ── */
+#skill-view{display:none;position:relative;z-index:1}
+.skill-detail-inner{max-width:1100px;margin:0 auto;padding:100px 3rem 80px}
+.skill-back-btn{display:inline-flex;align-items:center;gap:.6rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);border:none;background:transparent;margin-bottom:3rem;transition:color .2s;padding:0;cursor:pointer;}
+.skill-back-btn:hover{color:var(--ac)}
+.skill-detail-header{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:start;margin-bottom:4rem;border-bottom:1px solid var(--bd);padding-bottom:3rem;}
+.skill-detail-ico{font-size:2.5rem;margin-bottom:1rem;display:block}
+.skill-detail-cat{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--ac);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
+.skill-detail-cat::before{content:'';width:24px;height:1px;background:var(--ac);opacity:.7}
+.skill-detail-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2rem,4vw,3.2rem);line-height:1.1;margin-bottom:1.2rem;}
+.skill-detail-h1 em{font-style:italic;color:var(--ac)}
+.skill-detail-sub{font-size:.92rem;color:var(--ts);line-height:1.85;max-width:520px}
+.skill-detail-body{display:grid;grid-template-columns:2fr 1fr;gap:4rem}
+.skill-detail-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;margin:2rem 0 .9rem;position:relative;padding-bottom:.6rem;}
+.skill-detail-content h3::after{content:'';position:absolute;bottom:0;left:0;width:32px;height:1px;background:var(--ac);opacity:.6;}
+.skill-detail-content p{font-size:.9rem;color:var(--ts);line-height:1.95;margin-bottom:1.2rem}
 </style>
 </head>
 <body>
@@ -512,30 +216,17 @@ td{
         <button class="hero-cta" onclick="goTo('about')">了解更多 →</button>
       </div>
       <div class="hero-card">
-        <div class="hero-status">
-          <div class="hero-dot"></div>
-          <span>Open to opportunities</span>
-        </div>
+        <div class="hero-status"><div class="hero-dot"></div><span>Open to opportunities</span></div>
         <div class="hero-name">LYZ</div>
         <div class="hero-role">Student · AI Researcher · Developer</div>
         <div class="tag-wrap">
-          <span class="tag">Deep Learning</span>
-          <span class="tag">PyTorch</span>
-          <span class="tag">Python</span>
-          <span class="tag">Android</span>
-          <span class="tag">MATLAB</span>
-          <span class="tag">Arduino</span>
+          <span class="tag">Deep Learning</span><span class="tag">PyTorch</span><span class="tag">Python</span>
+          <span class="tag">Android</span><span class="tag">MATLAB</span><span class="tag">Arduino</span>
         </div>
         <div class="hero-divider"></div>
         <div class="hero-stats">
-          <div>
-            <div class="stat-num">6</div>
-            <div class="stat-label">Projects</div>
-          </div>
-          <div>
-            <div class="stat-num">97%+</div>
-            <div class="stat-label">Model F1</div>
-          </div>
+          <div><div class="stat-num">6</div><div class="stat-label">Projects</div></div>
+          <div><div class="stat-num">97%+</div><div class="stat-label">Model F1</div></div>
         </div>
       </div>
     </div>
@@ -559,41 +250,72 @@ td{
     <div class="sec-label">02 — Skills</div>
     <h2 class="skills-h2">What I<br>work with</h2>
     <div class="skills-grid">
-      <div class="skill-card">
+      <div class="skill-card" onclick="showSkill('dl')">
         <span class="skill-ico">🤖</span>
         <div class="skill-cat">Deep Learning</div>
         <div class="skill-name">模型訓練</div>
         <div class="tag-wrap"><span class="pill">PyTorch</span><span class="pill">ResNet50</span><span class="pill">DenseNet121</span><span class="pill">EfficientNetB0</span></div>
+        <div class="ext-links">
+          <a class="ext-btn" href="https://pytorch.org/docs/stable/index.html" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">PyTorch ↗</a>
+          <a class="ext-btn" href="https://pytorch.org/vision/stable/models.html" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">TorchVision ↗</a>
+        </div>
       </div>
-      <div class="skill-card">
+      <div class="skill-card" onclick="showSkill('prog')">
         <span class="skill-ico">⌨️</span>
         <div class="skill-cat">Programming</div>
         <div class="skill-name">程式開發</div>
         <div class="tag-wrap"><span class="pill">Python</span><span class="pill">Java (Android)</span><span class="pill">MATLAB</span><span class="pill">JavaScript</span><span class="pill">C / C++</span></div>
+        <div class="ext-links">
+          <a class="ext-btn" href="https://docs.python.org/3/" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Python ↗</a>
+          <a class="ext-btn" href="https://developer.android.com/docs" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Android ↗</a>
+          <a class="ext-btn" href="https://www.mathworks.com/help/matlab/" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">MATLAB ↗</a>
+          <a class="ext-btn" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">JavaScript ↗</a>
+          <a class="ext-btn" href="https://en.cppreference.com/w/" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">C / C++ ↗</a>
+        </div>
       </div>
-      <div class="skill-card">
+      <div class="skill-card" onclick="showSkill('data')">
         <span class="skill-ico">🧪</span>
         <div class="skill-cat">Data Science</div>
         <div class="skill-name">資料處理</div>
         <div class="tag-wrap"><span class="pill">NumPy</span><span class="pill">Pandas</span><span class="pill">Kaggle</span><span class="pill">Cross-Validation</span></div>
+        <div class="ext-links">
+          <a class="ext-btn" href="https://numpy.org/doc/" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">NumPy ↗</a>
+          <a class="ext-btn" href="https://pandas.pydata.org/docs/" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Pandas ↗</a>
+          <a class="ext-btn" href="https://www.kaggle.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Kaggle ↗</a>
+          <a class="ext-btn" href="https://scikit-learn.org/stable/modules/cross_validation.html" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Cross-Val ↗</a>
+        </div>
       </div>
-      <div class="skill-card">
+      <div class="skill-card" onclick="showSkill('web')">
         <span class="skill-ico">🌐</span>
         <div class="skill-cat">Web / Platform</div>
         <div class="skill-name">應用部署</div>
         <div class="tag-wrap"><span class="pill">Streamlit</span><span class="pill">Flask</span><span class="pill">REST API</span><span class="pill">Docker</span></div>
+        <div class="ext-links">
+          <a class="ext-btn" href="https://docs.streamlit.io" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Streamlit ↗</a>
+          <a class="ext-btn" href="https://flask.palletsprojects.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Flask ↗</a>
+          <a class="ext-btn" href="https://docs.docker.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Docker ↗</a>
+        </div>
       </div>
-      <div class="skill-card">
+      <div class="skill-card" onclick="showSkill('hw')">
         <span class="skill-ico">🔌</span>
         <div class="skill-cat">Hardware</div>
         <div class="skill-name">電路實作</div>
         <div class="tag-wrap"><span class="pill">Arduino</span><span class="pill">PCB 製作</span><span class="pill">EAGLE</span><span class="pill">焊接</span><span class="pill">示波器</span></div>
+        <div class="ext-links">
+          <a class="ext-btn" href="https://www.arduino.cc/reference/en/" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Arduino ↗</a>
+          <a class="ext-btn" href="https://www.autodesk.com/products/eagle/overview" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">EAGLE ↗</a>
+        </div>
       </div>
-      <div class="skill-card">
+      <div class="skill-card" onclick="showSkill('tools')">
         <span class="skill-ico">☁️</span>
         <div class="skill-cat">Tools</div>
         <div class="skill-name">開發工具</div>
-        <div class="tag-wrap"><span class="pill">Git / GitHub</span><span class="pill">CUDA 12.1</span><span class="pill">TensorBoard</span><span class="pill">Linux</span></div>
+        <div class="tag-wrap"><span class="pill">Git / GitHub</span><span class="pill">CUDA 12.1</span><span class="pill">TensorBoard</span>
+        <div class="ext-links">
+          <a class="ext-btn" href="https://github.com/lyz-0422" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">GitHub ↗</a>
+          <a class="ext-btn" href="https://developer.nvidia.com/cuda-toolkit" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">CUDA ↗</a>
+          <a class="ext-btn" href="https://www.tensorflow.org/tensorboard" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">TensorBoard ↗</a>
+        </div>
       </div>
     </div>
   </div>
@@ -603,73 +325,42 @@ td{
     <div class="sec-label">03 — Projects</div>
     <h2 class="proj-h2">Selected<br>Work</h2>
     <div class="proj-list">
-
       <button class="proj-row" onclick="showDetail('car')">
         <span class="proj-n">01</span>
-        <div>
-          <div class="proj-year">大一 · Freshman Project</div>
-          <div class="proj-title">藍芽遙控自走車</div>
-          <div class="proj-desc">逢甲大學通訊工程系 大一專題 · Arduino × 藍芽 × App Inventor 硬體整合實作</div>
-        </div>
+        <div><div class="proj-year">大一 · Freshman Project</div><div class="proj-title">藍芽遙控自走車</div><div class="proj-desc">逢甲大學通訊工程系 大一專題 · Arduino × 藍芽 × App Inventor 硬體整合實作</div></div>
         <div class="proj-tags"><span class="proj-tag">Arduino</span><span class="proj-tag">藍芽</span><span class="proj-tag">App Inventor</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-
       <button class="proj-row" onclick="showDetail('conv')">
         <span class="proj-n">02</span>
-        <div>
-          <div class="proj-year">大三 · 數位信號處理</div>
-          <div class="proj-title">卷積的三種實現方式</div>
-          <div class="proj-desc">逢甲大學通訊工程系 · 線性卷積、循環卷積、FFT 頻域卷積 MATLAB 實作比較</div>
-        </div>
+        <div><div class="proj-year">大三 · 數位信號處理</div><div class="proj-title">卷積的三種實現方式</div><div class="proj-desc">逢甲大學通訊工程系 · 線性卷積、循環卷積、FFT 頻域卷積 MATLAB 實作比較</div></div>
         <div class="proj-tags"><span class="proj-tag">MATLAB</span><span class="proj-tag">FFT</span><span class="proj-tag">信號處理</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-
       <button class="proj-row" onclick="showDetail('android')">
         <span class="proj-n">03</span>
-        <div>
-          <div class="proj-year">大三 · Android 程式設計</div>
-          <div class="proj-title">Android 程式設計 Final Exam</div>
-          <div class="proj-desc">逢甲大學通訊工程系 · 以 SEVENTEEN 為主題開發 Android 追星 App</div>
-        </div>
+        <div><div class="proj-year">大三 · Android 程式設計</div><div class="proj-title">Android 程式設計 Final Exam</div><div class="proj-desc">逢甲大學通訊工程系 · 以 SEVENTEEN 為主題開發 Android 追星 App</div></div>
         <div class="proj-tags"><span class="proj-tag">Android</span><span class="proj-tag">Java</span><span class="proj-tag">ListView</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-
       <button class="proj-row" onclick="showDetail('pcb')">
         <span class="proj-n">04</span>
-        <div>
-          <div class="proj-year">大三 · 電子學</div>
-          <div class="proj-title">PCB 電路板製作</div>
-          <div class="proj-desc">逢甲大學電子學 期末專題 · 手工 PCB 製作全流程實作</div>
-        </div>
+        <div><div class="proj-year">大三 · 電子學</div><div class="proj-title">PCB 電路板製作</div><div class="proj-desc">逢甲大學電子學 期末專題 · 手工 PCB 製作全流程實作</div></div>
         <div class="proj-tags"><span class="proj-tag">PCB</span><span class="proj-tag">蝕刻</span><span class="proj-tag">焊接</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-
       <button class="proj-row" onclick="showDetail('led')">
         <span class="proj-n">05</span>
-        <div>
-          <div class="proj-year">大三 · 電子學</div>
-          <div class="proj-title">聲控 LED 旋律套件</div>
-          <div class="proj-desc">逢甲大學電子學 期末小專題 · 聲頻放大電路與 LED 驅動實作</div>
-        </div>
+        <div><div class="proj-year">大三 · 電子學</div><div class="proj-title">聲控 LED 旋律套件</div><div class="proj-desc">逢甲大學電子學 期末小專題 · 聲頻放大電路與 LED 驅動實作</div></div>
         <div class="proj-tags"><span class="proj-tag">Electronics</span><span class="proj-tag">EAGLE</span><span class="proj-tag">Soldering</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-
       <button class="proj-row" onclick="showDetail('ai')">
         <span class="proj-n">06</span>
-        <div>
-          <div class="proj-year">大四 · 畢業專題</div>
-          <div class="proj-title">腦腫瘤 MRI 影像分類系統</div>
-          <div class="proj-desc">逢甲大學通訊工程系畢業專題 · 三種深度學習模型最佳化研究</div>
-        </div>
+        <div><div class="proj-year">大四 · 畢業專題</div><div class="proj-title">腦腫瘤 MRI 影像分類系統</div><div class="proj-desc">逢甲大學通訊工程系畢業專題 · 三種深度學習模型最佳化研究</div></div>
         <div class="proj-tags"><span class="proj-tag">PyTorch</span><span class="proj-tag">DenseNet121</span><span class="proj-tag">Streamlit</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-
     </div>
   </div>
 
@@ -701,6 +392,26 @@ td{
   </footer>
 </div>
 
+<!-- SKILL DETAIL VIEW -->
+<div id="skill-view">
+  <div class="skill-detail-inner">
+    <button class="skill-back-btn" onclick="showSkillBack()">← 返回技能列表</button>
+    <div class="skill-detail-header">
+      <div>
+        <span class="skill-detail-ico" id="sk-ico"></span>
+        <div class="skill-detail-cat" id="sk-cat"></div>
+        <h1 class="skill-detail-h1" id="sk-title"></h1>
+        <p class="skill-detail-sub" id="sk-sub"></p>
+      </div>
+      <div class="detail-meta" id="sk-meta"></div>
+    </div>
+    <div class="skill-detail-body">
+      <div class="skill-detail-content" id="sk-content"></div>
+      <div class="sidebar" id="sk-sidebar"></div>
+    </div>
+  </div>
+</div>
+
 <!-- DETAIL VIEW -->
 <div id="detail-view">
   <div class="detail-inner">
@@ -719,6 +430,7 @@ td{
     </div>
   </div>
 </div>
+
 
 <script>
 const PROJECTS = {
@@ -830,21 +542,16 @@ const PROJECTS = {
 
 function goTo(id){
   if(document.getElementById('detail-view').style.display==='block'){
-    showHome();
-    setTimeout(()=>{ document.getElementById(id).scrollIntoView({behavior:'smooth'}); },50);
-  } else {
-    document.getElementById(id).scrollIntoView({behavior:'smooth'});
-  }
+    showHome();setTimeout(()=>{document.getElementById(id).scrollIntoView({behavior:'smooth'});},50);
+  }else{document.getElementById(id).scrollIntoView({behavior:'smooth'});}
 }
-
 function showHomeToProjects(){
   document.getElementById('home-view').style.display='block';
   document.getElementById('detail-view').style.display='none';
   document.getElementById('nav-links').style.display='flex';
   document.getElementById('nav-back').style.display='none';
-  setTimeout(()=>{ document.getElementById('projects').scrollIntoView({behavior:'smooth'}); }, 50);
+  setTimeout(()=>{document.getElementById('projects').scrollIntoView({behavior:'smooth'});},50);
 }
-
 function showHome(){
   document.getElementById('home-view').style.display='block';
   document.getElementById('detail-view').style.display='none';
@@ -852,70 +559,96 @@ function showHome(){
   document.getElementById('nav-back').style.display='none';
   window.scrollTo(0,0);
 }
-
 function showDetail(key){
   const p=PROJECTS[key];
   document.getElementById('d-num').textContent=p.num;
   document.getElementById('d-title').innerHTML=p.title[0]+'<br><em>'+p.title[1]+'</em>';
   document.getElementById('d-sub').textContent=p.sub;
-
   let m='';
-  p.meta.forEach(({label,val})=>{
-    m+=`<div><div class="meta-label">${label}</div><div class="meta-val">${val}</div></div>`;
-  });
+  p.meta.forEach(({label,val})=>{m+=`<div><div class="meta-label">${label}</div><div class="meta-val">${val}</div></div>`;});
   m+=`<div><div class="meta-label">技術標籤</div><div class="tag-wrap" style="margin-top:.6rem">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`;
   document.getElementById('d-meta').innerHTML=m;
-
   let c='';
   if(key==='pcb'){
     c+=`<h3>專題概述</h3><p>本專題完整實作手工 PCB 電路板的製作流程，從感光板裁切開始，依序經過紫外線曝光、顯影、化學蝕刻、精密鑽孔，最終完成元件焊接與電路測試，是對電子學實作能力的全面訓練。</p><h3>製作流程</h3>`;
-    p.steps.forEach(([n,t])=>{ c+=`<div class="step-row"><span class="step-num">${n}</span><span class="step-text">${t}</span></div>`; });
+    p.steps.forEach(([n,t])=>{c+=`<div class="step-row"><span class="step-num">${n}</span><span class="step-text">${t}</span></div>`;});
     c+=`<h3>實驗結果與反思</h3><p>${p.result}</p>`;
-  } else if(key==='led'){
+  }else if(key==='led'){
     c+=`<h3>電路說明</h3><p>${p.desc}</p><h3>元件清單</h3><table><thead><tr><th>類別</th><th>元件</th><th>規格</th><th>數量</th></tr></thead><tbody>`;
-    p.components.forEach(([a,b,cc,d])=>{ c+=`<tr><td>${a}</td><td>${b}</td><td>${cc}</td><td>${d}</td></tr>`; });
+    p.components.forEach(([a,b,cc,d])=>{c+=`<tr><td>${a}</td><td>${b}</td><td>${cc}</td><td>${d}</td></tr>`;});
     c+=`</tbody></table><h3>問題討論</h3><p>${p.problem}</p><h3>實作心得</h3><p>${p.reflection}</p>`;
-  } else {
-    p.sections.forEach(({h,p:t})=>{ c+=`<h3>${h}</h3><p>${t}</p>`; });
-  }
+  }else{p.sections.forEach(({h,p:t})=>{c+=`<h3>${h}</h3><p>${t}</p>`;});}
   document.getElementById('d-content').innerHTML=c;
-
   let s='';
   if(key==='ai'){
     s+=`<div class="scard"><div class="scard-title">模型 F1-Score 比較</div>${p.models.map(({name,score,best})=>`<div class="model-row${best?' best':''}"><span class="model-name">${name}</span><span class="model-score">${score}</span></div>`).join('')}</div>`;
     s+=`<div class="scard"><div class="scard-title">DenseNet121 各項指標</div>${p.bars.map(({label,val,pct})=>`<div class="bar-wrap"><div class="bar-header"><span>${label}</span><span>${val}</span></div><div class="bar-track"><div class="bar-fill" data-pct="${pct}"></div></div></div>`).join('')}</div>`;
     s+=`<div class="scard"><div class="scard-title">實驗環境</div>${p.env.map(([k,v])=>`<div class="erow"><span class="erow-k">${k}</span><span class="erow-v">${v}</span></div>`).join('')}</div>`;
-  } else {
+  }else{
     p.sidebar.forEach(card=>{
       s+=`<div class="scard"><div class="scard-title">${card.title}</div>`;
-      if(card.rows) card.rows.forEach(([k,v])=>{ s+=`<div class="erow"><span class="erow-k">${k}</span><span class="erow-v">${v}</span></div>`; });
-      if(card.note) s+=`<p class="scard-note">${card.note}</p>`;
+      if(card.rows)card.rows.forEach(([k,v])=>{s+=`<div class="erow"><span class="erow-k">${k}</span><span class="erow-v">${v}</span></div>`;});
+      if(card.note)s+=`<p class="scard-note">${card.note}</p>`;
       s+=`</div>`;
     });
   }
   document.getElementById('d-sidebar').innerHTML=s;
-
   document.getElementById('home-view').style.display='none';
   document.getElementById('detail-view').style.display='block';
   document.getElementById('nav-links').style.display='none';
   document.getElementById('nav-back').style.display='block';
   window.scrollTo(0,0);
-
-  if(key==='ai'){
-    setTimeout(()=>{
-      document.querySelectorAll('.bar-fill').forEach(el=>{
-        el.style.width=(parseFloat(el.dataset.pct)*100)+'%';
-      });
-    },150);
-  }
+  if(key==='ai'){setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(el=>{el.style.width=(parseFloat(el.dataset.pct)*100)+'%';});},150);}
 }
 
-window.addEventListener('load', () => {
-  const hash = window.location.hash;
-  if(hash && hash !== '#hero'){
-    const target = document.getElementById(hash.slice(1));
-    if(target) setTimeout(()=>target.scrollIntoView({behavior:'smooth'}), 100);
-  }
+const SKILLS = {
+  dl:{ico:"🤖",cat:"Deep Learning",title:["模型訓練 &","<em>深度學習</em>"],sub:"運用 PyTorch 框架訓練卷積神經網路，專注於醫療影像分類與模型最佳化研究，熟悉遷移學習與超參數調整流程。",meta:[{label:"主要框架",val:"PyTorch"},{label:"應用領域",val:"Medical Imaging · CV"},{label:"代表成果",val:"腦腫瘤 MRI 分類 F1 97.54%"}],sections:[{h:"學習歷程",p:"從大三修習機器學習課程開始接觸深度學習，大四畢業專題正式以 PyTorch 實作 ResNet50、DenseNet121、EfficientNetB0 三種架構，並透過三折交叉驗證與早停法系統性比較各模型效能。"},{h:"使用經驗",p:"熟悉完整的模型訓練流程，包含資料預處理、資料擴增、訓練迴圈設計、損失函數選擇與學習率調整。曾使用 Adam 優化器搭配 Cross Entropy Loss，並以 TensorBoard 可視化訓練過程。"},{h:"代表成果",p:"畢業專題中 DenseNet121 模型在四類腦腫瘤分類任務達到平均 F1-Score 97.54%，優於 ResNet50（96.42%）與 EfficientNetB0（96.98%），最終模型部署於 Streamlit 網頁平台。"}],sidebar:[{title:"技術棧",rows:[["框架","PyTorch"],["模型","ResNet50 · DenseNet121 · EfficientNetB0"],["優化器","Adam"],["損失函數","Cross Entropy Loss"],["可視化","TensorBoard"]]},{title:"硬體環境",rows:[["GPU","RTX 4060"],["CUDA","12.1"],["Python","3.8.8"]]}]},
+  prog:{ico:"⌨️",cat:"Programming",title:["多語言","<em>程式開發</em>"],sub:"以 Python 為主力語言，兼具 Java（Android）、MATLAB、JavaScript、C/C++ 等多語言開發經驗，能依據專案需求選擇適合工具。",meta:[{label:"主力語言",val:"Python"},{label:"其他語言",val:"Java · MATLAB · JS · C/C++"},{label:"開發環境",val:"VS Code · Android Studio"}],sections:[{h:"學習歷程",p:"從大一開始學習 C 語言基礎，大二接觸 MATLAB 用於信號處理課程，大三修習 Android 程式設計學習 Java，大四畢業專題全面轉向 Python 進行深度學習開發。"},{h:"使用經驗",p:"Python 主要用於資料處理、模型訓練與 Web 部署；Java 用於 Android App 開發；MATLAB 用於數位信號處理的卷積運算實作；C/C++ 用於 Arduino 韌體開發。"},{h:"開發習慣",p:"習慣使用 Git 進行版本控制，撰寫清晰的程式碼結構並加上適當註解。喜歡從需求出發設計架構，再逐步實作並測試。"}],sidebar:[{title:"語言熟練度",rows:[["Python","★★★★★"],["MATLAB","★★★★☆"],["Java","★★★☆☆"],["JavaScript","★★★☆☆"],["C / C++","★★★☆☆"]]},{title:"常用工具",rows:[["編輯器","VS Code"],["版控","Git / GitHub"],["筆記","Notion"]]}]},
+  data:{ico:"🧪",cat:"Data Science",title:["資料處理 &","<em>分析</em>"],sub:"熟悉資料清理、特徵工程與模型評估流程，曾在 Kaggle 資料集上進行實作，並運用交叉驗證確保模型泛化能力。",meta:[{label:"主要工具",val:"NumPy · Pandas"},{label:"評估方法",val:"3-Fold Cross Validation"},{label:"資料來源",val:"Kaggle Brain Tumor Dataset"}],sections:[{h:"學習歷程",p:"配合深度學習專題的需求，系統性學習資料前處理與評估方法。從 Kaggle 下載真實醫療影像資料集，進行類別平衡、影像 resize、資料擴增等前處理步驟。"},{h:"使用經驗",p:"熟悉使用 Pandas 進行表格資料處理，NumPy 處理矩陣運算，以及 Scikit-learn 的交叉驗證工具。曾處理 7,000+ 筆影像資料，並設計 1:1:1:1 類別平衡策略。"},{h:"模型評估",p:"熟悉 Accuracy、Precision、Recall、F1-Score 等指標，並以混淆矩陣分析各類別分類結果，確保模型在各類別間表現均衡。"}],sidebar:[{title:"工具",rows:[["數值運算","NumPy"],["表格處理","Pandas"],["驗證","Cross-Validation"],["資料集","Kaggle"]]},{title:"評估指標",rows:[["Accuracy","97.54%"],["Precision","97.56%"],["Recall","97.54%"],["F1-Score","97.54%"]]}]},
+  web:{ico:"🌐",cat:"Web / Platform",title:["應用部署 &","<em>平台開發</em>"],sub:"能將訓練完成的模型快速部署為可互動的網頁應用，以 Streamlit 為主要工具，熟悉 Flask REST API 設計與基本 Docker 容器化流程。",meta:[{label:"主要框架",val:"Streamlit"},{label:"其他工具",val:"Flask · REST API · Docker"},{label:"代表成果",val:"腦腫瘤分類網頁系統"}],sections:[{h:"學習歷程",p:"為了將畢業專題的深度學習模型提供給使用者操作，自學 Streamlit 快速建構互動式網頁介面，並學習如何整合 PyTorch 模型的推論流程。"},{h:"使用經驗",p:"使用 Streamlit 建立支援 MRI 影像上傳、即時分類預測與結果視覺化的網頁系統。介面包含模型選擇、影像預覽、預測機率顯示等功能模組。"},{h:"未來方向",p:"目前正在學習 Flask 與 REST API 設計，計畫將模型服務拆分為獨立的後端 API，並搭配前端框架實現更完整的應用架構。"}],sidebar:[{title:"工具",rows:[["UI 框架","Streamlit"],["後端","Flask"],["API","REST API"],["容器化","Docker"]]},{title:"已部署專案",rows:[["腦腫瘤分類","Streamlit App"],["影像上傳","支援 JPG/PNG"],["即時推論","DenseNet121"]]}]},
+  hw:{ico:"🔌",cat:"Hardware",title:["電路實作 &","<em>硬體開發</em>"],sub:"具備從電路設計到實體製作的完整硬體實作經驗，熟悉 Arduino 程式開發、PCB 手工製作流程及基本電子元件焊接技術。",meta:[{label:"主控板",val:"Arduino UNO"},{label:"設計工具",val:"EAGLE"},{label:"量測儀器",val:"示波器 · 三用電表"}],sections:[{h:"學習歷程",p:"大一透過自走車專題初次接觸 Arduino 與硬體整合，大三電子學課程系統性學習電路設計，並完成手工 PCB 製作與聲控 LED 旋律套件兩個實作專題。"},{h:"PCB 製作經驗",p:"完整走過感光板裁切、紫外線曝光、顯影、化學蝕刻、鑽孔、焊接的手工 PCB 製作全流程，並使用 Keysight EDUX1052A 示波器進行電路測試。"},{h:"EAGLE 設計",p:"使用 EAGLE 軟體完成聲控 LED 旋律套件的電路圖繪製與 PCB Layout，包含電容式麥克風偏壓電路、NPN 電晶體串級放大電路設計。"}],sidebar:[{title:"硬體工具",rows:[["微控制器","Arduino UNO"],["PCB 設計","EAGLE"],["焊接","手工焊接"],["量測","示波器 · 三用電表"]]},{title:"代表專題",rows:[["大一","藍芽遙控自走車"],["大三","PCB 電路板製作"],["大三","聲控 LED 旋律套件"]]}]},
+  tools:{ico:"☁️",cat:"Tools",title:["開發工具 &","<em>環境配置</em>"],sub:"熟悉現代軟體開發的常用工具鏈，從版本控制、GPU 加速運算到 Linux 環境操作，能獨立建置完整的開發與訓練環境。",meta:[{label:"版控",val:"Git / GitHub"},{label:"GPU",val:"CUDA 12.1 · RTX 4060"},{label:"系統",val:"Windows 11 · Linux"}],sections:[{h:"學習歷程",p:"從大三開始使用 Git 進行專題版本控制，大四配合深度學習訓練需求學習 CUDA 環境配置、Linux 指令操作，以及 TensorBoard 訓練視覺化工具。"},{h:"使用經驗",p:"熟悉 Git 基本操作（commit、branch、push、pull request），能在 GitHub 上管理專案程式碼。CUDA 12.1 搭配 RTX 4060 進行模型訓練，顯著縮短訓練時間。"},{h:"Linux 環境",p:"能在 Linux 環境下進行基本的檔案操作、套件管理（pip、conda）、遠端連線（SSH）與執行 Python 訓練腳本，具備基本的命令列工作能力。"}],sidebar:[{title:"工具清單",rows:[["版控","Git / GitHub"],["GPU 加速","CUDA 12.1"],["視覺化","TensorBoard"],["系統","Linux · Windows 11"],["套件管理","pip · conda"]]},{title:"開發環境",rows:[["編輯器","VS Code"],["GPU","RTX 4060"],["RAM","32 GB"]]}]}
+};
+
+function showSkill(key){
+  const s=SKILLS[key];
+  document.getElementById('sk-ico').textContent=s.ico;
+  document.getElementById('sk-cat').textContent=s.cat;
+  document.getElementById('sk-title').innerHTML=s.title[0]+'<br>'+s.title[1];
+  document.getElementById('sk-sub').textContent=s.sub;
+  let m='';s.meta.forEach(({label,val})=>{m+=`<div><div class="meta-label">${label}</div><div class="meta-val">${val}</div></div>`;});
+  document.getElementById('sk-meta').innerHTML=m;
+  let content='';s.sections.forEach(({h,p})=>{content+=`<h3>${h}</h3><p>${p}</p>`;});
+  document.getElementById('sk-content').innerHTML=content;
+  let sidebar='';
+  s.sidebar.forEach(card=>{
+    sidebar+=`<div class="scard"><div class="scard-title">${card.title}</div>`;
+    if(card.rows)card.rows.forEach(([k,v])=>{sidebar+=`<div class="erow"><span class="erow-k">${k}</span><span class="erow-v">${v}</span></div>`;});
+    if(card.note)sidebar+=`<p class="scard-note">${card.note}</p>`;
+    sidebar+=`</div>`;
+  });
+  document.getElementById('sk-sidebar').innerHTML=sidebar;
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('detail-view').style.display='none';
+  document.getElementById('skill-view').style.display='block';
+  document.getElementById('nav-links').style.display='none';
+  document.getElementById('nav-back').style.display='block';
+  document.getElementById('nav-back').onclick=showSkillBack;
+  window.scrollTo(0,0);
+}
+function showSkillBack(){
+  document.getElementById('home-view').style.display='block';
+  document.getElementById('skill-view').style.display='none';
+  document.getElementById('nav-links').style.display='flex';
+  document.getElementById('nav-back').style.display='none';
+  setTimeout(()=>{document.getElementById('skills').scrollIntoView({behavior:'smooth'});},50);
+}
+window.addEventListener('load',()=>{
+  const params=new URLSearchParams(window.location.search);
+  const projectKey=params.get('project');
+  const skillKey=params.get('skill');
+  if(projectKey&&PROJECTS[projectKey])showDetail(projectKey);
+  else if(skillKey&&SKILLS[skillKey])showSkill(skillKey);
 });
 </script>
 </body>
