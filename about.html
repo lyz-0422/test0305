@@ -22,14 +22,42 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 button{cursor:pointer}
 a{text-decoration:none;color:inherit}
 
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;backdrop-filter:blur(18px) saturate(1.5);background:rgba(250,247,242,.88);border-bottom:1px solid var(--bd);}
-.nav-left{display:flex;align-items:center;gap:2rem}
+/* ══════════════════════════════════
+   ✅ FlexBox: NAV
+   ══════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;              /* ✅ FlexBox */
+  justify-content:space-between;
+  align-items:center;
+  padding:1.2rem 3rem;
+  backdrop-filter:blur(18px) saturate(1.5);
+  background:rgba(250,247,242,.88);
+  border-bottom:1px solid var(--bd);
+  /* ✅ Animation: 頁面載入時從上方滑入 */
+  animation: navIn 0.5s ease forwards;
+}
+@keyframes navIn {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.nav-left{
+  display:flex;       /* ✅ FlexBox */
+  align-items:center;
+  gap:2rem;
+}
 .nav-logo{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;border:none;background:transparent;}
 .nav-home{font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;border:none;background:transparent;display:flex;align-items:center;gap:.4rem;transition:color .2s;text-decoration:none;}
 .nav-home:hover{color:var(--ac)}
 .nav-divider{width:1px;height:14px;background:var(--bd)}
-.nav-links{display:flex;gap:2.2rem;list-style:none}
+
+.nav-links{
+  display:flex;       /* ✅ FlexBox */
+  gap:2.2rem;
+  list-style:none;
+  align-items:center;
+}
 .nav-links button{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;border:none;background:transparent;position:relative;padding-bottom:2px;transition:color .2s;}
 .nav-links button::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .25s ease;}
 .nav-links button:hover{color:var(--ac)}
@@ -37,6 +65,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content
 .nav-back{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--ac);letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(181,101,29,.3);background:transparent;padding:.35rem .9rem;display:none;transition:background .2s;}
 .nav-back:hover{background:var(--as)}
 
+/* 漢堡選單（手機） */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: transparent;
+  border: none;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--tm);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* views */
 #home-view{display:block;position:relative;z-index:1}
 #detail-view{display:none;position:relative;z-index:1}
 
@@ -47,76 +95,216 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content
 .sec-label::before{content:'';display:inline-block;width:28px;height:1px;background:var(--ac);opacity:.6;}
 .sec-label::after{content:'';display:inline-block;flex:0 0 1px;height:28px;background:var(--bd);margin-left:.5rem;}
 
-/* ── HERO ── */
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
-.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--tm);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.4rem;}
-.hero-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.8rem,5.5vw,4.5rem);line-height:1.05;margin-bottom:1.4rem;letter-spacing:.01em;}
+/* ══════════════════════════════════
+   ✅ FlexBox + Animation: HERO
+   ══════════════════════════════════ */
+.hero-grid{
+  display:grid;   /* ✅ Grid: 兩欄英雄區 */
+  grid-template-columns:1fr 1fr;
+  gap:5rem;
+  align-items:center;
+}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--tm);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.4rem;
+  /* ✅ Animation: 進場 */
+  opacity:0; animation: fadeUp .6s .1s ease forwards;
+}
+.hero-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.8rem,5.5vw,4.5rem);line-height:1.05;margin-bottom:1.4rem;letter-spacing:.01em;
+  opacity:0; animation: fadeUp .7s .25s ease forwards;
+}
 .hero-h1 em{font-style:italic;color:var(--ac);font-weight:400}
-.hero-p{font-size:.92rem;color:var(--ts);max-width:380px;line-height:1.95;margin-bottom:2.5rem;}
-.hero-cta{display:inline-flex;align-items:center;gap:.75rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tp);border:1px solid var(--bd2);padding:.82rem 1.6rem;background:transparent;transition:background .2s,border-color .2s;}
-.hero-cta:hover{background:var(--sf);border-color:var(--bd2)}
-.hero-card{background:var(--bg2);border:1px solid var(--bd);padding:2.4rem;position:relative;box-shadow:4px 4px 0 var(--bd);}
+.hero-p{font-size:.92rem;color:var(--ts);max-width:380px;line-height:1.95;margin-bottom:2.5rem;
+  opacity:0; animation: fadeUp .7s .4s ease forwards;
+}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:.75rem;
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--tp);border:1px solid var(--bd2);padding:.82rem 1.6rem;background:transparent;
+  transition:background .2s,border-color .2s,transform .2s;
+  opacity:0; animation: fadeUp .7s .55s ease forwards;
+}
+.hero-cta:hover{background:var(--sf);border-color:var(--bd2);transform:translateY(-2px);}
+
+.hero-card{
+  background:var(--bg2);border:1px solid var(--bd);padding:2.4rem;position:relative;box-shadow:4px 4px 0 var(--bd);
+  opacity:0; animation: fadeUp .8s .35s ease forwards;
+  /* ✅ Animation: hover 時輕微上浮 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 6px 8px 0 var(--bd);
+}
 .hero-card::before{content:'';position:absolute;top:12px;right:12px;width:32px;height:32px;border-top:1px solid var(--bd2);border-right:1px solid var(--bd2);}
 .hero-card::after{content:'';position:absolute;bottom:12px;left:12px;width:32px;height:32px;border-bottom:1px solid var(--bd2);border-left:1px solid var(--bd2);}
-.hero-status{display:flex;align-items:center;gap:.65rem;margin-bottom:1.8rem;}
-.hero-dot{width:7px;height:7px;border-radius:50%;background:#6dbf7e;box-shadow:0 0 0 3px rgba(109,191,126,.18),0 0 10px rgba(109,191,126,.4);}
+
+/* ✅ FlexBox: hero-status 橫排 */
+.hero-status{
+  display:flex;
+  align-items:center;
+  gap:.65rem;
+  margin-bottom:1.8rem;
+}
+.hero-dot{width:7px;height:7px;border-radius:50%;background:#6dbf7e;box-shadow:0 0 0 3px rgba(109,191,126,.18),0 0 10px rgba(109,191,126,.4);
+  /* ✅ Animation: 呼吸動畫 */
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(109,191,126,.18), 0 0 10px rgba(109,191,126,.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(109,191,126,.25), 0 0 18px rgba(109,191,126,.6); }
+}
 .hero-status span{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--tm);letter-spacing:.1em;}
 .hero-name{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;margin-bottom:.4rem;}
 .hero-role{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--ac);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.8rem;}
-.tag-wrap{display:flex;flex-wrap:wrap;gap:.45rem}
+
+/* ✅ FlexBox: tag 橫排換行 */
+.tag-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45rem;
+}
 .tag{font-family:'DM Mono',monospace;font-size:.6rem;padding:.22rem .65rem;border:1px solid var(--bd);color:var(--ts);background:rgba(255,255,255,.5);letter-spacing:.06em;}
 .hero-divider{height:1px;background:var(--bd);margin:1.8rem 0;}
-.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* ✅ Grid: hero stats 2欄 */
+.hero-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+}
 .stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--ac);line-height:1;}
 .stat-label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--tm);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;}
 
 /* ── ABOUT ── */
-.about-grid{display:grid;grid-template-columns:1fr 2fr;gap:5rem;align-items:start;}
+/* ✅ Grid: about 兩欄 */
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 2fr;
+  gap:5rem;
+  align-items:start;
+}
 .about-h2{font-family:'Playfair Display',serif;font-size:3rem;font-weight:300;line-height:1.1;}
 .about-h2 em{font-style:italic;color:var(--ac);font-weight:400}
 .about-p{font-size:.92rem;color:var(--ts);line-height:1.95;margin-bottom:1.4rem;}
 .hl{display:inline;background:var(--as);border-bottom:1px solid rgba(181,101,29,.4);padding:.05em .3em;}
 
-/* ── SKILLS ── */
+/* ══════════════════════════════════
+   ✅ Grid: SKILLS SECTION
+   ══════════════════════════════════ */
 .skills-h2{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:300;margin-bottom:3rem;line-height:1.15;}
-.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);}
-.skill-card{background:var(--bg);padding:2rem;transition:background .2s;color:inherit;display:block;cursor:pointer;position:relative;}
-.skill-card:hover{background:var(--bg2)}
-.skill-ico{font-size:1.3rem;margin-bottom:1rem;display:block;}
+
+/* ✅ Grid: 技能卡片 3欄自動排列 */
+.skills-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);   /* ✅ Grid */
+  gap:1px;
+  background:var(--bd);
+  border:1px solid var(--bd);
+}
+
+.skill-card{
+  background:var(--bg);padding:2rem;color:inherit;display:block;cursor:pointer;position:relative;
+  /* ✅ Animation: hover 過渡 */
+  transition:background .2s, transform .25s ease, box-shadow .25s ease;
+}
+.skill-card:hover{
+  background:var(--bg2);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(107,76,50,.1);
+  z-index: 2;
+}
+.skill-ico{font-size:1.3rem;margin-bottom:1rem;display:block;
+  /* ✅ Animation: icon hover 放大 */
+  transition: transform 0.3s ease;
+}
+.skill-card:hover .skill-ico { transform: scale(1.2); }
+
 .skill-cat{font-family:'DM Mono',monospace;font-size:.59rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ac);margin-bottom:.5rem;}
 .skill-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;margin-bottom:.8rem;}
 .pill{font-family:'DM Mono',monospace;font-size:.59rem;padding:.2rem .6rem;background:var(--as);color:var(--ac);border:1px solid rgba(181,101,29,.2);}
 
-/* ── EXT LINKS (hover reveal) ── */
-.ext-links{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--bd);opacity:0;max-height:0;overflow:hidden;transition:opacity .25s,max-height .3s ease;pointer-events:none;}
+/* ✅ FlexBox: ext-links hover 顯示 */
+.ext-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.4rem;
+  margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--bd);
+  opacity:0;max-height:0;overflow:hidden;
+  transition:opacity .25s,max-height .3s ease;
+  pointer-events:none;
+}
 .skill-card:hover .ext-links{opacity:1;max-height:100px;pointer-events:auto;}
 .ext-btn{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--tm);letter-spacing:.06em;border:1px solid var(--bd);padding:.18rem .55rem;text-decoration:none;background:transparent;transition:color .2s,border-color .2s,background .2s;display:inline-block;}
 .ext-btn:hover{color:var(--ac);border-color:var(--ac);background:var(--as)}
 
-/* ── PROJECTS ── */
+/* ══════════════════════════════════
+   ✅ FlexBox: PROJECTS LIST
+   ══════════════════════════════════ */
 .proj-h2{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:300;margin-bottom:3rem;line-height:1.15;}
 .proj-list{display:flex;flex-direction:column;gap:0;background:var(--bd);border:1px solid var(--bd);}
-.proj-row{background:var(--bg);padding:1.6rem 2.2rem;display:grid;grid-template-columns:auto 1fr auto auto;gap:2.2rem;align-items:center;border:none;width:100%;text-align:left;border-bottom:1px solid var(--bd);transition:background .2s;}
+
+.proj-row{
+  background:var(--bg);padding:1.6rem 2.2rem;
+  display:grid;          /* ✅ Grid: 每行分欄 */
+  grid-template-columns:auto 1fr auto auto;
+  gap:2.2rem;align-items:center;
+  border:none;width:100%;text-align:left;
+  border-bottom:1px solid var(--bd);
+  /* ✅ Animation: hover 過渡 */
+  transition:background .2s, transform .15s ease;
+  position:relative;
+}
 .proj-row:last-child{border-bottom:none}
-.proj-row:hover{background:var(--bg2)}
+.proj-row:hover{background:var(--bg2); transform: translateX(4px);}
 .proj-n{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);letter-spacing:.1em;min-width:28px;}
 .proj-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:400;margin-bottom:.3rem;}
 .proj-desc{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--tm);line-height:1.6;}
-.proj-tags{display:flex;gap:.45rem;flex-wrap:wrap}
+
+/* ✅ FlexBox: proj-tags 橫排 */
+.proj-tags{
+  display:flex;
+  gap:.45rem;
+  flex-wrap:wrap;
+}
 .proj-tag{font-family:'DM Mono',monospace;font-size:.58rem;padding:.2rem .6rem;border:1px solid var(--bd);color:var(--ts);background:transparent;}
-.proj-arrow{font-size:1rem;color:var(--tm);transition:color .2s,transform .2s;}
+
+.proj-arrow{font-size:1rem;color:var(--tm);
+  transition:color .2s,transform .2s;
+}
 .proj-row:hover .proj-arrow{color:var(--ac);transform:translate(2px,-2px)}
-.proj-year{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem;}
+
+.proj-year{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:.35rem;
+  display:flex;align-items:center;gap:.4rem;
+}
 .proj-year::before{content:'';width:16px;height:1px;background:var(--ac);opacity:.5;}
 
 /* ── CONTACT ── */
 .contact-h2{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:300;margin-bottom:1rem;}
 .contact-h2 em{font-style:italic;color:var(--ac);font-weight:400}
 .contact-p{font-size:.9rem;color:var(--ts);line-height:1.9;margin-bottom:3rem;}
-.contact-list{display:flex;flex-direction:column;gap:.8rem}
-.contact-link{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border:1px solid var(--bd);color:var(--tp);transition:background .2s,border-color .2s;background:var(--bg);}
-.contact-link:hover{background:var(--bg2);border-color:var(--bd2)}
-.contact-left{display:flex;align-items:center;gap:1.1rem}
+
+/* ✅ FlexBox: contact list */
+.contact-list{
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+}
+.contact-link{
+  display:flex;             /* ✅ FlexBox */
+  align-items:center;
+  justify-content:space-between;
+  padding:1.2rem 1.5rem;
+  border:1px solid var(--bd);color:var(--tp);
+  transition:background .2s,border-color .2s,transform .2s;
+  background:var(--bg);
+}
+.contact-link:hover{background:var(--bg2);border-color:var(--bd2); transform: translateX(6px);}
+
+/* ✅ FlexBox: contact-left 橫排 */
+.contact-left{
+  display:flex;
+  align-items:center;
+  gap:1.1rem;
+}
 .contact-ico{width:38px;height:38px;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .2s,background .2s;}
 .contact-link:hover .contact-ico{border-color:var(--ac);background:var(--as)}
 .contact-ico svg{width:17px;height:17px;fill:var(--tm);transition:fill .2s}
@@ -127,15 +315,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content
 .contact-link:hover .contact-arrow{color:var(--ac);transform:translate(3px,-3px)}
 
 /* ── FOOTER ── */
-footer{border-top:1px solid var(--bd);padding:1.8rem 3rem;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+footer{
+  border-top:1px solid var(--bd);padding:1.8rem 3rem;
+  max-width:1100px;margin:0 auto;
+  display:flex;            /* ✅ FlexBox */
+  justify-content:space-between;
+  align-items:center;
+  position:relative;z-index:1;
+}
 footer span{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);}
 .footer-ornament{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--bd2);letter-spacing:.3em;}
 
-/* ── DETAIL ── */
+/* ── DETAIL VIEW ── */
 .detail-inner{max-width:1100px;margin:0 auto;padding:100px 3rem 80px;}
 .detail-back-btn{display:inline-flex;align-items:center;gap:.6rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);border:none;background:transparent;margin-bottom:3rem;transition:color .2s;padding:0;}
 .detail-back-btn:hover{color:var(--ac)}
-.detail-header{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:start;margin-bottom:4rem;border-bottom:1px solid var(--bd);padding-bottom:3rem;}
+
+/* ✅ Grid: detail header 兩欄 */
+.detail-header{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:3rem;align-items:start;
+  margin-bottom:4rem;border-bottom:1px solid var(--bd);padding-bottom:3rem;
+}
 .detail-num{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--ac);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
 .detail-num::before{content:'';width:24px;height:1px;background:var(--ac);opacity:.7;}
 .detail-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2rem,4vw,3.2rem);line-height:1.1;margin-bottom:1.2rem;}
@@ -144,7 +346,13 @@ footer span{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);}
 .detail-meta{display:flex;flex-direction:column;gap:1.2rem;min-width:200px;}
 .meta-label{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tm);margin-bottom:.3rem;}
 .meta-val{font-size:.84rem;line-height:1.5}
-.detail-body{display:grid;grid-template-columns:2fr 1fr;gap:4rem;}
+
+/* ✅ Grid: detail body 兩欄 */
+.detail-body{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:4rem;
+}
 .detail-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;margin:2rem 0 .9rem;color:var(--tp);position:relative;padding-bottom:.6rem;}
 .detail-content h3::after{content:'';position:absolute;bottom:0;left:0;width:32px;height:1px;background:var(--ac);opacity:.6;}
 .detail-content p{font-size:.9rem;color:var(--ts);line-height:1.95;margin-bottom:1.2rem;}
@@ -155,7 +363,8 @@ table{width:100%;border-collapse:collapse;margin-bottom:1.4rem}
 th{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);text-align:left;padding:.55rem .8rem;border-bottom:2px solid var(--bd);}
 td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid var(--bd);}
 .sidebar{display:flex;flex-direction:column;gap:1.4rem}
-.scard{background:var(--bg2);border:1px solid var(--bd);padding:1.4rem;position:relative;}
+.scard{background:var(--bg2);border:1px solid var(--bd);padding:1.4rem;position:relative;transition:transform .2s;}
+.scard:hover{transform:translateY(-2px);}
 .scard::before{content:'';position:absolute;top:8px;right:8px;width:20px;height:20px;border-top:1px solid var(--bd2);border-right:1px solid var(--bd2);}
 .scard-title{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ac);margin-bottom:1rem;}
 .erow{display:flex;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--bd);}
@@ -171,24 +380,146 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
 .bar-wrap{margin-bottom:.9rem}
 .bar-header{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.59rem;color:var(--tm);margin-bottom:.35rem;}
 .bar-track{height:3px;background:var(--bd);border-radius:2px;overflow:hidden;}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:2px;width:0;transition:width 1.3s cubic-bezier(.22,.68,0,1.1);}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:2px;width:0;
+  /* ✅ Animation: 進度條展開 */
+  transition:width 1.3s cubic-bezier(.22,.68,0,1.1);
+}
 
-/* ── SKILL DETAIL ── */
+/* ── SKILL DETAIL VIEW ── */
 #skill-view{display:none;position:relative;z-index:1}
 .skill-detail-inner{max-width:1100px;margin:0 auto;padding:100px 3rem 80px}
 .skill-back-btn{display:inline-flex;align-items:center;gap:.6rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);border:none;background:transparent;margin-bottom:3rem;transition:color .2s;padding:0;cursor:pointer;}
 .skill-back-btn:hover{color:var(--ac)}
-.skill-detail-header{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:start;margin-bottom:4rem;border-bottom:1px solid var(--bd);padding-bottom:3rem;}
-.skill-detail-ico{font-size:2.5rem;margin-bottom:1rem;display:block}
+
+/* ✅ Grid: skill-detail header 兩欄 */
+.skill-detail-header{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:3rem;align-items:start;
+  margin-bottom:4rem;border-bottom:1px solid var(--bd);padding-bottom:3rem;
+}
+.skill-detail-ico{font-size:2.5rem;margin-bottom:1rem;display:block;
+  transition: transform .3s ease;
+}
+.skill-detail-ico:hover { transform: scale(1.2) rotate(-5deg); }
+
 .skill-detail-cat{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--ac);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
 .skill-detail-cat::before{content:'';width:24px;height:1px;background:var(--ac);opacity:.7}
 .skill-detail-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2rem,4vw,3.2rem);line-height:1.1;margin-bottom:1.2rem;}
 .skill-detail-h1 em{font-style:italic;color:var(--ac)}
 .skill-detail-sub{font-size:.92rem;color:var(--ts);line-height:1.85;max-width:520px}
-.skill-detail-body{display:grid;grid-template-columns:2fr 1fr;gap:4rem}
+
+/* ✅ Grid: skill-detail body 兩欄 */
+.skill-detail-body{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:4rem;
+}
 .skill-detail-content h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;margin:2rem 0 .9rem;position:relative;padding-bottom:.6rem;}
 .skill-detail-content h3::after{content:'';position:absolute;bottom:0;left:0;width:32px;height:1px;background:var(--ac);opacity:.6;}
 .skill-detail-content p{font-size:.9rem;color:var(--ts);line-height:1.95;margin-bottom:1.2rem}
+
+/* ══════════════════════════════════
+   ✅ Animation: scroll 進場動畫
+   ══════════════════════════════════ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+/* 用 JS + IntersectionObserver 觸發這個 class */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════
+   ✅ RWD: Responsive Web Design
+   ══════════════════════════════════ */
+
+/* 平板（≤ 1024px）：Grid 欄數縮減 */
+@media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;   /* ✅ Grid: 單欄 */
+    gap: 3rem;
+  }
+  .about-grid {
+    grid-template-columns: 1fr;   /* ✅ Grid: 單欄 */
+    gap: 2rem;
+  }
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);  /* ✅ Grid: 2欄 */
+  }
+  .detail-body,
+  .skill-detail-body {
+    grid-template-columns: 1fr;   /* ✅ Grid: 單欄 */
+    gap: 2rem;
+  }
+  .detail-header,
+  .skill-detail-header {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* 手機（≤ 640px） */
+@media (max-width: 640px) {
+  /* Nav */
+  nav { padding: 1rem 1.5rem; flex-wrap: wrap; }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    padding: 1rem 0 0.5rem;
+    border-top: 1px solid var(--bd);
+    margin-top: 0.8rem;
+  }
+  .nav-links.open { display: flex; }   /* JS 切換 */
+  .nav-hamburger { display: flex; }
+
+  /* Sections */
+  .sec { padding: 80px 1.5rem 60px; }
+
+  /* ✅ Grid: 技能卡片在手機為單欄 */
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ✅ Grid: 專題列改為較簡單的欄位 */
+  .proj-row {
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+  }
+  .proj-tags { display: none; }   /* 手機隱藏 tags，保持簡潔 */
+  .proj-arrow { display: none; }
+
+  /* Hero */
+  .hero-h1 { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+
+  /* About */
+  .about-h2 { font-size: 2rem; }
+
+  /* Contact */
+  .contact-h2 { font-size: 2rem; }
+
+  /* Footer */
+  footer {
+    flex-direction: column;   /* ✅ FlexBox: 手機垂直排列 */
+    gap: 0.8rem;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  /* Detail 頁面 */
+  .detail-inner,
+  .skill-detail-inner { padding: 80px 1.5rem 60px; }
+}
 </style>
 </head>
 <body>
@@ -199,6 +530,9 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
     <div class="nav-divider"></div>
     <a class="nav-home" href="index.html">← Home</a>
   </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="選單">
+    <span></span><span></span><span></span>
+  </button>
   <ul class="nav-links" id="nav-links">
     <li><button onclick="goTo('about')">about</button></li>
     <li><button onclick="goTo('skills')">skills</button></li>
@@ -240,7 +574,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
   <!-- ABOUT -->
   <div class="sec sec-border" id="about">
     <div class="sec-label">01 — About</div>
-    <div class="about-grid">
+    <div class="about-grid reveal">
       <h2 class="about-h2">Who<br>am<br><em>I?</em></h2>
       <div>
         <p class="about-p">我目前就讀於 <span class="hl">中原大學電機工程學系</span>，在此之前完成了 <span class="hl">逢甲大學通訊工程學系</span> 的學業，並在畢業專題中深入研究深度學習應用於醫療影像分類的課題。</p>
@@ -255,7 +589,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
     <div class="sec-label">02 — Skills</div>
     <h2 class="skills-h2">What I<br>work with</h2>
     <div class="skills-grid">
-      <div class="skill-card" onclick="showSkill('dl')">
+      <div class="skill-card reveal" onclick="showSkill('dl')">
         <span class="skill-ico">🤖</span>
         <div class="skill-cat">Deep Learning</div>
         <div class="skill-name">模型訓練</div>
@@ -265,7 +599,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
           <a class="ext-btn" href="https://pytorch.org/vision/stable/models.html" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">TorchVision ↗</a>
         </div>
       </div>
-      <div class="skill-card" onclick="showSkill('prog')">
+      <div class="skill-card reveal" onclick="showSkill('prog')">
         <span class="skill-ico">⌨️</span>
         <div class="skill-cat">Programming</div>
         <div class="skill-name">程式開發</div>
@@ -278,7 +612,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
           <a class="ext-btn" href="https://en.cppreference.com/w/" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">C / C++ ↗</a>
         </div>
       </div>
-      <div class="skill-card" onclick="showSkill('data')">
+      <div class="skill-card reveal" onclick="showSkill('data')">
         <span class="skill-ico">🧪</span>
         <div class="skill-cat">Data Science</div>
         <div class="skill-name">資料處理</div>
@@ -290,7 +624,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
           <a class="ext-btn" href="https://scikit-learn.org/stable/modules/cross_validation.html" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Cross-Val ↗</a>
         </div>
       </div>
-      <div class="skill-card" onclick="showSkill('web')">
+      <div class="skill-card reveal" onclick="showSkill('web')">
         <span class="skill-ico">🌐</span>
         <div class="skill-cat">Web / Platform</div>
         <div class="skill-name">應用部署</div>
@@ -301,7 +635,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
           <a class="ext-btn" href="https://docs.docker.com" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">Docker ↗</a>
         </div>
       </div>
-      <div class="skill-card" onclick="showSkill('hw')">
+      <div class="skill-card reveal" onclick="showSkill('hw')">
         <span class="skill-ico">🔌</span>
         <div class="skill-cat">Hardware</div>
         <div class="skill-name">電路實作</div>
@@ -311,7 +645,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
           <a class="ext-btn" href="https://www.autodesk.com/products/eagle/overview" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">EAGLE ↗</a>
         </div>
       </div>
-      <div class="skill-card" onclick="showSkill('tools')">
+      <div class="skill-card reveal" onclick="showSkill('tools')">
         <span class="skill-ico">☁️</span>
         <div class="skill-cat">Tools</div>
         <div class="skill-name">開發工具</div>
@@ -330,37 +664,37 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
     <div class="sec-label">03 — Projects</div>
     <h2 class="proj-h2">Selected<br>Work</h2>
     <div class="proj-list">
-      <button class="proj-row" onclick="showDetail('car')">
+      <button class="proj-row reveal" onclick="showDetail('car')">
         <span class="proj-n">01</span>
         <div><div class="proj-year">大一 · Freshman Project</div><div class="proj-title">藍芽遙控自走車</div><div class="proj-desc">逢甲大學通訊工程系 大一專題 · Arduino × 藍芽 × App Inventor 硬體整合實作</div></div>
         <div class="proj-tags"><span class="proj-tag">Arduino</span><span class="proj-tag">藍芽</span><span class="proj-tag">App Inventor</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-      <button class="proj-row" onclick="showDetail('conv')">
+      <button class="proj-row reveal" onclick="showDetail('conv')">
         <span class="proj-n">02</span>
         <div><div class="proj-year">大三 · 數位信號處理</div><div class="proj-title">卷積的三種實現方式</div><div class="proj-desc">逢甲大學通訊工程系 · 線性卷積、循環卷積、FFT 頻域卷積 MATLAB 實作比較</div></div>
         <div class="proj-tags"><span class="proj-tag">MATLAB</span><span class="proj-tag">FFT</span><span class="proj-tag">信號處理</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-      <button class="proj-row" onclick="showDetail('android')">
+      <button class="proj-row reveal" onclick="showDetail('android')">
         <span class="proj-n">03</span>
         <div><div class="proj-year">大三 · Android 程式設計</div><div class="proj-title">Android 程式設計 Final Exam</div><div class="proj-desc">逢甲大學通訊工程系 · 以 SEVENTEEN 為主題開發 Android 追星 App</div></div>
         <div class="proj-tags"><span class="proj-tag">Android</span><span class="proj-tag">Java</span><span class="proj-tag">ListView</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-      <button class="proj-row" onclick="showDetail('pcb')">
+      <button class="proj-row reveal" onclick="showDetail('pcb')">
         <span class="proj-n">04</span>
         <div><div class="proj-year">大三 · 電子學</div><div class="proj-title">PCB 電路板製作</div><div class="proj-desc">逢甲大學電子學 期末專題 · 手工 PCB 製作全流程實作</div></div>
         <div class="proj-tags"><span class="proj-tag">PCB</span><span class="proj-tag">蝕刻</span><span class="proj-tag">焊接</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-      <button class="proj-row" onclick="showDetail('led')">
+      <button class="proj-row reveal" onclick="showDetail('led')">
         <span class="proj-n">05</span>
         <div><div class="proj-year">大三 · 電子學</div><div class="proj-title">聲控 LED 旋律套件</div><div class="proj-desc">逢甲大學電子學 期末小專題 · 聲頻放大電路與 LED 驅動實作</div></div>
         <div class="proj-tags"><span class="proj-tag">Electronics</span><span class="proj-tag">EAGLE</span><span class="proj-tag">Soldering</span></div>
         <span class="proj-arrow">↗</span>
       </button>
-      <button class="proj-row" onclick="showDetail('ai')">
+      <button class="proj-row reveal" onclick="showDetail('ai')">
         <span class="proj-n">06</span>
         <div><div class="proj-year">大四 · 畢業專題</div><div class="proj-title">腦腫瘤 MRI 影像分類系統</div><div class="proj-desc">逢甲大學通訊工程系畢業專題 · 三種深度學習模型最佳化研究</div></div>
         <div class="proj-tags"><span class="proj-tag">PyTorch</span><span class="proj-tag">DenseNet121</span><span class="proj-tag">Streamlit</span></div>
@@ -375,38 +709,30 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
     <h2 class="contact-h2">Let's<br><em>Connect</em></h2>
     <p class="contact-p">不管是合作機會、實習詢問，還是想聊聊 AI 與技術，都歡迎聯繫我。</p>
     <div class="contact-list">
-      <a class="contact-link" href="mailto:zoe920422@gmail.com">
+      <a class="contact-link reveal" href="mailto:zoe920422@gmail.com">
         <div class="contact-left">
-          <div class="contact-ico">
-            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-          </div>
+          <div class="contact-ico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
           <div><div class="contact-platform">Email</div><div class="contact-handle">zoe920422@gmail.com</div></div>
         </div>
         <span class="contact-arrow">↗</span>
       </a>
-      <a class="contact-link" href="https://github.com/lyz-0422" target="_blank" rel="noreferrer">
+      <a class="contact-link reveal" href="https://github.com/lyz-0422" target="_blank" rel="noreferrer">
         <div class="contact-left">
-          <div class="contact-ico">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
-          </div>
+          <div class="contact-ico"><svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg></div>
           <div><div class="contact-platform">GitHub</div><div class="contact-handle">@lyz-0422</div></div>
         </div>
         <span class="contact-arrow">↗</span>
       </a>
-      <a class="contact-link" href="https://www.instagram.com/lyzzz_0422/" target="_blank" rel="noreferrer">
+      <a class="contact-link reveal" href="https://www.instagram.com/lyzzz_0422/" target="_blank" rel="noreferrer">
         <div class="contact-left">
-          <div class="contact-ico">
-            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </div>
+          <div class="contact-ico"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
           <div><div class="contact-platform">Instagram</div><div class="contact-handle">@lyzzz_0422</div></div>
         </div>
         <span class="contact-arrow">↗</span>
       </a>
-      <a class="contact-link" href="https://www.threads.com/@lyzzz_0422" target="_blank" rel="noreferrer">
+      <a class="contact-link reveal" href="https://www.threads.com/@lyzzz_0422" target="_blank" rel="noreferrer">
         <div class="contact-left">
-          <div class="contact-ico">
-            <svg viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 012.62.187v-.228c0-.98-.31-1.766-.919-2.335-.588-.548-1.434-.82-2.511-.81-1.056.01-1.9.296-2.51.851-.303.27-.546.62-.714 1.024l-1.99-.418c.265-.838.736-1.575 1.392-2.163.958-.854 2.239-1.295 3.812-1.309 1.744-.016 3.126.476 4.108 1.461.95.952 1.444 2.302 1.444 3.902v.205c.345.138.672.299.975.485 1.14.683 1.985 1.661 2.444 2.716.76 1.745.84 4.57-1.44 6.787-1.916 1.877-4.248 2.685-7.562 2.707zm.568-9.716c-.134 0-.27.004-.405.012-1.034.059-1.874.37-2.435.875-.484.426-.724.983-.693 1.567.028.526.318 1.133 1.012 1.567.57.37 1.309.555 2.035.515 1.148-.063 1.994-.5 2.515-1.297.47-.728.685-1.726.64-3.007a11.98 11.98 0 00-2.669-.232z"/></svg>
-          </div>
+          <div class="contact-ico"><svg viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 012.62.187v-.228c0-.98-.31-1.766-.919-2.335-.588-.548-1.434-.82-2.511-.81-1.056.01-1.9.296-2.51.851-.303.27-.546.62-.714 1.024l-1.99-.418c.265-.838.736-1.575 1.392-2.163.958-.854 2.239-1.295 3.812-1.309 1.744-.016 3.126.476 4.108 1.461.95.952 1.444 2.302 1.444 3.902v.205c.345.138.672.299.975.485 1.14.683 1.985 1.661 2.444 2.716.76 1.745.84 4.57-1.44 6.787-1.916 1.877-4.248 2.685-7.562 2.707zm.568-9.716c-.134 0-.27.004-.405.012-1.034.059-1.874.37-2.435.875-.484.426-.724.983-.693 1.567.028.526.318 1.133 1.012 1.567.57.37 1.309.555 2.035.515 1.148-.063 1.994-.5 2.515-1.297.47-.728.685-1.726.64-3.007a11.98 11.98 0 00-2.669-.232z"/></svg></div>
           <div><div class="contact-platform">Threads</div><div class="contact-handle">@lyzzz_0422</div></div>
         </div>
         <span class="contact-arrow">↗</span>
@@ -462,111 +788,43 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
 
 
 <script>
+/* ══════════════════════════
+   ✅ Animation: Scroll 進場動畫
+   IntersectionObserver 讓元素捲動進入視窗時才顯示
+   ══════════════════════════ */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      // 依序延遲，製造交錯進場效果
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, i * 80);
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ══════════════════════════
+   漢堡選單（手機）
+   ══════════════════════════ */
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+hamburger.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+
+/* ══════════════════════════
+   原有 JS 邏輯
+   ══════════════════════════ */
 const PROJECTS = {
-  car: {
-    num:"Project 01 · 逢甲大學通訊工程系 大一專題",
-    title:["藍芽遙控","自走車"],
-    sub:"以 Arduino UNO 搭配藍芽模組（HC-05）與 L298N 馬達驅動板，透過 App Inventor 開發手機遙控介面，實現前進、後退、左轉、右轉及停止功能。",
-    tags:["Arduino","HC-05 藍芽","L298N","App Inventor","C / C++"],
-    meta:[{label:"學校 / 課程",val:"逢甲大學通訊工程系 · 大一專題"},{label:"組別",val:"第 14 組"},{label:"組員",val:"張宜翔、呂尹筑、林嵩庭、王漢宇、蕭廷育、龔元俊"}],
-    sections:[
-      {h:"專題目標",p:"學會以電腦撰寫 Arduino 程式，並使用 Arduino 連接馬達、藍芽及手機，訓練團隊分工與溝通協調的能力，最終與組員合作製作出能透過藍芽遙控操控的自走車。"},
-      {h:"軟體架構",p:"Arduino 端透過 SoftwareSerial 函式庫讀取藍芽模組傳來的指令字元，以 if/else if 判斷後呼叫對應的馬達控制函式（m_front、m_back、m_stop、m_right、m_left）。手機端使用 App Inventor 拼圖式程式設計，建立藍芽連線後，按下方向按鈕即發送對應數字字元（8:前、2:後、5:停、4:右、6:左）至 Arduino。"},
-      {h:"硬體架構",p:"硬體核心為 Arduino UNO，搭配 L298N 馬達驅動板控制左右兩組直流馬達（ML1/ML2、MR1/MR2），HC-05 藍芽模組負責無線通訊，整體由電池供電。"},
-      {h:"實作心得",p:"這次專題不僅讓我們認識更多的硬體設備及其架構、學習手機軟體的開發和程式設計，並且最重要的是學會與同組成員間的合作討論，最後共同整合出一台能透過藍芽連接操控的遙控車。儘管過程中遇上重重困難，在組員們的帶領下逐步完成了此次專題。"},
-    ],
-    sidebar:[
-      {title:"硬體元件",rows:[["主控板","Arduino UNO"],["藍芽模組","HC-05"],["馬達驅動","L298N"],["馬達","直流馬達 ×4"],["電源","電池組"]]},
-      {title:"指令對照表",rows:[["'8'","前進"],["'2'","後退"],["'5'","停止"],["'4'","右轉"],["'6'","左轉"]]},
-      {title:"開發工具",rows:[["韌體","Arduino IDE"],["手機 App","App Inventor"],["語言","C / C++"]]},
-    ]
-  },
-  conv: {
-    num:"Project 02 · 逢甲大學通訊工程系 數位信號處理",
-    title:["卷積的三種","實現方式"],
-    sub:"以 MATLAB 實作並比較線性卷積（時域直接法）、循環卷積（時域補零法）、傅立葉轉換（FFT 頻域法）三種卷積運算方式，透過兩道練習題驗證結果一致性。",
-    tags:["MATLAB","線性卷積","循環卷積","FFT / IFFT","數位信號處理"],
-    meta:[{label:"學校 / 課程",val:"逢甲大學通訊工程系 · 數位信號處理"},{label:"指導老師",val:"辛正和 老師"},{label:"組別 / 組員",val:"第九組 · 呂尹筑、羅欣潔、林文瑜、陳楷森、林祐彤、孫樂宜"}],
-    sections:[
-      {h:"專題目的",p:"加深對信號處理和卷積運算的理解，探索不同卷積法在處理信號時的應用，通過實際操作和觀察更清晰地理解信號處理領域的基本概念和技術。"},
-      {h:"線性卷積（時域直接法）",p:"將其中一個信號反轉滑動，與另一信號對應部分進行逐項相乘再加總。MATLAB 直接使用 conv(x,y) 函式實現。公式：y(n) = x(n)*h(n) = Σ x(k)h(n-k)。"},
-      {h:"循環卷積（時域補零法）",p:"將兩信號序列補零擴展至相等長度 L = N+M-1，再透過自訂的 cir_conv(L,x,y) 函式進行循環卷積運算，使其等效於線性卷積結果。"},
-      {h:"傅立葉轉換（FFT 頻域法）",p:"將兩信號補零後各自進行 FFT，在頻域進行逐元素相乘（點乘），再使用 IFFT 將結果轉回時域，得到與線性卷積相同的結果。"},
-      {h:"結論",p:"三種方法在相同輸入下輸出結果一致，驗證了其等效性。線性卷積是最基本的方法，易於理解但計算量大；循環卷積需補零擴展；頻域卷積使用 FFT 計算效率較高，但涉及頻域轉換的額外開銷。每種方法各有適用場景。"},
-    ],
-    sidebar:[
-      {title:"三種方法比較",rows:[["線性卷積","conv(x,y) 時域直接"],["循環卷積","補零 + cir_conv"],["FFT 頻域","fft → 點乘 → ifft"]]},
-      {title:"練習題 1",rows:[["x(n)","2cos(0.5πn)[u(n)-u(n-10)]"],["y(n)","sin(0.25πn)sin(0.75πn)"],["n範圍","0:30"]]},
-      {title:"練習題 2",rows:[["x(n)","2(1.5)ⁿ"],["y(n)","(0.314)ⁿ"],["n範圍","-15:15"]]},
-    ]
-  },
-  android: {
-    num:"Project 03 · 逢甲大學通訊工程系 Android 程式設計",
-    title:["Android 程式設計","Final Exam"],
-    sub:"以 SEVENTEEN 韓國男團為主題，開發一款包含成員介紹、團體綜藝、專輯歌曲列表三大功能模組的 Android 追星 App，運用多種 Layout 與 UI 元件完成完整 App 架構。",
-    tags:["Android Studio","Java","ListView","GridView","VideoView","Spinner"],
-    meta:[{label:"學校 / 課程",val:"逢甲大學通訊工程系 · Android 程式設計"},{label:"班級 / 學號",val:"通訊三乙 · D1020235"},{label:"組員",val:"呂尹筑、林祐彤（第二組）"}],
-    sections:[
-      {h:"App 架構",p:"主頁（MainActivity）透過三個 Button 跳轉至：Page2 成員基本介紹、Page3 團體綜藝、Page4 專輯歌曲列表。Page2 再細分為 HipHop Team、Vocal Team、Performance Team 三個子頁面。"},
-      {h:"主頁（MainActivity）",p:"使用 ConstraintLayout + LinearLayout，包含 VideoView 播放介紹影片、TextView 顯示歡迎文字，以及三顆導覽 Button。"},
-      {h:"成員介紹（Page2 / 2_1 / 2_2 / 2_3）",p:"Page2 以 ImageView + TextView 展示 SEVENTEEN 整體介紹，並提供三個 Team 按鈕。子頁面使用 ListView 顯示各隊成員列表，點擊成員後在下方顯示對應姓名、生日、國籍等詳細資料。"},
-      {h:"團體綜藝（Page3）",p:"使用 GridView 顯示綜藝節目封面圖，點擊項目後顯示對應節目圖片與介紹文字，提供互動式瀏覽體驗。"},
-      {h:"專輯歌曲列表（Page4）",p:"使用 Spinner（Mode='dialog'）彈出專輯清單視窗，搭配 GridView 顯示各專輯封面，讓使用者快速瀏覽不同時期的專輯。"},
-      {h:"實作心得",p:"當初對主題的選定十分苦惱，後來決定結合追星興趣開發一款讓自己也能受用的 App。過程中面臨程式編譯錯誤的挑戰，透過不斷排除錯誤進行修正，直到最終使 App 能夠實現預定功能，這不僅給予莫大的成就感，更加深了對程式運作細節和邏輯的理解。"},
-    ],
-    sidebar:[
-      {title:"App 架構",rows:[["主頁","MainActivity"],["成員介紹","Page2 → 2_1/2_2/2_3"],["團體綜藝","Page3"],["專輯列表","Page4"]]},
-      {title:"使用元件",rows:[["Layout","Constraint / Linear / Relative / Frame"],["清單","ListView · GridView"],["媒體","VideoView"],["選單","Spinner (dialog)"]]},
-      {title:"開發環境",rows:[["IDE","Android Studio"],["語言","Java"],["主題","SEVENTEEN 韓國男團"]]},
-    ]
-  },
-  pcb: {
-    num:"Project 04 · 逢甲大學 電子學期末專題",
-    title:["PCB","電路板製作"],
-    sub:"完整走過從裁切、曝光、顯影、蝕刻、鑽孔到焊接的手工 PCB 製作全流程，並使用示波器進行電路測試驗證。",
-    tags:["PCB 製作","曝光顯影","蝕刻","鑽孔","焊接","示波器量測"],
-    meta:[{label:"學校 / 課程",val:"逢甲大學 · 電子學"},{label:"學號",val:"D1020235 呂尹筑"}],
-    steps:[["01","裁切 — 將感光銅板依電路尺寸裁切成適合大小"],["02","曝光 — 使用透明膠片覆蓋電路圖案，紫外線曝光約 60 秒，將圖案轉移至感光層"],["03","顯影 — 顯影劑與水以 1:20 比例配置，溶解未曝光部分，露出電路圖案"],["04","蝕刻 — 以蝕刻液去除多餘銅層，保留電路導線"],["05","鑽孔 — 操作鑽孔機精確鑽出元件孔位（不戴手套、配戴護目鏡）"],["06","測試線路 — 使用三用電表確認所有鑽孔點是否導通"],["07","焊接 — 將電阻、電容、電晶體等元件焊接至 PCB 板"],["08","實驗測試 — 使用 Keysight EDUX1052A 示波器觀測輸入輸出波形"]],
-    result:"最終實驗結果顯示電路輸出不符預期，經分析找出兩個錯誤原因：電容正負極焊接方向與電路設計相反，以及電阻 4.7KΩ & 47KΩ 與 1KΩ & 10KΩ 位置放反。雖然結果有誤，但整個 PCB 製作流程的實作經驗收穫豐富，也對電路調試除錯有了更深的理解。",
-    sidebar:[
-      {title:"製作流程摘要",rows:[["Step 1","裁切"],["Step 2","曝光 60s"],["Step 3","顯影 1:20"],["Step 4","蝕刻"],["Step 5","鑽孔"],["Step 6","導通測試"],["Step 7","焊接"],["Step 8","示波器量測"]]},
-      {title:"測試儀器",rows:[["示波器","Keysight EDUX1052A"],["頻寬","50 MHz"],["取樣率","1 GSa/s"],["電表","三用電表"]]},
-      {title:"錯誤原因",note:"電容正負極裝反 ＋ 電阻 4.7K/47K 與 1K/10K 位置互換，導致輸出不符預期。"}
-    ]
-  },
-  led: {
-    num:"Project 05 · 逢甲大學 電子學期末小專題",
-    title:["聲控 LED","旋律套件"],
-    sub:"以電容式麥克風搭配兩級 NPN 電晶體放大電路，驅動 5 顆並聯 LED 隨聲音強弱閃爍，並使用 EAGLE 軟體完成電路設計與 Layout。",
-    tags:["EAGLE","PCB Layout","BJT 放大器","焊接","電路分析"],
-    meta:[{label:"學校 / 課程",val:"逢甲大學 · 電子學"},{label:"班級 / 學號",val:"通訊二乙 · D1020235"}],
-    desc:"本電路為一個聲頻放大器，利用聲音信號推動 LED 發亮。電阻 R1 為電容式麥克風偏壓電阻，負責提供電源給麥克風工作所需；麥克風收音的信號由 C2 傳送到 Tr2 與 Tr1 組成的串級放大電路，Tr1 的輸出負載為 5 個並聯的 LED，其 LED 的電流由 Tr1 控制，所以 LED 會隨麥克風接收到的聲音大小變化明亮。",
-    components:[["電阻","R1","4.7KΩ / 0.25W（黃紫紅）","×1"],["電阻","R2","1MΩ / 0.25W（棕黑綠）","×1"],["電阻","R3","10KΩ / 0.25W（棕黑紅）","×1"],["電容","C1","47μF / 16V（電解質）","×1"],["電容","C2","1μF / 50V（電解質）","×1"],["電晶體","TR1~TR2","9014（TO-92, NPN）","×2"],["LED","LED1~5","φ5mm","×5"],["其他","MIC / SW / BT","電容式麥克風 / 開關 / CR2032","各×1"]],
-    problem:"實驗中觀察到 LED 亮度明暗變化不夠明顯，分析可能原因：聲音感應模組靈敏度不足，僅能檢測聲音有無而非精確強度；控制電路在處理聲音信號時存在簡化；驅動電路亮度控制範圍有限。",
-    reflection:"透過這次實驗反覆練習焊接技術，相比上次 PCB 專題有明顯進步。聲控 LED 旋律套件結合音樂與燈光，是個有趣的概念，未來若能提高麥克風靈敏度並擴大 LED 亮度控制範圍，效果將更加出色。",
-    sidebar:[
-      {title:"電路架構",rows:[["電源","CR2032 鈕扣電池"],["輸入","電容式麥克風"],["放大級","2 × 9014 NPN 串級"],["輸出","5 × LED 並聯"],["開關","SW 電源開關"]]},
-      {title:"設計工具",rows:[["電路圖","EAGLE"],["Layout","EAGLE PCB"],["焊接板","洞洞板（萬用板）"]]},
-      {title:"工作原理",note:"MIC 收音 → C2 耦合 → Tr2 初級放大 → Tr1 二級放大 → LED 電流控制 → 亮度隨聲音大小變化"}
-    ]
-  },
-  ai: {
-    num:"Project 06 · 逢甲大學通訊工程學系 畢業專題",
-    title:["腦腫瘤 MRI","影像分類系統"],
-    sub:"以三種深度學習模型進行四種腦腫瘤影像分類的最佳化研究，並構建醫學生輔助學習平台。指導老師：辛正和 老師。",
-    tags:["PyTorch","DenseNet121","ResNet50","EfficientNetB0","Streamlit","CUDA 12.1","Python 3.8"],
-    meta:[{label:"指導老師",val:"辛正和 老師"},{label:"完成時間",val:"2024 年 11 月"},{label:"角色",val:"專題生 · 模型訓練 · 平台開發"}],
-    sections:[
-      {h:"研究背景",p:"根據美國中央腦腫瘤登記系統（CBTRUS）統計，2022 年全球原發性惡性腦腫瘤年齡標準化發生率約每 10 萬人 3.5 例，總病例數達 32 萬餘例。由於腦腫瘤早期症狀隱匿，影像判讀充滿挑戰，本研究以 AI 輔助醫學影像分類為核心目標，同時響應 SDG3（健康與福祉）及 SDG4（優質教育）。"},
-      {h:"研究目的",p:"比較 ResNet50、DenseNet121、EfficientNetB0 三種深度學習模型，在四類腦腫瘤（Glioma、Meningioma、Pituitary、No Tumor）MRI 影像分類上的最佳表現，並將最佳模型部署至 Streamlit 網頁平台，提供醫學生即時輔助學習工具。"},
-      {h:"資料集與前處理",p:"使用 Kaggle Brain Tumor MRI Dataset，原始共 7,015 張影像。調整為 1:1:1:1 比例，每類 1,605 張，共 6,420 張。影像從 512×512 resize 至 224×224，並採用隨機水平翻轉進行資料多樣化。"},
-      {h:"研究方法",p:"採用三折交叉驗證（3-Fold Cross Validation）搭配早停法（Early Stopping）。三個模型統一使用：學習率 0.00005、批次大小 32、Adam 最佳化器、Cross Entropy Loss 損失函數、輸入影像 224×224。"},
-      {h:"關鍵成果",p:"DenseNet121 在所有指標上均優於其他模型，平均 F1-Score 達 97.54%，被選為最終模型，並成功整合至 Streamlit 腦瘤分類網頁系統，支援即時 MRI 影像上傳與分類預測。"}
-    ],
-    models:[{name:"★ DenseNet121",score:"97.54%",best:true},{name:"EfficientNetB0",score:"96.98%",best:false},{name:"ResNet50",score:"96.42%",best:false}],
-    bars:[{label:"Accuracy",val:"97.54%",pct:.9754},{label:"Precision",val:"97.56%",pct:.9756},{label:"Recall",val:"97.54%",pct:.9754},{label:"F1-Score",val:"97.54%",pct:.9754}],
-    env:[["OS","Windows 11"],["CPU","i7-13620H"],["GPU","RTX 4060"],["RAM","32 GB"],["CUDA","12.1"],["Python","3.8.8"]]
-  }
+  car:{num:"Project 01 · 逢甲大學通訊工程系 大一專題",title:["藍芽遙控","自走車"],sub:"以 Arduino UNO 搭配藍芽模組（HC-05）與 L298N 馬達驅動板，透過 App Inventor 開發手機遙控介面，實現前進、後退、左轉、右轉及停止功能。",tags:["Arduino","HC-05 藍芽","L298N","App Inventor","C / C++"],meta:[{label:"學校 / 課程",val:"逢甲大學通訊工程系 · 大一專題"},{label:"組別",val:"第 14 組"},{label:"組員",val:"張宜翔、呂尹筑、林嵩庭、王漢宇、蕭廷育、龔元俊"}],sections:[{h:"專題目標",p:"學會以電腦撰寫 Arduino 程式，並使用 Arduino 連接馬達、藍芽及手機，訓練團隊分工與溝通協調的能力，最終與組員合作製作出能透過藍芽遙控操控的自走車。"},{h:"軟體架構",p:"Arduino 端透過 SoftwareSerial 函式庫讀取藍芽模組傳來的指令字元，以 if/else if 判斷後呼叫對應的馬達控制函式（m_front、m_back、m_stop、m_right、m_left）。手機端使用 App Inventor 拼圖式程式設計，建立藍芽連線後，按下方向按鈕即發送對應數字字元（8:前、2:後、5:停、4:右、6:左）至 Arduino。"},{h:"硬體架構",p:"硬體核心為 Arduino UNO，搭配 L298N 馬達驅動板控制左右兩組直流馬達（ML1/ML2、MR1/MR2），HC-05 藍芽模組負責無線通訊，整體由電池供電。"},{h:"實作心得",p:"這次專題不僅讓我們認識更多的硬體設備及其架構、學習手機軟體的開發和程式設計，並且最重要的是學會與同組成員間的合作討論，最後共同整合出一台能透過藍芽連接操控的遙控車。儘管過程中遇上重重困難，在組員們的帶領下逐步完成了此次專題。"}],sidebar:[{title:"硬體元件",rows:[["主控板","Arduino UNO"],["藍芽模組","HC-05"],["馬達驅動","L298N"],["馬達","直流馬達 ×4"],["電源","電池組"]]},{title:"指令對照表",rows:[["'8'","前進"],["'2'","後退"],["'5'","停止"],["'4'","右轉"],["'6'","左轉"]]},{title:"開發工具",rows:[["韌體","Arduino IDE"],["手機 App","App Inventor"],["語言","C / C++"]]}]},
+  conv:{num:"Project 02 · 逢甲大學通訊工程系 數位信號處理",title:["卷積的三種","實現方式"],sub:"以 MATLAB 實作並比較線性卷積（時域直接法）、循環卷積（時域補零法）、傅立葉轉換（FFT 頻域法）三種卷積運算方式，透過兩道練習題驗證結果一致性。",tags:["MATLAB","線性卷積","循環卷積","FFT / IFFT","數位信號處理"],meta:[{label:"學校 / 課程",val:"逢甲大學通訊工程系 · 數位信號處理"},{label:"指導老師",val:"辛正和 老師"},{label:"組別 / 組員",val:"第九組 · 呂尹筑、羅欣潔、林文瑜、陳楷森、林祐彤、孫樂宜"}],sections:[{h:"專題目的",p:"加深對信號處理和卷積運算的理解，探索不同卷積法在處理信號時的應用，通過實際操作和觀察更清晰地理解信號處理領域的基本概念和技術。"},{h:"線性卷積（時域直接法）",p:"將其中一個信號反轉滑動，與另一信號對應部分進行逐項相乘再加總。MATLAB 直接使用 conv(x,y) 函式實現。公式：y(n) = x(n)*h(n) = Σ x(k)h(n-k)。"},{h:"循環卷積（時域補零法）",p:"將兩信號序列補零擴展至相等長度 L = N+M-1，再透過自訂的 cir_conv(L,x,y) 函式進行循環卷積運算，使其等效於線性卷積結果。"},{h:"傅立葉轉換（FFT 頻域法）",p:"將兩信號補零後各自進行 FFT，在頻域進行逐元素相乘（點乘），再使用 IFFT 將結果轉回時域，得到與線性卷積相同的結果。"},{h:"結論",p:"三種方法在相同輸入下輸出結果一致，驗證了其等效性。線性卷積是最基本的方法，易於理解但計算量大；循環卷積需補零擴展；頻域卷積使用 FFT 計算效率較高，但涉及頻域轉換的額外開銷。每種方法各有適用場景。"}],sidebar:[{title:"三種方法比較",rows:[["線性卷積","conv(x,y) 時域直接"],["循環卷積","補零 + cir_conv"],["FFT 頻域","fft → 點乘 → ifft"]]},{title:"練習題 1",rows:[["x(n)","2cos(0.5πn)[u(n)-u(n-10)]"],["y(n)","sin(0.25πn)sin(0.75πn)"],["n範圍","0:30"]]},{title:"練習題 2",rows:[["x(n)","2(1.5)ⁿ"],["y(n)","(0.314)ⁿ"],["n範圍","-15:15"]]}]},
+  android:{num:"Project 03 · 逢甲大學通訊工程系 Android 程式設計",title:["Android 程式設計","Final Exam"],sub:"以 SEVENTEEN 韓國男團為主題，開發一款包含成員介紹、團體綜藝、專輯歌曲列表三大功能模組的 Android 追星 App，運用多種 Layout 與 UI 元件完成完整 App 架構。",tags:["Android Studio","Java","ListView","GridView","VideoView","Spinner"],meta:[{label:"學校 / 課程",val:"逢甲大學通訊工程系 · Android 程式設計"},{label:"班級 / 學號",val:"通訊三乙 · D1020235"},{label:"組員",val:"呂尹筑、林祐彤（第二組）"}],sections:[{h:"App 架構",p:"主頁（MainActivity）透過三個 Button 跳轉至：Page2 成員基本介紹、Page3 團體綜藝、Page4 專輯歌曲列表。Page2 再細分為 HipHop Team、Vocal Team、Performance Team 三個子頁面。"},{h:"主頁（MainActivity）",p:"使用 ConstraintLayout + LinearLayout，包含 VideoView 播放介紹影片、TextView 顯示歡迎文字，以及三顆導覽 Button。"},{h:"成員介紹（Page2 / 2_1 / 2_2 / 2_3）",p:"Page2 以 ImageView + TextView 展示 SEVENTEEN 整體介紹，並提供三個 Team 按鈕。子頁面使用 ListView 顯示各隊成員列表，點擊成員後在下方顯示對應姓名、生日、國籍等詳細資料。"},{h:"團體綜藝（Page3）",p:"使用 GridView 顯示綜藝節目封面圖，點擊項目後顯示對應節目圖片與介紹文字，提供互動式瀏覽體驗。"},{h:"專輯歌曲列表（Page4）",p:"使用 Spinner（Mode='dialog'）彈出專輯清單視窗，搭配 GridView 顯示各專輯封面，讓使用者快速瀏覽不同時期的專輯。"},{h:"實作心得",p:"當初對主題的選定十分苦惱，後來決定結合追星興趣開發一款讓自己也能受用的 App。過程中面臨程式編譯錯誤的挑戰，透過不斷排除錯誤進行修正，直到最終使 App 能夠實現預定功能，這不僅給予莫大的成就感，更加深了對程式運作細節和邏輯的理解。"}],sidebar:[{title:"App 架構",rows:[["主頁","MainActivity"],["成員介紹","Page2 → 2_1/2_2/2_3"],["團體綜藝","Page3"],["專輯列表","Page4"]]},{title:"使用元件",rows:[["Layout","Constraint / Linear / Relative / Frame"],["清單","ListView · GridView"],["媒體","VideoView"],["選單","Spinner (dialog)"]]},{title:"開發環境",rows:[["IDE","Android Studio"],["語言","Java"],["主題","SEVENTEEN 韓國男團"]]}]},
+  pcb:{num:"Project 04 · 逢甲大學 電子學期末專題",title:["PCB","電路板製作"],sub:"完整走過從裁切、曝光、顯影、蝕刻、鑽孔到焊接的手工 PCB 製作全流程，並使用示波器進行電路測試驗證。",tags:["PCB 製作","曝光顯影","蝕刻","鑽孔","焊接","示波器量測"],meta:[{label:"學校 / 課程",val:"逢甲大學 · 電子學"},{label:"學號",val:"D1020235 呂尹筑"}],steps:[["01","裁切 — 將感光銅板依電路尺寸裁切成適合大小"],["02","曝光 — 使用透明膠片覆蓋電路圖案，紫外線曝光約 60 秒，將圖案轉移至感光層"],["03","顯影 — 顯影劑與水以 1:20 比例配置，溶解未曝光部分，露出電路圖案"],["04","蝕刻 — 以蝕刻液去除多餘銅層，保留電路導線"],["05","鑽孔 — 操作鑽孔機精確鑽出元件孔位（不戴手套、配戴護目鏡）"],["06","測試線路 — 使用三用電表確認所有鑽孔點是否導通"],["07","焊接 — 將電阻、電容、電晶體等元件焊接至 PCB 板"],["08","實驗測試 — 使用 Keysight EDUX1052A 示波器觀測輸入輸出波形"]],result:"最終實驗結果顯示電路輸出不符預期，經分析找出兩個錯誤原因：電容正負極焊接方向與電路設計相反，以及電阻 4.7KΩ & 47KΩ 與 1KΩ & 10KΩ 位置放反。雖然結果有誤，但整個 PCB 製作流程的實作經驗收穫豐富，也對電路調試除錯有了更深的理解。",sidebar:[{title:"製作流程摘要",rows:[["Step 1","裁切"],["Step 2","曝光 60s"],["Step 3","顯影 1:20"],["Step 4","蝕刻"],["Step 5","鑽孔"],["Step 6","導通測試"],["Step 7","焊接"],["Step 8","示波器量測"]]},{title:"測試儀器",rows:[["示波器","Keysight EDUX1052A"],["頻寬","50 MHz"],["取樣率","1 GSa/s"],["電表","三用電表"]]},{title:"錯誤原因",note:"電容正負極裝反 ＋ 電阻 4.7K/47K 與 1K/10K 位置互換，導致輸出不符預期。"}]},
+  led:{num:"Project 05 · 逢甲大學 電子學期末小專題",title:["聲控 LED","旋律套件"],sub:"以電容式麥克風搭配兩級 NPN 電晶體放大電路，驅動 5 顆並聯 LED 隨聲音強弱閃爍，並使用 EAGLE 軟體完成電路設計與 Layout。",tags:["EAGLE","PCB Layout","BJT 放大器","焊接","電路分析"],meta:[{label:"學校 / 課程",val:"逢甲大學 · 電子學"},{label:"班級 / 學號",val:"通訊二乙 · D1020235"}],desc:"本電路為一個聲頻放大器，利用聲音信號推動 LED 發亮。電阻 R1 為電容式麥克風偏壓電阻，負責提供電源給麥克風工作所需；麥克風收音的信號由 C2 傳送到 Tr2 與 Tr1 組成的串級放大電路，Tr1 的輸出負載為 5 個並聯的 LED，其 LED 的電流由 Tr1 控制，所以 LED 會隨麥克風接收到的聲音大小變化明亮。",components:[["電阻","R1","4.7KΩ / 0.25W（黃紫紅）","×1"],["電阻","R2","1MΩ / 0.25W（棕黑綠）","×1"],["電阻","R3","10KΩ / 0.25W（棕黑紅）","×1"],["電容","C1","47μF / 16V（電解質）","×1"],["電容","C2","1μF / 50V（電解質）","×1"],["電晶體","TR1~TR2","9014（TO-92, NPN）","×2"],["LED","LED1~5","φ5mm","×5"],["其他","MIC / SW / BT","電容式麥克風 / 開關 / CR2032","各×1"]],problem:"實驗中觀察到 LED 亮度明暗變化不夠明顯，分析可能原因：聲音感應模組靈敏度不足，僅能檢測聲音有無而非精確強度；控制電路在處理聲音信號時存在簡化；驅動電路亮度控制範圍有限。",reflection:"透過這次實驗反覆練習焊接技術，相比上次 PCB 專題有明顯進步。聲控 LED 旋律套件結合音樂與燈光，是個有趣的概念，未來若能提高麥克風靈敏度並擴大 LED 亮度控制範圍，效果將更加出色。",sidebar:[{title:"電路架構",rows:[["電源","CR2032 鈕扣電池"],["輸入","電容式麥克風"],["放大級","2 × 9014 NPN 串級"],["輸出","5 × LED 並聯"],["開關","SW 電源開關"]]},{title:"設計工具",rows:[["電路圖","EAGLE"],["Layout","EAGLE PCB"],["焊接板","洞洞板（萬用板）"]]},{title:"工作原理",note:"MIC 收音 → C2 耦合 → Tr2 初級放大 → Tr1 二級放大 → LED 電流控制 → 亮度隨聲音大小變化"}]},
+  ai:{num:"Project 06 · 逢甲大學通訊工程學系 畢業專題",title:["腦腫瘤 MRI","影像分類系統"],sub:"以三種深度學習模型進行四種腦腫瘤影像分類的最佳化研究，並構建醫學生輔助學習平台。指導老師：辛正和 老師。",tags:["PyTorch","DenseNet121","ResNet50","EfficientNetB0","Streamlit","CUDA 12.1","Python 3.8"],meta:[{label:"指導老師",val:"辛正和 老師"},{label:"完成時間",val:"2024 年 11 月"},{label:"角色",val:"專題生 · 模型訓練 · 平台開發"}],sections:[{h:"研究背景",p:"根據美國中央腦腫瘤登記系統（CBTRUS）統計，2022 年全球原發性惡性腦腫瘤年齡標準化發生率約每 10 萬人 3.5 例，總病例數達 32 萬餘例。由於腦腫瘤早期症狀隱匿，影像判讀充滿挑戰，本研究以 AI 輔助醫學影像分類為核心目標，同時響應 SDG3（健康與福祉）及 SDG4（優質教育）。"},{h:"研究目的",p:"比較 ResNet50、DenseNet121、EfficientNetB0 三種深度學習模型，在四類腦腫瘤（Glioma、Meningioma、Pituitary、No Tumor）MRI 影像分類上的最佳表現，並將最佳模型部署至 Streamlit 網頁平台，提供醫學生即時輔助學習工具。"},{h:"資料集與前處理",p:"使用 Kaggle Brain Tumor MRI Dataset，原始共 7,015 張影像。調整為 1:1:1:1 比例，每類 1,605 張，共 6,420 張。影像從 512×512 resize 至 224×224，並採用隨機水平翻轉進行資料多樣化。"},{h:"研究方法",p:"採用三折交叉驗證（3-Fold Cross Validation）搭配早停法（Early Stopping）。三個模型統一使用：學習率 0.00005、批次大小 32、Adam 最佳化器、Cross Entropy Loss 損失函數、輸入影像 224×224。"},{h:"關鍵成果",p:"DenseNet121 在所有指標上均優於其他模型，平均 F1-Score 達 97.54%，被選為最終模型，並成功整合至 Streamlit 腦瘤分類網頁系統，支援即時 MRI 影像上傳與分類預測。"}],models:[{name:"★ DenseNet121",score:"97.54%",best:true},{name:"EfficientNetB0",score:"96.98%",best:false},{name:"ResNet50",score:"96.42%",best:false}],bars:[{label:"Accuracy",val:"97.54%",pct:.9754},{label:"Precision",val:"97.56%",pct:.9756},{label:"Recall",val:"97.54%",pct:.9754},{label:"F1-Score",val:"97.54%",pct:.9754}],env:[["OS","Windows 11"],["CPU","i7-13620H"],["GPU","RTX 4060"],["RAM","32 GB"],["CUDA","12.1"],["Python","3.8.8"]]}
 };
 
 function goTo(id){
@@ -630,7 +888,7 @@ function showDetail(key){
   if(key==='ai'){setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(el=>{el.style.width=(parseFloat(el.dataset.pct)*100)+'%';});},150);}
 }
 
-const SKILLS = {
+const SKILLS={
   dl:{ico:"🤖",cat:"Deep Learning",title:["模型訓練 &","<em>深度學習</em>"],sub:"運用 PyTorch 框架訓練卷積神經網路，專注於醫療影像分類與模型最佳化研究，熟悉遷移學習與超參數調整流程。",meta:[{label:"主要框架",val:"PyTorch"},{label:"應用領域",val:"Medical Imaging · CV"},{label:"代表成果",val:"腦腫瘤 MRI 分類 F1 97.54%"}],sections:[{h:"學習歷程",p:"從大三修習機器學習課程開始接觸深度學習，大四畢業專題正式以 PyTorch 實作 ResNet50、DenseNet121、EfficientNetB0 三種架構，並透過三折交叉驗證與早停法系統性比較各模型效能。"},{h:"使用經驗",p:"熟悉完整的模型訓練流程，包含資料預處理、資料擴增、訓練迴圈設計、損失函數選擇與學習率調整。曾使用 Adam 優化器搭配 Cross Entropy Loss，並以 TensorBoard 可視化訓練過程。"},{h:"代表成果",p:"畢業專題中 DenseNet121 模型在四類腦腫瘤分類任務達到平均 F1-Score 97.54%，優於 ResNet50（96.42%）與 EfficientNetB0（96.98%），最終模型部署於 Streamlit 網頁平台。"}],sidebar:[{title:"技術棧",rows:[["框架","PyTorch"],["模型","ResNet50 · DenseNet121 · EfficientNetB0"],["優化器","Adam"],["損失函數","Cross Entropy Loss"],["可視化","TensorBoard"]]},{title:"硬體環境",rows:[["GPU","RTX 4060"],["CUDA","12.1"],["Python","3.8.8"]]}]},
   prog:{ico:"⌨️",cat:"Programming",title:["多語言","<em>程式開發</em>"],sub:"以 Python 為主力語言，兼具 Java（Android）、MATLAB、JavaScript、C/C++ 等多語言開發經驗，能依據專案需求選擇適合工具。",meta:[{label:"主力語言",val:"Python"},{label:"其他語言",val:"Java · MATLAB · JS · C/C++"},{label:"開發環境",val:"VS Code · Android Studio"}],sections:[{h:"學習歷程",p:"從大一開始學習 C 語言基礎，大二接觸 MATLAB 用於信號處理課程，大三修習 Android 程式設計學習 Java，大四畢業專題全面轉向 Python 進行深度學習開發。"},{h:"使用經驗",p:"Python 主要用於資料處理、模型訓練與 Web 部署；Java 用於 Android App 開發；MATLAB 用於數位信號處理的卷積運算實作；C/C++ 用於 Arduino 韌體開發。"},{h:"開發習慣",p:"習慣使用 Git 進行版本控制，撰寫清晰的程式碼結構並加上適當註解。喜歡從需求出發設計架構，再逐步實作並測試。"}],sidebar:[{title:"語言熟練度",rows:[["Python","★★★★★"],["MATLAB","★★★★☆"],["Java","★★★☆☆"],["JavaScript","★★★☆☆"],["C / C++","★★★☆☆"]]},{title:"常用工具",rows:[["編輯器","VS Code"],["版控","Git / GitHub"],["筆記","Notion"]]}]},
   data:{ico:"🧪",cat:"Data Science",title:["資料處理 &","<em>分析</em>"],sub:"熟悉資料清理、特徵工程與模型評估流程，曾在 Kaggle 資料集上進行實作，並運用交叉驗證確保模型泛化能力。",meta:[{label:"主要工具",val:"NumPy · Pandas"},{label:"評估方法",val:"3-Fold Cross Validation"},{label:"資料來源",val:"Kaggle Brain Tumor Dataset"}],sections:[{h:"學習歷程",p:"配合深度學習專題的需求，系統性學習資料前處理與評估方法。從 Kaggle 下載真實醫療影像資料集，進行類別平衡、影像 resize、資料擴增等前處理步驟。"},{h:"使用經驗",p:"熟悉使用 Pandas 進行表格資料處理，NumPy 處理矩陣運算，以及 Scikit-learn 的交叉驗證工具。曾處理 7,000+ 筆影像資料，並設計 1:1:1:1 類別平衡策略。"},{h:"模型評估",p:"熟悉 Accuracy、Precision、Recall、F1-Score 等指標，並以混淆矩陣分析各類別分類結果，確保模型在各類別間表現均衡。"}],sidebar:[{title:"工具",rows:[["數值運算","NumPy"],["表格處理","Pandas"],["驗證","Cross-Validation"],["資料集","Kaggle"]]},{title:"評估指標",rows:[["Accuracy","97.54%"],["Precision","97.56%"],["Recall","97.54%"],["F1-Score","97.54%"]]}]},

@@ -27,17 +27,19 @@ html,body{height:100%;overflow:hidden}
 body{
   font-family:'Noto Sans TC',sans-serif;font-weight:300;
   background:var(--bg);color:var(--tp);
-  display:flex;flex-direction:column;
+  /* ✅ FlexBox: 讓整個 body 為垂直 flex 容器 */
+  display:flex;
+  flex-direction:column;
 }
 
-/* noise texture overlay */
+/* noise texture */
 body::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
   opacity:.028;
 }
 
-/* warm grid */
+/* warm grid background */
 body::before{
   content:'';position:fixed;inset:0;
   background-image:
@@ -47,21 +49,36 @@ body::before{
   opacity:.28;pointer-events:none;z-index:0;
 }
 
-/* ── nav ── */
+/* ── ✅ FlexBox: nav 使用 flex 排列左右元素 ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:10;
-  display:flex;justify-content:space-between;align-items:center;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   padding:1.3rem 3rem;
   backdrop-filter:blur(16px) saturate(1.4);
   background:rgba(250,247,242,.82);
   border-bottom:1px solid var(--bd);
+  /* ✅ Animation: nav 從頂部滑入 */
+  animation: navSlideIn 0.6s ease forwards;
 }
+
+@keyframes navSlideIn {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
 .nav-logo{
   font-family:'DM Mono',monospace;font-size:.7rem;
   color:var(--tm);letter-spacing:.22em;text-transform:uppercase;
 }
+
+/* ✅ FlexBox: nav-links 水平排列 */
 .nav-links{
-  display:flex;gap:2.2rem;list-style:none;
+  display:flex;
+  gap:2.2rem;
+  list-style:none;
+  align-items:center;
 }
 .nav-links a{
   font-family:'DM Mono',monospace;font-size:.64rem;
@@ -77,19 +94,78 @@ nav{
 .nav-links a:hover{color:var(--ac)}
 .nav-links a:hover::after{transform:scaleX(1)}
 
-/* ── main stage ── */
+/* 漢堡選單按鈕（手機版） */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: transparent;
+  border: none;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--tm);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* ── ✅ FlexBox: main stage 置中 ── */
 main{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  padding:0 3rem;position:relative;
-  margin-top:64px;z-index:1;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 3rem;
+  position:relative;
+  margin-top:64px;
+  z-index:1;
+  gap: 4rem;          /* ✅ FlexBox: 文字區與裝飾圓之間的間距 */
 }
 .stage{max-width:680px;width:100%}
 
-/* decorative line */
+/* 裝飾圓區域（右側）*/
+.ornament-wrap {
+  /* ✅ FlexBox: 不縮小，保持固定大小 */
+  flex-shrink: 0;
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+/* decorative ornament */
+.ornament{
+  width:200px;height:200px;
+  border:1px solid var(--bd);border-radius:50%;
+  opacity:.25;pointer-events:none;
+  /* ✅ Animation: 裝飾圓緩慢旋轉 */
+  animation: spinSlow 30s linear infinite;
+}
+.ornament::before{
+  content:'';position:absolute;inset:24px;
+  border:1px solid var(--bd2);border-radius:50%;
+}
+.ornament::after{
+  content:'';position:absolute;inset:48px;
+  border:1px dashed var(--bd2);border-radius:50%;
+  /* ✅ Animation: 內圓反向旋轉 */
+  animation: spinSlow 18s linear infinite reverse;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── ✅ Animation: 各元素依序淡入上滑 ── */
 .deco-line{
   display:flex;align-items:center;gap:1rem;
   margin-bottom:1.6rem;
-  opacity:0;animation:fadeUp .6s .05s forwards;
+  opacity:0;
+  animation:fadeUp .6s .05s ease forwards;
 }
 .deco-line::before{
   content:'';width:32px;height:1px;background:var(--ac);opacity:.7;
@@ -105,7 +181,8 @@ main{
   font-size:clamp(3.8rem,8.5vw,7rem);
   line-height:.92;margin-bottom:2rem;
   letter-spacing:.01em;
-  opacity:0;animation:fadeUp .7s .2s forwards;
+  opacity:0;
+  animation:fadeUp .7s .2s ease forwards;
 }
 .big-name .accent{
   color:var(--ac);font-style:italic;font-weight:400;
@@ -113,7 +190,8 @@ main{
 
 .typewriter-wrap{
   min-height:1.8rem;margin-bottom:3rem;
-  opacity:0;animation:fadeUp .7s .38s forwards;
+  opacity:0;
+  animation:fadeUp .7s .38s ease forwards;
 }
 .typewriter{
   font-family:'DM Mono',monospace;font-size:.82rem;
@@ -122,12 +200,18 @@ main{
 .cursor{
   display:inline-block;width:1.5px;height:.9em;
   background:var(--ac);vertical-align:middle;margin-left:3px;
+  /* ✅ Animation: 游標閃爍 */
   animation:blink .95s step-end infinite;
 }
 
+/* ✅ FlexBox: CTA 按鈕橫排 */
 .cta-row{
-  display:flex;gap:1.2rem;align-items:center;
-  opacity:0;animation:fadeUp .7s .52s forwards;
+  display:flex;
+  gap:1.2rem;
+  align-items:center;
+  flex-wrap:wrap;  /* ✅ RWD: 小螢幕時換行 */
+  opacity:0;
+  animation:fadeUp .7s .52s ease forwards;
 }
 
 .btn-enter{
@@ -137,7 +221,7 @@ main{
   color:#faf7f2;background:var(--ac);
   border:1px solid var(--ac);padding:.85rem 2rem;
   text-decoration:none;cursor:pointer;
-  transition:background .25s,color .25s,border-color .25s;
+  transition:background .25s,color .25s,border-color .25s,transform .2s;
   position:relative;overflow:hidden;
 }
 .btn-enter::before{
@@ -147,6 +231,8 @@ main{
 }
 .btn-enter span{position:relative;z-index:1}
 .btn-enter:hover::before{transform:translateX(0)}
+/* ✅ Animation: hover 微提升 */
+.btn-enter:hover { transform: translateY(-2px); }
 
 .btn-about{
   display:inline-flex;align-items:center;gap:.6rem;
@@ -155,36 +241,32 @@ main{
   color:var(--ts);background:transparent;
   border:1px solid var(--bd2);padding:.85rem 1.8rem;
   text-decoration:none;cursor:pointer;
-  transition:background .2s,border-color .2s,color .2s;
+  transition:background .2s,border-color .2s,color .2s,transform .2s;
 }
 .btn-about:hover{background:var(--sf);border-color:var(--bd2);color:var(--tp)}
+/* ✅ Animation: hover 微提升 */
+.btn-about:hover { transform: translateY(-2px); }
 
-/* corner ornament */
-.ornament{
-  position:absolute;right:3rem;top:50%;transform:translateY(-50%);
-  width:200px;height:200px;
-  border:1px solid var(--bd);border-radius:50%;
-  opacity:.25;pointer-events:none;
+/* ── ✅ Animation: keyframes ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
 }
-.ornament::before{
-  content:'';position:absolute;inset:24px;
-  border:1px solid var(--bd2);border-radius:50%;
-}
-.ornament::after{
-  content:'';position:absolute;inset:48px;
-  border:1px dashed var(--bd2);border-radius:50%;
-}
+@keyframes blink{50%{opacity:0}}
 
-/* ── ticker ── */
+/* ── ✅ FlexBox: ticker 底部跑馬燈 ── */
 .ticker-wrap{
   position:fixed;bottom:0;left:0;right:0;
   border-top:1px solid var(--bd);
   background:rgba(244,239,230,.9);backdrop-filter:blur(12px);
-  overflow:hidden;height:30px;display:flex;align-items:center;
+  overflow:hidden;height:30px;
+  display:flex;          /* ✅ FlexBox */
+  align-items:center;   /* ✅ FlexBox: 垂直置中 */
   z-index:10;
 }
 .ticker{
   display:flex;gap:0;white-space:nowrap;
+  /* ✅ Animation: 無限捲動 */
   animation:ticker 28s linear infinite;
 }
 .ticker-item{
@@ -198,14 +280,96 @@ main{
   background:var(--ac);flex-shrink:0;opacity:.6;
 }
 
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(14px)}
-  to{opacity:1;transform:none}
-}
-@keyframes blink{50%{opacity:0}}
 @keyframes ticker{
   from{transform:translateX(0)}
   to{transform:translateX(-50%)}
+}
+
+/* ══════════════════════════════════
+   ✅ RWD: Responsive Web Design
+   ══════════════════════════════════ */
+
+/* 平板（≤ 900px） */
+@media (max-width: 900px) {
+  main {
+    gap: 2rem;
+    padding: 0 2rem;
+  }
+  .ornament-wrap {
+    width: 120px;
+    height: 120px;
+  }
+  .ornament {
+    width: 120px;
+    height: 120px;
+  }
+  .big-name {
+    font-size: clamp(2.8rem, 7vw, 5rem);
+  }
+}
+
+/* 手機（≤ 640px） */
+@media (max-width: 640px) {
+  html, body { overflow: auto; }
+
+  nav {
+    padding: 1rem 1.5rem;
+    flex-wrap: wrap;
+    position: relative;   /* 手機不固定，讓內容能捲動 */
+  }
+
+  /* 手機版漢堡選單：隱藏原本連結，顯示漢堡按鈕 */
+  .nav-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0 0.5rem;
+    border-top: 1px solid var(--bd);
+    margin-top: 0.8rem;
+  }
+  .nav-links.open { display: flex; }
+  .nav-hamburger { display: flex; }
+
+  main {
+    flex-direction: column;   /* ✅ FlexBox: 手機改為垂直排列 */
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 2rem 1.5rem 4rem;
+    margin-top: 64px;
+    min-height: calc(100vh - 64px - 30px);
+  }
+
+  .ornament-wrap {
+    align-self: center;
+    margin-top: 1rem;
+    width: 100px;
+    height: 100px;
+  }
+  .ornament {
+    width: 100px;
+    height: 100px;
+  }
+
+  .big-name {
+    font-size: clamp(2.4rem, 12vw, 3.5rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-row {
+    flex-direction: column;   /* ✅ FlexBox: 按鈕改垂直排列 */
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+  .btn-enter, .btn-about {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .ticker-wrap {
+    position: fixed;
+  }
 }
 </style>
 </head>
@@ -213,7 +377,10 @@ main{
 
 <nav>
   <span class="nav-logo">LYZ.dev</span>
-  <ul class="nav-links">
+  <button class="nav-hamburger" id="hamburger" aria-label="選單">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links-mobile">
     <li><a href="about.html#hero">Home</a></li>
     <li><a href="about.html#about">About</a></li>
     <li><a href="about.html#skills">Skills</a></li>
@@ -236,12 +403,16 @@ main{
       <a class="btn-about" href="about.html#about">關於我</a>
     </div>
   </div>
-  <div class="ornament"></div>
+  <!-- ✅ FlexBox: 裝飾圓放在 flex 子項目 -->
+  <div class="ornament-wrap">
+    <div class="ornament"></div>
+  </div>
 </main>
 
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
+/* 打字機效果 */
 const phrases=["深度學習研究者","電機工程系學生","Android App Developer","PCB Circuit Builder","Signal Processing · MATLAB","AI Medical Imaging"];
 let pi=0,ci=0,del=false;
 const tw=document.getElementById('tw');
@@ -253,10 +424,18 @@ function type(){
 }
 setTimeout(type,1100);
 
+/* 跑馬燈 */
 const items=["Deep Learning","PyTorch","DenseNet121","Android Studio","Java","MATLAB","FFT · Convolution","Arduino","Bluetooth","PCB Design","Soldering","EAGLE","Streamlit","Python 3.8","CUDA 12.1","App Inventor","Brain Tumor MRI","Signal Processing"];
 const t=document.getElementById('ticker');
 const seg=items.map(i=>`<span class="ticker-item"><span class="ticker-dot"></span>${i}</span>`).join('');
 t.innerHTML=seg+seg;
+
+/* 漢堡選單切換（手機） */
+const hamburger = document.getElementById('hamburger');
+const navLinksMobile = document.getElementById('nav-links-mobile');
+hamburger.addEventListener('click', () => {
+  navLinksMobile.classList.toggle('open');
+});
 </script>
 </body>
 </html>
