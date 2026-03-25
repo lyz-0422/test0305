@@ -19,19 +19,15 @@ html,body{height:100%;overflow:hidden}
 *{cursor:none!important}
 body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--tp);display:flex;flex-direction:column;}
 
-/* noise */
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
 
-/* ✅ 自訂磁性游標 */
 #cur-dot{position:fixed;width:10px;height:10px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply;}
 #cur-ring{position:fixed;width:44px;height:44px;border:1.5px solid rgba(107,76,50,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
 body.ch #cur-dot{width:5px;height:5px;}
 body.ch #cur-ring{width:60px;height:60px;border-color:var(--ac);background:rgba(107,76,50,.04);}
 
-/* ✅ 粒子 Canvas */
 #pc{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.7;}
 
-/* ✅ NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.3rem 3rem;backdrop-filter:blur(20px) saturate(1.6);background:rgba(250,247,242,.88);border-bottom:1px solid var(--bd);animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
 @keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
 .nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--tm);letter-spacing:.22em;text-transform:uppercase;}
@@ -43,17 +39,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content
 .nav-hamburger{display:none;flex-direction:column;gap:5px;background:transparent;border:none;padding:4px;}
 .nav-hamburger span{display:block;width:22px;height:2px;background:var(--tm);border-radius:2px;transition:all .3s;}
 
-/* ✅ MAIN */
+/* 即時時鐘（計時器應用） */
+#live-clock{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--tm);letter-spacing:.1em;display:flex;align-items:center;gap:.5rem;}
+#live-clock .clock-dot{width:5px;height:5px;border-radius:50%;background:#6dbf7e;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
 main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3rem;position:relative;margin-top:64px;z-index:2;gap:4rem;}
 .stage{max-width:680px;width:100%;}
 
-/* ✅ 裝飾 */
 .deco-line{display:flex;align-items:center;gap:1rem;margin-bottom:1.6rem;overflow:hidden;}
 .deco-line::before{content:'';width:32px;height:1px;background:var(--ac);opacity:.7;animation:lineIn .8s .15s cubic-bezier(.16,1,.3,1) both;}
 @keyframes lineIn{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1)}}
 .eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;animation:slideUp .7s .25s cubic-bezier(.16,1,.3,1) both;}
 
-/* ✅ 大標題（字母分割動畫） */
 .big-name{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(3.8rem,8.5vw,7rem);line-height:.92;margin-bottom:2rem;letter-spacing:.01em;display:flex;gap:.3rem;align-items:baseline;flex-wrap:wrap;}
 .big-name .accent{color:var(--ac);font-style:italic;}
 .char{display:inline-block;animation:charIn .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d);}
@@ -63,10 +61,17 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 .typewriter{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--ts);letter-spacing:.05em;}
 .cursor{display:inline-block;width:1.5px;height:.9em;background:var(--ac);vertical-align:middle;margin-left:3px;animation:blink .95s step-end infinite;}
 
-/* ✅ CTA */
+/* JS 知識點標籤（DOM操作 + JSON陣列渲染） */
+.js-tags-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--tm);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem;animation:slideUp .7s .95s cubic-bezier(.16,1,.3,1) both;}
+.js-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2rem;animation:slideUp .7s 1s cubic-bezier(.16,1,.3,1) both;}
+.js-tag{font-family:'DM Mono',monospace;font-size:.58rem;padding:.22rem .65rem;border:1px solid var(--bd);color:var(--ts);background:rgba(255,255,255,.5);letter-spacing:.04em;transition:all .25s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;}
+.js-tag::before{content:'';position:absolute;inset:0;background:var(--ac);transform:translateY(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);}
+.js-tag:hover{color:#faf7f2;border-color:var(--ac);}
+.js-tag:hover::before{transform:translateY(0);}
+.js-tag span{position:relative;z-index:1;}
+
 .cta-row{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;animation:slideUp .7s 1.05s cubic-bezier(.16,1,.3,1) both;}
 
-/* 液態填充按鈕 */
 .btn-enter{display:inline-flex;align-items:center;gap:.75rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#faf7f2;background:var(--ac);border:1px solid var(--ac);padding:.85rem 2rem;text-decoration:none;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;position:relative;overflow:hidden;}
 .btn-enter::before{content:'';position:absolute;bottom:-110%;left:50%;width:130%;padding-bottom:130%;background:var(--ac2);border-radius:50%;transform:translate(-50%,0);transition:bottom .55s cubic-bezier(.16,1,.3,1);}
 .btn-enter span{position:relative;z-index:1;}
@@ -76,7 +81,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 .btn-about{display:inline-flex;align-items:center;gap:.6rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ts);background:transparent;border:1px solid var(--bd2);padding:.85rem 1.8rem;text-decoration:none;transition:background .2s,color .2s,transform .3s cubic-bezier(.16,1,.3,1);}
 .btn-about:hover{background:var(--sf);color:var(--tp);transform:translateY(-3px);}
 
-/* ✅ 3D 浮動裝飾圓 */
+/* 3D 浮動裝飾 */
 .ornament-wrap{flex-shrink:0;position:relative;width:220px;height:220px;perspective:600px;animation:slideUp .8s .45s cubic-bezier(.16,1,.3,1) both;}
 .ornament-3d{width:100%;height:100%;transform-style:preserve-3d;animation:float3d 8s ease-in-out infinite;}
 @keyframes float3d{0%,100%{transform:rotateX(10deg) rotateY(0deg) translateY(0)}25%{transform:rotateX(5deg) rotateY(15deg) translateY(-8px)}50%{transform:rotateX(-5deg) rotateY(0deg) translateY(-14px)}75%{transform:rotateX(5deg) rotateY(-15deg) translateY(-8px)}}
@@ -89,7 +94,15 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 .oc-num{font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--ac);line-height:1;font-weight:600;}
 .oc-sub{font-family:'DM Mono',monospace;font-size:.44rem;letter-spacing:.15em;color:var(--tm);text-transform:uppercase;}
 
-/* ✅ ticker */
+/* JS 知識點 toast 提示（DOM操作） */
+#toast{position:fixed;bottom:50px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--tp);color:#faf7f2;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;padding:.6rem 1.4rem;border-radius:2px;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:500;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* 倒數計時 banner（計時器應用） */
+#countdown-bar{position:fixed;top:64px;left:0;right:0;background:var(--ac);color:#faf7f2;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-align:center;padding:.45rem;z-index:99;display:none;animation:slideDown .4s cubic-bezier(.16,1,.3,1);}
+@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+
+/* 跑馬燈 */
 .ticker-wrap{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--bd);background:rgba(244,239,230,.92);backdrop-filter:blur(14px);overflow:hidden;height:32px;display:flex;align-items:center;z-index:100;}
 .ticker{display:flex;gap:0;white-space:nowrap;animation:tickerAnim 32s linear infinite;}
 .ticker-item{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;padding:0 2.4rem;border-right:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;transition:color .2s;}
@@ -100,7 +113,6 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 @keyframes blink{50%{opacity:0}}
 @keyframes tickerAnim{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ✅ RWD */
 @media(max-width:900px){main{gap:2rem;padding:0 2rem;}.ornament-wrap{width:150px;height:150px;}}
 @media(max-width:640px){
   html,body{overflow:auto;}
@@ -121,9 +133,16 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 <div id="cur-dot"></div>
 <div id="cur-ring"></div>
 <canvas id="pc"></canvas>
+<div id="toast"></div>
+<div id="countdown-bar"></div>
 
 <nav>
   <span class="nav-logo">LYZ.dev</span>
+  <!-- 即時時鐘 (計時器 setInterval 應用) -->
+  <div id="live-clock">
+    <span class="clock-dot"></span>
+    <span id="clock-time"></span>
+  </div>
   <button class="nav-hamburger" id="hbg"><span></span><span></span><span></span></button>
   <ul class="nav-links" id="navlm">
     <li><a href="about.html#hero">Home</a></li>
@@ -141,6 +160,11 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
       <span id="npart"></span><span class="accent" id="nacc">Z</span>
     </h1>
     <div class="typewriter-wrap"><span class="typewriter" id="tw"></span><span class="cursor"></span></div>
+
+    <!-- 技能標籤（由 JSON 陣列動態渲染，DOM 操作） -->
+    <div class="js-tags-label">上課所學技術 →</div>
+    <div class="js-tags" id="skill-tags"></div>
+
     <div class="cta-row">
       <a class="btn-enter" href="about.html"><span>查看作品集 →</span></a>
       <a class="btn-about" href="about.html#about">關於我</a>
@@ -164,63 +188,239 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
-/* ── 磁性游標 ── */
-const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
-(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
-document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));});
+/* ════════════════════════════════════════════════
+   【JavaScript 基礎】：變數、函式宣告
+   使用 const / let 宣告變數
+   ════════════════════════════════════════════════ */
+const dot = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+/* ── 磁性游標（DOM 事件監聽 + requestAnimationFrame） ── */
+document.addEventListener('mousemove', e => {
+  mx = e.clientX;
+  my = e.clientY;
+  dot.style.left = mx + 'px';
+  dot.style.top = my + 'px';
+});
+
+(function loop() {
+  rx += (mx - rx) * .1;
+  ry += (my - ry) * .1;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(loop);
+})();
+
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('ch'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('ch'));
+});
+
+
+/* ════════════════════════════════════════════════
+   【陣列與 JSON】：用 JSON 陣列儲存技能資料
+   並用 forEach + DOM 操作動態生成標籤
+   ════════════════════════════════════════════════ */
+const skillsData = [
+  { name: "JavaScript", category: "語言" },
+  { name: "陣列 / 物件", category: "JS概念" },
+  { name: "JSON", category: "JS概念" },
+  { name: "DOM 操作", category: "JS概念" },
+  { name: "事件處理", category: "JS概念" },
+  { name: "setInterval", category: "計時器" },
+  { name: "setTimeout", category: "計時器" },
+  { name: "動態效果", category: "JS概念" }
+];
+
+// 用 forEach 遍歷陣列，動態建立 DOM 元素（DOM操作應用）
+const tagsContainer = document.getElementById('skill-tags');
+skillsData.forEach(skill => {
+  const tag = document.createElement('span');
+  tag.className = 'js-tag';
+  tag.innerHTML = `<span>${skill.name}</span>`;
+
+  // 事件處理：hover 顯示 category（DOM 事件）
+  tag.addEventListener('mouseenter', () => showToast(`分類：${skill.category}`));
+  tag.addEventListener('click', () => showToast(`✓ ${skill.name} — 已學會！`));
+
+  tagsContainer.appendChild(tag);
+});
+
+
+/* ════════════════════════════════════════════════
+   【DOM 操作與事件處理】：Toast 通知系統
+   動態修改 DOM 元素的 classList 與 textContent
+   ════════════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+
+  // clearTimeout 避免重複觸發（計時器概念）
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2000);
+}
+
+
+/* ════════════════════════════════════════════════
+   【計時器與動態效果】：setInterval 即時時鐘
+   每秒更新一次 DOM 文字內容
+   ════════════════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();                      // 取得當前時間物件
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('clock-time').textContent = `${h}:${m}:${s}`;
+}
+updateClock();                                 // 立即執行一次
+setInterval(updateClock, 1000);               // 每 1000ms 更新（setInterval 應用）
+
+
+/* ════════════════════════════════════════════════
+   【計時器】：訪客在線時間計時
+   記錄進入頁面後經過的秒數
+   ════════════════════════════════════════════════ */
+let onlineSeconds = 0;
+setInterval(() => {
+  onlineSeconds++;
+  // 每 30 秒顯示提醒（條件判斷 + DOM 操作）
+  if (onlineSeconds === 30) {
+    const bar = document.getElementById('countdown-bar');
+    bar.textContent = '👋 你已在頁面上停留 30 秒！歡迎查看我的作品集 →';
+    bar.style.display = 'block';
+    setTimeout(() => { bar.style.display = 'none'; }, 4000);
+  }
+}, 1000);
+
 
 /* ── 粒子背景 ── */
-const cv=document.getElementById('pc'),cx=cv.getContext('2d');
-let ps=[];
-function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();window.addEventListener('resize',rsz);
-class P{
-  constructor(){this.reset();this.y=Math.random()*innerHeight;}
-  reset(){this.x=Math.random()*cv.width;this.y=cv.height+10;this.r=Math.random()*2.2+.4;this.vy=-(Math.random()*.55+.15);this.vx=(Math.random()-.5)*.25;this.a=Math.random()*.45+.08;this.life=0;this.ml=Math.random()*320+180;}
-  upd(){
-    this.x+=this.vx;this.y+=this.vy;this.life++;
-    const dx=mx-this.x,dy=my-this.y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<130){this.x+=dx*.0025;this.y+=dy*.0025;}
-    if(this.life>this.ml||this.y<-10)this.reset();
+const cv = document.getElementById('pc'), cx = cv.getContext('2d');
+let ps = [];
+function rsz() { cv.width = innerWidth; cv.height = innerHeight; }
+rsz(); window.addEventListener('resize', rsz);
+
+class P {
+  constructor() { this.reset(); this.y = Math.random() * innerHeight; }
+  reset() { this.x = Math.random() * cv.width; this.y = cv.height + 10; this.r = Math.random() * 2.2 + .4; this.vy = -(Math.random() * .55 + .15); this.vx = (Math.random() - .5) * .25; this.a = Math.random() * .45 + .08; this.life = 0; this.ml = Math.random() * 320 + 180; }
+  upd() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    const dx = mx - this.x, dy = my - this.y, d = Math.sqrt(dx * dx + dy * dy);
+    if (d < 130) { this.x += dx * .0025; this.y += dy * .0025; }
+    if (this.life > this.ml || this.y < -10) this.reset();
   }
-  draw(){
-    const f=this.life<40?this.life/40:this.life>this.ml-60?(this.ml-this.life)/60:1;
-    cx.beginPath();cx.arc(this.x,this.y,this.r,0,Math.PI*2);
-    cx.fillStyle=`rgba(107,76,50,${this.a*f})`;cx.fill();
+  draw() {
+    const f = this.life < 40 ? this.life / 40 : this.life > this.ml - 60 ? (this.ml - this.life) / 60 : 1;
+    cx.beginPath(); cx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    cx.fillStyle = `rgba(107,76,50,${this.a * f})`; cx.fill();
   }
 }
-for(let i=0;i<65;i++)ps.push(new P());
-(function anim(){
-  cx.clearRect(0,0,cv.width,cv.height);
-  ps.forEach((p,i)=>{
-    ps.slice(i+1).forEach(q=>{const dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<85){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.strokeStyle=`rgba(107,76,50,${(1-d/85)*.07})`;cx.lineWidth=.5;cx.stroke();}});
-    p.upd();p.draw();
+for (let i = 0; i < 65; i++) ps.push(new P());
+(function anim() {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  ps.forEach((p, i) => {
+    ps.slice(i + 1).forEach(q => { const dx = p.x - q.x, dy = p.y - q.y, d = Math.sqrt(dx * dx + dy * dy); if (d < 85) { cx.beginPath(); cx.moveTo(p.x, p.y); cx.lineTo(q.x, q.y); cx.strokeStyle = `rgba(107,76,50,${(1 - d / 85) * .07})`; cx.lineWidth = .5; cx.stroke(); } });
+    p.upd(); p.draw();
   });
   requestAnimationFrame(anim);
 })();
 
+
 /* ── 文字分割動畫 ── */
-const npart=document.getElementById('npart'),nacc=document.getElementById('nacc');
-[...'L · Y · '].forEach((c,i)=>{const s=document.createElement('span');s.className='char';s.style.setProperty('--d',`${.3+i*.065}s`);s.textContent=c===' '?'\u00A0':c;npart.appendChild(s);});
-nacc.classList.add('char');nacc.style.setProperty('--d',`${.3+8*.065}s`);
+const npart = document.getElementById('npart'), nacc = document.getElementById('nacc');
+[...'L · Y · '].forEach((c, i) => {
+  const s = document.createElement('span');
+  s.className = 'char';
+  s.style.setProperty('--d', `${.3 + i * .065}s`);
+  s.textContent = c === ' ' ? '\u00A0' : c;
+  npart.appendChild(s);
+});
+nacc.classList.add('char');
+nacc.style.setProperty('--d', `${.3 + 8 * .065}s`);
 
-/* ── 數字計數動畫 ── */
-function countUp(el,n,dur=1800){let s=null;(function f(ts){if(!s)s=ts;const p=Math.min((ts-s)/dur,1),e=1-Math.pow(1-p,3);el.textContent=Math.floor(e*n);if(p<1)requestAnimationFrame(f);else el.textContent=n;})(0);}
-setTimeout(()=>countUp(document.getElementById('cnum'),6),1300);
 
-/* ── 打字機 ── */
-const ph=["深度學習研究者","電機工程系學生","Android App Developer","PCB Circuit Builder","Signal Processing · MATLAB","AI Medical Imaging"];
-let pi=0,ci=0,dl=false;const tw=document.getElementById('tw');
-function type(){const p=ph[pi];if(!dl){tw.textContent=p.slice(0,++ci);if(ci===p.length){dl=true;setTimeout(type,2000);return;}}else{tw.textContent=p.slice(0,--ci);if(ci===0){dl=false;pi=(pi+1)%ph.length;}}setTimeout(type,dl?36:72);}
-setTimeout(type,1500);
+/* ════════════════════════════════════════════════
+   【動態效果】：countUp 數字動畫
+   使用 requestAnimationFrame + easing 公式
+   ════════════════════════════════════════════════ */
+function countUp(el, n, dur = 1800) {
+  let s = null;
+  (function f(ts) {
+    if (!s) s = ts;
+    const p = Math.min((ts - s) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);       // 緩動函數（easing）
+    el.textContent = Math.floor(e * n);
+    if (p < 1) requestAnimationFrame(f);
+    else el.textContent = n;
+  })(0);  // 立即呼叫（IIFE）
+}
+setTimeout(() => countUp(document.getElementById('cnum'), 6), 1300);
 
-/* ── 跑馬燈 ── */
-const items=["Deep Learning","PyTorch","DenseNet121","Android Studio","Java","MATLAB","FFT · Convolution","Arduino","Bluetooth","PCB Design","Soldering","EAGLE","Streamlit","Python 3.8","CUDA 12.1","App Inventor","Brain Tumor MRI","Signal Processing"];
-const tk=document.getElementById('ticker');const seg=items.map(i=>`<span class="ticker-item"><span class="ticker-dot"></span>${i}</span>`).join('');tk.innerHTML=seg+seg;
 
-/* ── 漢堡 ── */
-document.getElementById('hbg').addEventListener('click',()=>document.getElementById('navlm').classList.toggle('open'));
+/* ════════════════════════════════════════════════
+   【陣列應用 + 計時器】：打字機效果
+   用陣列儲存多個字串，用 setTimeout 遞迴切換
+   ════════════════════════════════════════════════ */
+const phrases = [
+  "深度學習研究者",
+  "電機工程系學生",
+  "Android App Developer",
+  "PCB Circuit Builder",
+  "Signal Processing · MATLAB",
+  "AI Medical Imaging"
+];
+let pi = 0, ci = 0, deleting = false;
+const twEl = document.getElementById('tw');
+
+function type() {
+  const current = phrases[pi];        // 取得當前字串（陣列索引）
+  if (!deleting) {
+    twEl.textContent = current.slice(0, ++ci);
+    if (ci === current.length) {
+      deleting = true;
+      setTimeout(type, 2000);        // setTimeout 延遲後開始刪除
+      return;
+    }
+  } else {
+    twEl.textContent = current.slice(0, --ci);
+    if (ci === 0) {
+      deleting = false;
+      pi = (pi + 1) % phrases.length; // 循環取下一個（陣列長度取餘）
+    }
+  }
+  setTimeout(type, deleting ? 36 : 72);
+}
+setTimeout(type, 1500);
+
+
+/* ════════════════════════════════════════════════
+   【陣列 + DOM 操作】：跑馬燈
+   JSON 陣列 → map() → innerHTML 動態渲染
+   ════════════════════════════════════════════════ */
+const tickerItems = [
+  "Deep Learning", "PyTorch", "DenseNet121", "Android Studio",
+  "Java", "MATLAB", "FFT · Convolution", "Arduino", "Bluetooth",
+  "PCB Design", "Soldering", "EAGLE", "Streamlit", "Python 3.8",
+  "CUDA 12.1", "App Inventor", "Brain Tumor MRI", "Signal Processing"
+];
+
+// 使用 map() 將陣列轉換為 HTML 字串（陣列方法應用）
+const tickerHTML = tickerItems
+  .map(item => `<span class="ticker-item"><span class="ticker-dot"></span>${item}</span>`)
+  .join('');
+
+// 重複兩次以實現無縫捲動（DOM innerHTML 操作）
+document.getElementById('ticker').innerHTML = tickerHTML + tickerHTML;
+
+
+/* ── 漢堡選單（DOM 事件處理） ── */
+document.getElementById('hbg').addEventListener('click', () => {
+  document.getElementById('navlm').classList.toggle('open');
+});
 </script>
 </body>
 </html>
