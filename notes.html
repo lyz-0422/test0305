@@ -19,7 +19,7 @@ html,body{scroll-behavior:smooth; cursor:none!important;}
 body{font-family:'Noto Sans TC',sans-serif;font-weight:300;line-height:1.7;color:var(--tp);background:var(--bg); overflow-x:hidden;}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
-button, input, select{cursor:none!important}
+button, input, select, a{cursor:none!important}
 a{text-decoration:none;color:inherit}
 
 /* ── cursor ── */
@@ -28,7 +28,12 @@ a{text-decoration:none;color:inherit}
 
 /* ── nav ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;backdrop-filter:blur(20px);background:rgba(250,247,242,.85);border-bottom:1px solid var(--bd);}
-.nav-logo{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;}
+.nav-left{display:flex;align-items:center;gap:1.5rem;}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase; transition: color .2s;}
+.nav-logo:hover{color:var(--ac);}
+.nav-divider{width:1px; height:14px; background:var(--bd);}
+.nav-back-link{font-family:'DM Mono',monospace; font-size:.64rem; color:var(--ts); text-transform:uppercase; transition: color .2s;}
+.nav-back-link:hover{color:var(--ac);}
 .nav-tabs{display:flex;list-style:none;}
 .nav-tab{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--tm);padding:.4rem 1.2rem;border:none;background:transparent;transition:color .2s;text-transform:uppercase;letter-spacing:0.1em;}
 .nav-tab.active{color:var(--ac);font-weight:500;}
@@ -89,7 +94,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 <div id="cur-ring"></div>
 
 <nav>
-  <span class="nav-logo">LYZ.dev / NOTES</span>
+  <div class="nav-left">
+    <a href="index.html" class="nav-logo">LYZ.dev</a>
+    <div class="nav-divider"></div>
+    <a href="about.html" class="nav-back-link">← Portfolio / About</a>
+  </div>
   <ul class="nav-tabs">
     <li><button class="nav-tab active" onclick="filterChapter('all',this)">All</button></li>
     <li><button class="nav-tab" onclick="filterChapter('js',this)">JavaScript</button></li>
@@ -106,7 +115,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
   </div>
 
   <div class="notes-grid" id="notes-grid">
-
     <!-- JS 01 -->
     <div class="note-card" data-chapter="js" onclick="toggleCard(this)">
       <div class="note-header">
@@ -122,14 +130,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
         <span class="npill">let · const</span><span class="npill">typeof</span><span class="npill">function</span><span class="npill">template literal</span>
       </div>
       <div class="note-body">
-        <div class="demo-label" style="font-size:0.6rem; color:var(--ac); margin-bottom:8px;">即時計算機</div>
         <div style="display:flex;gap:.5rem;align-items:center; margin-bottom:10px;">
           <input class="demo-input" type="number" id="d1a" value="10" style="width:80px; margin-bottom:0;" onclick="event.stopPropagation()">
           <select id="d1op" class="demo-input" style="width:60px; margin-bottom:0;" onclick="event.stopPropagation()"><option>+</option><option>-</option><option>×</option><option>÷</option></select>
           <input class="demo-input" type="number" id="d1b" value="5" style="width:80px; margin-bottom:0;" onclick="event.stopPropagation()">
         </div>
         <button class="demo-btn" onclick="event.stopPropagation();runCalc1()">計算</button>
-        <div class="demo-output" id="d1out">等待輸入....</div>
+        <div class="demo-output" id="d1out">等待輸入...</div>
       </div>
     </div>
 
