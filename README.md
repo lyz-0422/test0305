@@ -1,20 +1,5 @@
 # README
 
-🌐 Personal Knowledge & Portfolio Site (test0305)
-
-![alt text](https://img.shields.io/badge/status-active-success.svg)
-
-
-![alt text](https://img.shields.io/badge/License-MIT-yellow.svg)
-
-
-![alt text](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-
-
-![alt text](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-
-這是一個基於 HTML5 與 CSS3 構建的多頁面靜態網站。本專案旨在建立一個個人化的資訊展示平台，整合了個人簡介、技術心得與專案導航。
-
 🎯 專案目標
 
 個人品牌展示：透過 about.html 展示個人背景與技術棧。
