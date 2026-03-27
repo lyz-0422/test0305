@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#faf7f2;--bg2:#f4efe6;--sf:#ede7db;
+  --bd:#d8cfc2;--bd2:#c9bfb0;
+  --tp:#1c1814;--ts:#5c5147;--tm:#9c9080;
+  --ac:#6b4c32;--ac2:#7d5a3c;--as:rgba(107,76,50,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{scroll-behavior:smooth; cursor:none!important;}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;line-height:1.7;color:var(--tp);background:var(--bg); overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
+button, input, select, a{cursor:none!important}
+a{text-decoration:none;color:inherit}
+
+/* ── cursor ── */
+#cur-dot{position:fixed;width:10px;height:10px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:multiply;transition: width 0.2s, height 0.2s;}
+#cur-ring{position:fixed;width:40px;height:40px;border:1.5px solid rgba(107,76,50,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition: all 0.1s ease-out;}
+
+/* ── nav ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;backdrop-filter:blur(20px);background:rgba(250,247,242,.85);border-bottom:1px solid var(--bd);}
+.nav-left{display:flex;align-items:center;gap:1.5rem;}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase; transition: color .2s;}
+.nav-logo:hover{color:var(--ac);}
+.nav-divider{width:1px; height:14px; background:var(--bd);}
+.nav-back-link{font-family:'DM Mono',monospace; font-size:.64rem; color:var(--ts); text-transform:uppercase; transition: color .2s;}
+.nav-back-link:hover{color:var(--ac);}
+.nav-tabs{display:flex;list-style:none;}
+.nav-tab{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--tm);padding:.4rem 1.2rem;border:none;background:transparent;transition:color .2s;text-transform:uppercase;letter-spacing:0.1em;}
+.nav-tab.active{color:var(--ac);font-weight:500;}
+
+/* ── page ── */
+.page{max-width:1100px;margin:0 auto;padding:120px 3rem 80px;}
+
+/* ── hero ── */
+.notes-hero{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:3rem;border-bottom:1px solid var(--bd);margin-bottom:4rem;}
+.notes-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:3.2rem;line-height:1.1;letter-spacing:-0.01em;}
+.notes-h1 em{font-style:italic;color:var(--ac);}
+.notes-stat-num{font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--ac);font-weight:500;}
+
+/* ── grid ── */
+.notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);}
+.note-card{background:var(--bg);padding:2.8rem 2.4rem;position:relative;cursor:pointer;transition:background .3s ease;}
+.note-card:hover{background:var(--bg2);}
+.note-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.note-card:hover::after, .note-card.expanded::after{transform:scaleX(1);}
+
+.note-header{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:1.2rem;}
+.note-num{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);margin-top:5px;letter-spacing:0.1em;}
+.note-chapter{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--tm);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.note-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--tp);}
+.note-arrow{font-size:1rem;color:var(--tm);margin-left:auto;transition:transform .4s ease, color .3s;}
+.note-card:hover .note-arrow{color:var(--ac);}
+.note-card.expanded .note-arrow{transform:rotate(90deg); color:var(--ac);}
+
+.note-desc{font-size:.72rem;color:var(--ts);margin-bottom:1.4rem;line-height:1.8; opacity:0.85;}
+.note-pills{display:flex;flex-wrap:wrap;gap:.4rem;}
+.npill{font-family:'DM Mono',monospace;font-size:.58rem;padding:.2rem .7rem;background:var(--as);color:var(--ac);border:1px solid rgba(107,76,50,.15);text-transform:lowercase;}
+
+/* ── interactive ── */
+.note-body{display:none;margin-top:1.8rem;padding-top:1.8rem;border-top:1px solid var(--bd); animation: fadeIn 0.4s ease both;}
+@keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+.note-card.expanded .note-body{display:block;}
+
+.demo-wrap{border:1px solid var(--bd);padding:1.2rem;background:var(--bg);margin:1rem 0;}
+.demo-btn{font-family:'DM Mono',monospace;font-size:.65rem;padding:.5rem 1.2rem;border:1px solid var(--bd2);background:transparent;transition:.2s; margin-right:4px; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;}
+.demo-btn:hover{background:var(--ac);color:white;border-color:var(--ac);}
+.demo-input{font-family:'DM Mono',monospace;font-size:.75rem;padding:.5rem .8rem;border:1px solid var(--bd);margin-bottom:.8rem;width:100%; outline:none;}
+.demo-input:focus{border-color:var(--ac);}
+.demo-output{font-family:'DM Mono',monospace;font-size:.7rem;background:var(--sf);padding:.9rem;margin-top:.8rem; min-height:40px; color:var(--ts);}
+.demo-flex-item, .demo-grid-item{background:var(--as);border:1px solid rgba(107,76,50,.2);padding:.6rem;font-size:.65rem;text-align:center;color:var(--ac); font-family:'DM Mono',monospace;}
+.demo-anim-box{width:54px;height:54px;background:var(--as);border:1px solid var(--ac);display:flex;align-items:center;justify-content:center;font-size:.65rem; font-family:'DM Mono',monospace; color:var(--ac);}
+
+/* Animations */
+@keyframes spin { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }
+@keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-18px);} }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.35);} }
+
+@media(max-width:960px){ .notes-grid{grid-template-columns:1fr;} .notes-h1{font-size:2.6rem;} }
+</style>
+</head>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<nav>
+  <div class="nav-left">
+    <a href="index.html" class="nav-logo">LYZ.dev</a>
+    <div class="nav-divider"></div>
+    <a href="about.html" class="nav-back-link">← Portfolio / About</a>
+  </div>
+  <ul class="nav-tabs">
+    <li><button class="nav-tab active" onclick="filterChapter('all',this)">All</button></li>
+    <li><button class="nav-tab" onclick="filterChapter('js',this)">JavaScript</button></li>
+    <li><button class="nav-tab" onclick="filterChapter('css',this)">CSS Layout</button></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <div class="notes-hero">
+    <div>
+      <h1 class="notes-h1">課程<br><em>學習筆記</em></h1>
+    </div>
+    <div class="notes-stat-num" id="st-chapters">8</div>
+  </div>
+
+  <div class="notes-grid" id="notes-grid">
+    <!-- JS 01 -->
+    <div class="note-card" data-chapter="js" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">JS · 01</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">JAVASCRIPT 簡介</div>
+          <div class="note-title">變數、型別、函式</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">let / const 宣告變數，typeof 檢查型別，template literal 組合字串，function 定義與呼叫。</p>
+      <div class="note-pills">
+        <span class="npill">let · const</span><span class="npill">typeof</span><span class="npill">function</span><span class="npill">template literal</span>
+      </div>
+      <div class="note-body">
+        <div style="display:flex;gap:.5rem;align-items:center; margin-bottom:10px;">
+          <input class="demo-input" type="number" id="d1a" value="10" style="width:80px; margin-bottom:0;" onclick="event.stopPropagation()">
+          <select id="d1op" class="demo-input" style="width:60px; margin-bottom:0;" onclick="event.stopPropagation()"><option>+</option><option>-</option><option>×</option><option>÷</option></select>
+          <input class="demo-input" type="number" id="d1b" value="5" style="width:80px; margin-bottom:0;" onclick="event.stopPropagation()">
+        </div>
+        <button class="demo-btn" onclick="event.stopPropagation();runCalc1()">計算</button>
+        <div class="demo-output" id="d1out">等待輸入...</div>
+      </div>
+    </div>
+
+    <!-- JS 02 -->
+    <div class="note-card" data-chapter="js" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">JS · 02</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">JAVASCRIPT 簡介</div>
+          <div class="note-title">陣列、物件、JSON</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">Array 的 push / filter / map，Object 屬性存取，JSON.stringify 與 JSON.parse 序列化。</p>
+      <div class="note-pills">
+        <span class="npill">Array.push</span><span class="npill">filter</span><span class="npill">map</span><span class="npill">JSON</span>
+      </div>
+      <div class="note-body">
+        <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+          <input class="demo-input" type="text" id="d2inp" placeholder="新增技能..." onclick="event.stopPropagation()" style="margin-bottom:0;">
+          <button class="demo-btn" onclick="event.stopPropagation();d2push()" style="margin-bottom:0;">PUSH</button>
+        </div>
+        <div id="d2tags" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;"></div>
+        <button class="demo-btn" onclick="event.stopPropagation();d2map()">MAP → 大寫</button>
+        <div class="demo-output" id="d2out">目前的陣列：["Python", "PyTorch", "JS"]</div>
+      </div>
+    </div>
+
+    <!-- JS 03 -->
+    <div class="note-card" data-chapter="js" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">JS · 03</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">JAVASCRIPT 簡介</div>
+          <div class="note-title">DOM 操作與事件處理</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">querySelector 選取元素、innerHTML 修改內容、addEventListener 綁定 click 事件。</p>
+      <div class="note-pills">
+        <span class="npill">querySelector</span><span class="npill">innerHTML</span><span class="npill">addEventListener</span>
+      </div>
+      <div class="note-body">
+        <div style="display:flex;gap:.5rem;margin-bottom:.8rem;">
+          <input class="demo-input" type="text" id="d3inp" placeholder="輸入待辦項目..." onclick="event.stopPropagation()" style="margin-bottom:0;">
+          <button class="demo-btn" onclick="event.stopPropagation();d3add()" style="margin-bottom:0;">新增項目</button>
+        </div>
+        <div id="d3list" style="border:1px solid var(--bd); min-height:50px; padding:10px;">
+          <div style="font-size:0.65rem; color:var(--tm);">列表目前為空</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS 04 -->
+    <div class="note-card" data-chapter="js" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">JS · 04</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">JAVASCRIPT 簡介</div>
+          <div class="note-title">計時器與動態效果</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">setTimeout 延遲、setInterval 週期重複、clearInterval 停止運作。</p>
+      <div class="note-pills">
+        <span class="npill">setTimeout</span><span class="npill">setInterval</span><span class="npill">clearInterval</span><span class="npill">rAF</span>
+      </div>
+      <div class="note-body">
+        <div style="text-align:center;">
+          <div id="d4disp" style="font-family:'DM Mono',monospace; font-size:2.5rem; color:var(--ac); margin-bottom:1rem;">00:00.0</div>
+          <button class="demo-btn" onclick="event.stopPropagation();d4start()">START</button>
+          <button class="demo-btn" onclick="event.stopPropagation();d4pause()">PAUSE</button>
+          <button class="demo-btn" onclick="event.stopPropagation();d4reset()">RESET</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS 01 -->
+    <div class="note-card" data-chapter="css" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">CSS · 01</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">CSS LAYOUT</div>
+          <div class="note-title">FlexBox</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">display:flex 讓子元素沿主軸排列，justify-content 控制分佈，align-items 控制對齊。</p>
+      <div class="note-pills">
+        <span class="npill">display:flex</span><span class="npill">justify-content</span><span class="npill">align-items</span><span class="npill">flex-wrap</span>
+      </div>
+      <div class="note-body">
+        <select class="demo-input" id="c1jc" onchange="updateFlex1()" onclick="event.stopPropagation()">
+          <option value="flex-start">flex-start</option>
+          <option value="center">center</option>
+          <option value="space-between" selected>space-between</option>
+          <option value="space-around">space-around</option>
+        </select>
+        <div class="demo-wrap" id="c1preview" style="display:flex;gap:12px;height:80px;align-items:center;">
+          <div class="demo-flex-item">A</div><div class="demo-flex-item">BB</div><div class="demo-flex-item">CCC</div><div class="demo-flex-item">D</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS 02 -->
+    <div class="note-card" data-chapter="css" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">CSS · 02</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">CSS LAYOUT</div>
+          <div class="note-title">Grid</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">display:grid 建立二維網格，grid-template-columns 定義欄寬，gap 設定間距。</p>
+      <div class="note-pills">
+        <span class="npill">display:grid</span><span class="npill">grid-template-columns</span><span class="npill">gap</span><span class="npill">fr 單位</span>
+      </div>
+      <div class="note-body">
+        <select class="demo-input" id="c2cols" onchange="updateGrid1()" onclick="event.stopPropagation()">
+          <option value="1fr">1 欄 (1fr)</option>
+          <option value="1fr 1fr">2 欄 (1fr 1fr)</option>
+          <option value="1fr 1fr 1fr" selected>3 欄 (1fr 1fr 1fr)</option>
+        </select>
+        <div class="demo-wrap" id="c2preview" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div class="demo-grid-item">1</div><div class="demo-grid-item">2</div><div class="demo-grid-item">3</div>
+          <div class="demo-grid-item">4</div><div class="demo-grid-item">5</div><div class="demo-grid-item">6</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS 03 -->
+    <div class="note-card" data-chapter="css" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">CSS · 03</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">CSS LAYOUT</div>
+          <div class="note-title">RWD 響應式設計</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">@media query 針對不同螢幕寬度套用樣式，搭配 rem / % / vw 等彈性單位。</p>
+      <div class="note-pills">
+        <span class="npill">@media</span><span class="npill">breakpoint</span><span class="npill">rem · vw</span><span class="npill">mobile-first</span>
+      </div>
+      <div class="note-body">
+        <div style="display:flex;gap:.6rem;margin-bottom:1rem;">
+          <button class="demo-btn" onclick="event.stopPropagation();setDevice('mobile')">手機模式 (1欄)</button>
+          <button class="demo-btn" onclick="event.stopPropagation();setDevice('desktop')">電腦模式 (3欄)</button>
+        </div>
+        <div class="demo-wrap" id="c3preview" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div class="demo-grid-item">Item</div><div class="demo-grid-item">Item</div><div class="demo-grid-item">Item</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS 04 -->
+    <div class="note-card" data-chapter="css" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">CSS · 04</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">CSS LAYOUT</div>
+          <div class="note-title">CSS Animation</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">@keyframes 定義動畫關鍵影格，animation 屬性控制時長、重複與變換方式。</p>
+      <div class="note-pills">
+        <span class="npill">@keyframes</span><span class="npill">animation</span><span class="npill">transition</span><span class="npill">transform</span>
+      </div>
+      <div class="note-body">
+        <select class="demo-input" id="c4type" onchange="updateAnim1()" onclick="event.stopPropagation()">
+          <option value="spin">旋轉 Spin</option>
+          <option value="bounce">彈跳 Bounce</option>
+          <option value="pulse">脈衝 Pulse</option>
+        </select>
+        <div class="demo-wrap" style="display:flex;justify-content:center;align-items:center;height:120px;">
+          <div class="demo-anim-box" id="c4box" style="animation: spin 2s linear infinite;">CSS</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ── cursor ── */
+const dot=document.getElementById('cur-dot'), ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+/* ── UI Logic ── */
+function filterChapter(ch,btn){
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.note-card');
+  let count = 0;
+  cards.forEach(c=>{
+    const match = (ch==='all'||c.dataset.chapter===ch);
+    c.style.display = match ? '' : 'none';
+    if(match) count++;
+  });
+  document.getElementById('st-chapters').textContent = count;
+}
+
+function toggleCard(card){
+  const wasExpanded = card.classList.contains('expanded');
+  document.querySelectorAll('.note-card').forEach(c=>c.classList.remove('expanded'));
+  if(!wasExpanded) card.classList.add('expanded');
+}
+
+/* ── JS Demos ── */
+function runCalc1(){
+  const a=parseFloat(document.getElementById('d1a').value)||0;
+  const b=parseFloat(document.getElementById('d1b').value)||0;
+  const op=document.getElementById('d1op').value;
+  let r;
+  if(op==='+') r=a+b; else if(op==='-') r=a-b; else if(op==='×') r=a*b; else r=b!==0?(a/b).toFixed(2):'錯誤 (除以0)';
+  document.getElementById('d1out').textContent = `計算結果：${r}`;
+}
+
+let skills = ['Python','PyTorch','JS'];
+function renderSkills(){ document.getElementById('d2tags').innerHTML = skills.map(s=>`<span class="npill">${s}</span>`).join(''); }
+renderSkills();
+function d2push(){ const v=document.getElementById('d2inp').value.trim(); if(v){skills.push(v); document.getElementById('d2inp').value=''; renderSkills();} }
+function d2map(){ document.getElementById('d2out').textContent = 'MAP 大寫：' + JSON.stringify(skills.map(s=>s.toUpperCase())); }
+
+let domItems = [];
+function d3add(){
+  const v=document.getElementById('d3inp').value.trim();
+  if(!v) return;
+  domItems.push(v);
+  document.getElementById('d3inp').value='';
+  document.getElementById('d3list').innerHTML = domItems.map(it=>`<div style="font-size:0.7rem; padding:6px 0; border-bottom:1px solid #eee;">• ${it}</div>`).join('');
+}
+
+let tiMs=0, tiInt=null;
+function fmtMs(ms){const s=Math.floor(ms/1000), t=Math.floor((ms%1000)/100); return `00:${String(s).padStart(2,'0')}.${t}`;}
+function d4start(){if(tiInt) return; tiInt=setInterval(()=>{tiMs+=100; document.getElementById('d4disp').textContent=fmtMs(tiMs);},100);}
+function d4pause(){clearInterval(tiInt); tiInt=null;}
+function d4reset(){d4pause(); tiMs=0; document.getElementById('d4disp').textContent='00:00.0';}
+
+/* ── CSS Demos ── */
+function updateFlex1(){ document.getElementById('c1preview').style.justifyContent = document.getElementById('c1jc').value; }
+function updateGrid1(){ document.getElementById('c2preview').style.gridTemplateColumns = document.getElementById('c2cols').value; }
+function setDevice(m){ document.getElementById('c3preview').style.gridTemplateColumns = (m==='mobile')?'1fr':'1fr 1fr 1fr'; }
+function updateAnim1(){
+  const t = document.getElementById('c4type').value;
+  const box = document.getElementById('c4box');
+  const dur = (t==='spin')?'2s linear':'1s ease-in-out';
+  box.style.animation = `${t} ${dur} infinite alternate`;
+}
+</script>
+</body>
+</html>
