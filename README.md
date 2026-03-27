@@ -22,8 +22,6 @@
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![Google Fonts](https://img.shields.io/badge/Google%20Fonts-4285F4?style=flat-square&logo=google&logoColor=white)](https://fonts.google.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-9c9080?style=flat-square)](LICENSE)
 
 <br>
 
@@ -298,8 +296,6 @@ npx serve .
 
 ## 🎨 自訂說明
 
-Fork 此專案後，以下是修改成自己作品集的主要位置：
-
 ### 1. 個人資訊
 
 搜尋並替換 `about.html` 中的以下文字：
@@ -399,9 +395,7 @@ myproject: {
 
 ## 📄 授權說明
 
-本專案以 [MIT License](LICENSE) 授權開放原始碼。
-
-- ✅ 可 Fork 並改作自己的作品集
+- ✅ 可改作自己的作品集
 - ✅ 可學習程式碼結構與動畫實作方式
 - ❌ 請勿直接複製個人簡介、學術資歷、專題內容等個人資料
 - ❌ 請勿冒充作者身份對外展示
