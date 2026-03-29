@@ -34,7 +34,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .nav-divider{width:1px; height:14px; background:var(--bd);}
 .nav-back-link{font-family:'DM Mono',monospace; font-size:.64rem; color:var(--ts); text-transform:uppercase; transition: color .2s;}
 .nav-back-link:hover{color:var(--ac);}
-.nav-tabs{display:flex;list-style:none;}
+.nav-tabs{display:flex;list-style:none;gap:.2rem;}
 .nav-tab{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--tm);padding:.4rem 1.2rem;border:none;background:transparent;transition:color .2s;text-transform:uppercase;letter-spacing:0.1em;}
 .nav-tab.active{color:var(--ac);font-weight:500;}
 
@@ -46,6 +46,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .notes-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:3.2rem;line-height:1.1;letter-spacing:-0.01em;}
 .notes-h1 em{font-style:italic;color:var(--ac);}
 .notes-stat-num{font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--ac);font-weight:500;}
+
+/* ── 單元標題分隔 ── */
+.unit-header{
+  display:flex;align-items:center;gap:1.2rem;
+  margin-bottom:1.5rem;
+  padding-top:.5rem;
+}
+.unit-header:not(:first-child){ margin-top: 3.5rem; }
+.unit-label{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ac);
+  border:1px solid rgba(107,76,50,.25);padding:.3rem .8rem;
+  white-space:nowrap;
+}
+.unit-title{
+  font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;color:var(--tp);
+}
+.unit-line{flex:1;height:1px;background:var(--bd);}
+.unit-count{
+  font-family:'DM Mono',monospace;font-size:.58rem;color:var(--tm);
+  letter-spacing:.1em;white-space:nowrap;
+}
 
 /* ── grid ── */
 .notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);}
@@ -74,11 +96,47 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .demo-wrap{border:1px solid var(--bd);padding:1.2rem;background:var(--bg);margin:1rem 0;}
 .demo-btn{font-family:'DM Mono',monospace;font-size:.65rem;padding:.5rem 1.2rem;border:1px solid var(--bd2);background:transparent;transition:.2s; margin-right:4px; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;}
 .demo-btn:hover{background:var(--ac);color:white;border-color:var(--ac);}
+.demo-btn.danger:hover{background:#c0392b;border-color:#c0392b;}
 .demo-input{font-family:'DM Mono',monospace;font-size:.75rem;padding:.5rem .8rem;border:1px solid var(--bd);margin-bottom:.8rem;width:100%; outline:none;}
 .demo-input:focus{border-color:var(--ac);}
-.demo-output{font-family:'DM Mono',monospace;font-size:.7rem;background:var(--sf);padding:.9rem;margin-top:.8rem; min-height:40px; color:var(--ts);}
+.demo-output{font-family:'DM Mono',monospace;font-size:.7rem;background:var(--sf);padding:.9rem;margin-top:.8rem; min-height:40px; color:var(--ts); white-space:pre-wrap; word-break:break-all; line-height:1.8;}
+.demo-output.success{color:#2e7d32; background:#f1f8e9;}
+.demo-output.error{color:#c0392b; background:#fdf2f2;}
+.demo-output.loading{color:var(--tm); font-style:italic;}
 .demo-flex-item, .demo-grid-item{background:var(--as);border:1px solid rgba(107,76,50,.2);padding:.6rem;font-size:.65rem;text-align:center;color:var(--ac); font-family:'DM Mono',monospace;}
 .demo-anim-box{width:54px;height:54px;background:var(--as);border:1px solid var(--ac);display:flex;align-items:center;justify-content:center;font-size:.65rem; font-family:'DM Mono',monospace; color:var(--ac);}
+
+/* async 特定樣式 */
+.timeline{display:flex;flex-direction:column;gap:6px;margin-top:.8rem;}
+.tl-row{display:flex;align-items:center;gap:.7rem;font-family:'DM Mono',monospace;font-size:.65rem;}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--bd2);flex-shrink:0;transition:background .3s;}
+.tl-dot.done{background:#6dbf7e;}
+.tl-dot.running{background:var(--ac);animation:pulse-dot .8s ease-in-out infinite;}
+.tl-dot.error{background:#c0392b;}
+@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.7}}
+.tl-text{color:var(--ts);transition:color .3s;}
+.tl-text.done{color:var(--tp);}
+.tl-time{margin-left:auto;color:var(--tm);font-size:.58rem;}
+
+.promise-chain{display:flex;flex-direction:column;gap:4px;margin:.8rem 0;}
+.pchain-item{font-family:'DM Mono',monospace;font-size:.65rem;padding:.4rem .8rem;border-left:2px solid var(--bd);color:var(--tm);transition:border-color .3s,color .3s,background .3s;}
+.pchain-item.active{border-color:var(--ac);color:var(--ac);background:var(--as);}
+.pchain-item.done{border-color:#6dbf7e;color:#2e7d32;}
+.pchain-item.reject{border-color:#c0392b;color:#c0392b;}
+
+.fetch-card{border:1px solid var(--bd);padding:1rem;margin:.5rem 0;background:var(--bg2);transition:border-color .3s;}
+.fetch-card.loaded{border-color:rgba(107,76,50,.4);}
+.fc-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;margin-bottom:.3rem;}
+.fc-meta{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);display:flex;gap:1rem;flex-wrap:wrap;}
+.fc-badge{font-family:'DM Mono',monospace;font-size:.56rem;padding:.15rem .5rem;border:1px solid var(--bd);color:var(--ts);background:rgba(255,255,255,.5);}
+
+.req-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:.8rem 0;}
+.req-item{border:1px solid var(--bd);padding:.8rem;background:var(--bg);text-align:center;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--tm);transition:border-color .3s,color .3s,background .3s;}
+.req-item.pending{border-color:var(--bd2);color:var(--tm);}
+.req-item.loading{border-color:var(--ac);color:var(--ac);background:var(--as);animation:blink-bg .8s step-end infinite;}
+.req-item.done{border-color:#6dbf7e;color:#2e7d32;background:#f1f8e9;}
+.req-item.fail{border-color:#c0392b;color:#c0392b;background:#fdf2f2;}
+@keyframes blink-bg{50%{opacity:.6}}
 
 /* Animations */
 @keyframes spin { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }
@@ -86,6 +144,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.35);} }
 
 @media(max-width:960px){ .notes-grid{grid-template-columns:1fr;} .notes-h1{font-size:2.6rem;} }
+@media(max-width:640px){ .page{padding:100px 1.5rem 60px;} nav{padding:1rem 1.5rem;} .nav-tabs{display:none;} }
 </style>
 </head>
 <body>
@@ -103,6 +162,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
     <li><button class="nav-tab active" onclick="filterChapter('all',this)">All</button></li>
     <li><button class="nav-tab" onclick="filterChapter('js',this)">JavaScript</button></li>
     <li><button class="nav-tab" onclick="filterChapter('css',this)">CSS Layout</button></li>
+    <li><button class="nav-tab" onclick="filterChapter('async',this)">Async / API</button></li>
   </ul>
 </nav>
 
@@ -111,10 +171,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
     <div>
       <h1 class="notes-h1">課程<br><em>學習筆記</em></h1>
     </div>
-    <div class="notes-stat-num" id="st-chapters">8</div>
+    <div class="notes-stat-num" id="st-chapters">12</div>
   </div>
 
-  <div class="notes-grid" id="notes-grid">
+  <!-- ══ 單元一：JavaScript 基礎 ══ -->
+  <div class="unit-header" data-chapter="js">
+    <span class="unit-label">Unit 01</span>
+    <span class="unit-title">JavaScript 基礎</span>
+    <div class="unit-line"></div>
+    <span class="unit-count">4 知識點</span>
+  </div>
+
+  <div class="notes-grid" id="notes-grid-js">
+
     <!-- JS 01 -->
     <div class="note-card" data-chapter="js" onclick="toggleCard(this)">
       <div class="note-header">
@@ -213,6 +282,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
         </div>
       </div>
     </div>
+
+  </div><!-- /notes-grid-js -->
+
+  <!-- ══ 單元二：CSS Layout ══ -->
+  <div class="unit-header" data-chapter="css">
+    <span class="unit-label">Unit 02</span>
+    <span class="unit-title">CSS Layout</span>
+    <div class="unit-line"></div>
+    <span class="unit-count">4 知識點</span>
+  </div>
+
+  <div class="notes-grid" id="notes-grid-css">
 
     <!-- CSS 01 -->
     <div class="note-card" data-chapter="css" onclick="toggleCard(this)">
@@ -319,8 +400,144 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
       </div>
     </div>
 
+  </div><!-- /notes-grid-css -->
+
+  <!-- ══ 單元三：非同步操作與 API 串接 ══ -->
+  <div class="unit-header" data-chapter="async">
+    <span class="unit-label">Unit 03</span>
+    <span class="unit-title">非同步操作與 API 串接</span>
+    <div class="unit-line"></div>
+    <span class="unit-count">4 知識點</span>
   </div>
-</div>
+
+  <div class="notes-grid" id="notes-grid-async">
+
+    <!-- ASYNC 01 -->
+    <div class="note-card" data-chapter="async" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">ASYNC · 01</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">非同步操作與 API 串接</div>
+          <div class="note-title">同步與非同步</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">同步程式碼逐行執行並等待，非同步則將耗時任務（I/O、網路請求）交給瀏覽器背景處理，不阻塞主執行緒，完成後再透過 Event Loop 回傳結果。</p>
+      <div class="note-pills">
+        <span class="npill">同步 sync</span><span class="npill">非同步 async</span><span class="npill">event loop</span><span class="npill">call stack</span>
+      </div>
+      <div class="note-body">
+        <p style="font-size:.68rem;color:var(--tm);margin-bottom:.8rem;">模擬同步 vs 非同步的執行順序差異 —— 觀察 log 輸出的先後</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="demo-btn" onclick="event.stopPropagation();runSync()">▶ 同步執行</button>
+          <button class="demo-btn" onclick="event.stopPropagation();runAsync()">▶ 非同步執行</button>
+          <button class="demo-btn" onclick="event.stopPropagation();clearA01()">清除</button>
+        </div>
+        <div class="timeline" id="a1-timeline"></div>
+        <div class="demo-output" id="a1out" style="margin-top:.8rem;">點擊按鈕觀察執行順序...</div>
+      </div>
+    </div>
+
+    <!-- ASYNC 02 -->
+    <div class="note-card" data-chapter="async" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">ASYNC · 02</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">非同步操作與 API 串接</div>
+          <div class="note-title">Callback 與 Promise</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">Callback 是傳入函式的函式，用於非同步完成後執行；Promise 封裝非同步狀態（pending → fulfilled / rejected），鏈式 .then().catch() 取代巢狀 callback，避免 Callback Hell。</p>
+      <div class="note-pills">
+        <span class="npill">callback</span><span class="npill">Promise</span><span class="npill">.then()</span><span class="npill">.catch()</span><span class="npill">pending · fulfilled · rejected</span>
+      </div>
+      <div class="note-body">
+        <p style="font-size:.68rem;color:var(--tm);margin-bottom:.8rem;">模擬 Promise 鏈式執行 — 觀察各階段狀態變化</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="demo-btn" onclick="event.stopPropagation();runPromiseChain(true)">✓ 成功鏈</button>
+          <button class="demo-btn" onclick="event.stopPropagation();runPromiseChain(false)">✗ 觸發 reject</button>
+          <button class="demo-btn" onclick="event.stopPropagation();resetPromise()">重置</button>
+        </div>
+        <div class="promise-chain" id="a2-chain">
+          <div class="pchain-item" id="pc1">① new Promise( executor )</div>
+          <div class="pchain-item" id="pc2">&nbsp;&nbsp;.then( 處理成功資料 )</div>
+          <div class="pchain-item" id="pc3">&nbsp;&nbsp;.then( 再次轉換資料 )</div>
+          <div class="pchain-item" id="pc4">&nbsp;&nbsp;.catch( 捕捉錯誤 )</div>
+          <div class="pchain-item" id="pc5">&nbsp;&nbsp;.finally( 無論如何執行 )</div>
+        </div>
+        <div class="demo-output" id="a2out">等待執行...</div>
+      </div>
+    </div>
+
+    <!-- ASYNC 03 -->
+    <div class="note-card" data-chapter="async" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">ASYNC · 03</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">非同步操作與 API 串接</div>
+          <div class="note-title">fetch 與 async/await</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">fetch() 回傳 Promise，用於發送 HTTP 請求取得資料；async/await 語法讓非同步程式碼讀起來像同步，搭配 try/catch 處理錯誤，大幅提升可讀性。</p>
+      <div class="note-pills">
+        <span class="npill">fetch()</span><span class="npill">async function</span><span class="npill">await</span><span class="npill">try / catch</span><span class="npill">response.json()</span>
+      </div>
+      <div class="note-body">
+        <p style="font-size:.68rem;color:var(--tm);margin-bottom:.8rem;">呼叫公開 API — JSONPlaceholder 隨機取得一位使用者資料</p>
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.8rem;">
+          <input class="demo-input" type="number" id="a3uid" value="1" min="1" max="10" style="width:70px;margin-bottom:0;" onclick="event.stopPropagation()" placeholder="ID">
+          <span style="font-size:.65rem;color:var(--tm);font-family:'DM Mono',monospace;">/ 10</span>
+          <button class="demo-btn" onclick="event.stopPropagation();fetchUser()" style="margin:0;">FETCH</button>
+          <button class="demo-btn" onclick="event.stopPropagation();fetchRandomUser()" style="margin:0;">隨機</button>
+        </div>
+        <div id="a3-card" style="display:none;" class="fetch-card">
+          <div class="fc-name" id="a3-name"></div>
+          <div class="fc-meta">
+            <span id="a3-email"></span>
+            <span id="a3-phone"></span>
+          </div>
+          <div style="margin-top:.6rem;display:flex;gap:.3rem;flex-wrap:wrap;" id="a3-badges"></div>
+        </div>
+        <div class="demo-output" id="a3out">輸入 ID (1–10) 後點擊 FETCH...</div>
+      </div>
+    </div>
+
+    <!-- ASYNC 04 -->
+    <div class="note-card" data-chapter="async" onclick="toggleCard(this)">
+      <div class="note-header">
+        <span class="note-num">ASYNC · 04</span>
+        <div class="note-title-wrap">
+          <div class="note-chapter">非同步操作與 API 串接</div>
+          <div class="note-title">多個請求與實戰整合</div>
+        </div>
+        <span class="note-arrow">›</span>
+      </div>
+      <p class="note-desc">Promise.all() 並行發送多個請求，全部完成才繼續；Promise.allSettled() 不論成功失敗都回傳結果；序列請求（for...of + await）則逐一等待，適合有依賴關係的場景。</p>
+      <div class="note-pills">
+        <span class="npill">Promise.all()</span><span class="npill">Promise.allSettled()</span><span class="npill">並行 parallel</span><span class="npill">序列 sequential</span>
+      </div>
+      <div class="note-body">
+        <p style="font-size:.68rem;color:var(--tm);margin-bottom:.8rem;">比較「並行」與「序列」請求的完成時序</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem;">
+          <button class="demo-btn" onclick="event.stopPropagation();runParallel()">⚡ Promise.all（並行）</button>
+          <button class="demo-btn" onclick="event.stopPropagation();runSequential()">⏩ Sequential（序列）</button>
+          <button class="demo-btn" onclick="event.stopPropagation();runAllSettled()">🔀 allSettled（含失敗）</button>
+        </div>
+        <div class="req-grid" id="a4-grid">
+          <div class="req-item pending" id="rq1">請求 #1<br><small>User /1</small></div>
+          <div class="req-item pending" id="rq2">請求 #2<br><small>User /2</small></div>
+          <div class="req-item pending" id="rq3">請求 #3<br><small>User /3</small></div>
+          <div class="req-item pending" id="rq4">請求 #4<br><small>User /99 ✗</small></div>
+        </div>
+        <div class="demo-output" id="a4out">選擇執行模式...</div>
+      </div>
+    </div>
+
+  </div><!-- /notes-grid-async -->
+
+</div><!-- /page -->
 
 <script>
 /* ── cursor ── */
@@ -329,16 +546,25 @@ let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
 (function loop(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
 
-/* ── UI Logic ── */
+/* ── filter ── */
 function filterChapter(ch,btn){
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const cards = document.querySelectorAll('.note-card');
+  const headers = document.querySelectorAll('.unit-header');
+  const grids = document.querySelectorAll('.notes-grid');
   let count = 0;
   cards.forEach(c=>{
     const match = (ch==='all'||c.dataset.chapter===ch);
     c.style.display = match ? '' : 'none';
     if(match) count++;
+  });
+  headers.forEach(h=>{
+    h.style.display=(ch==='all'||h.dataset.chapter===ch)?'':'none';
+  });
+  grids.forEach(g=>{
+    const visible=[...g.querySelectorAll('.note-card')].some(c=>c.style.display!=='none');
+    g.style.display=visible?'':'none';
   });
   document.getElementById('st-chapters').textContent = count;
 }
@@ -349,7 +575,9 @@ function toggleCard(card){
   if(!wasExpanded) card.classList.add('expanded');
 }
 
-/* ── JS Demos ── */
+/* ══════════════════════════════════
+   JS Demos (original)
+   ══════════════════════════════════ */
 function runCalc1(){
   const a=parseFloat(document.getElementById('d1a').value)||0;
   const b=parseFloat(document.getElementById('d1b').value)||0;
@@ -389,6 +617,279 @@ function updateAnim1(){
   const box = document.getElementById('c4box');
   const dur = (t==='spin')?'2s linear':'1s ease-in-out';
   box.style.animation = `${t} ${dur} infinite alternate`;
+}
+
+/* ══════════════════════════════════
+   ASYNC Demos
+   ══════════════════════════════════ */
+
+/* ─── ASYNC 01：同步 vs 非同步 ─── */
+function addLog(el, text, delay=0){
+  return new Promise(res=>setTimeout(()=>{
+    el.textContent += (el.textContent ? '\n' : '') + text;
+    res();
+  }, delay));
+}
+
+function addTlRow(containerId, text, status='running'){
+  const tl = document.getElementById(containerId);
+  const row = document.createElement('div');
+  row.className = 'tl-row';
+  row.innerHTML = `<span class="tl-dot ${status}"></span><span class="tl-text ${status==='done'?'done':''}">${text}</span><span class="tl-time" id="tl-t-${Date.now()}"></span>`;
+  tl.appendChild(row);
+  return row;
+}
+
+function clearA01(){
+  document.getElementById('a1-timeline').innerHTML='';
+  document.getElementById('a1out').textContent='點擊按鈕觀察執行順序...';
+  document.getElementById('a1out').className='demo-output';
+}
+
+function runSync(){
+  clearA01();
+  const tl=document.getElementById('a1-timeline');
+  const out=document.getElementById('a1out');
+  out.className='demo-output';
+  out.textContent='';
+  const logs=[];
+
+  // Simulate synchronous execution visually with staggered display
+  const steps=[
+    {t:'① console.log("開始")  ← 立刻執行',d:0},
+    {t:'② 執行耗時運算（假設 3 秒）← 卡住！主執行緒阻塞',d:400},
+    {t:'③ console.log("結束")  ← 等②完成才執行',d:900},
+  ];
+  steps.forEach((s,i)=>{
+    setTimeout(()=>{
+      const row=document.createElement('div');
+      row.className='tl-row';
+      row.innerHTML=`<span class="tl-dot running"></span><span class="tl-text">${s.t}</span>`;
+      tl.appendChild(row);
+      setTimeout(()=>{
+        row.querySelector('.tl-dot').className='tl-dot done';
+        row.querySelector('.tl-text').className='tl-text done';
+      },200);
+      logs.push(s.t.split('←')[0].trim());
+      if(i===steps.length-1){
+        setTimeout(()=>{
+          out.textContent='同步輸出順序：\n① 開始\n② [耗時運算...阻塞]\n③ 結束\n\n⚠ 主執行緒在②期間完全被阻塞，UI 無法回應。';
+        },300);
+      }
+    }, s.d);
+  });
+}
+
+function runAsync(){
+  clearA01();
+  const tl=document.getElementById('a1-timeline');
+  const out=document.getElementById('a1out');
+  out.className='demo-output loading';
+  out.textContent='執行中...';
+  const steps=[
+    {t:'① console.log("開始")  ← 立刻執行',d:0,done:100},
+    {t:'② setTimeout( fn, 2000 )  ← 交給 Web API，繼續往下！',d:250,done:350},
+    {t:'③ console.log("結束")  ← ②還沒跑完就先執行',d:500,done:600},
+    {t:'④ [2 秒後] fn() 回到 Call Stack ← Event Loop 排程',d:1000,done:1200},
+  ];
+  steps.forEach((s,i)=>{
+    setTimeout(()=>{
+      const row=document.createElement('div');
+      row.className='tl-row';
+      row.innerHTML=`<span class="tl-dot running"></span><span class="tl-text">${s.t}</span>`;
+      tl.appendChild(row);
+      setTimeout(()=>{
+        row.querySelector('.tl-dot').className='tl-dot done';
+        row.querySelector('.tl-text').className='tl-text done';
+        if(i===steps.length-1){
+          out.className='demo-output success';
+          out.textContent='非同步輸出順序：\n① 開始\n③ 結束   ← ②還沒完成，主執行緒繼續\n④ setTimeout 的 fn()  ← 2秒後 Event Loop 排程\n\n✓ 主執行緒不阻塞，UI 保持流暢。';
+        }
+      },s.done-s.d);
+    },s.d);
+  });
+}
+
+/* ─── ASYNC 02：Promise chain ─── */
+const pcIds=['pc1','pc2','pc3','pc4','pc5'];
+function resetPromise(){
+  pcIds.forEach(id=>{
+    const el=document.getElementById(id);
+    el.className='pchain-item';
+  });
+  document.getElementById('a2out').textContent='等待執行...';
+  document.getElementById('a2out').className='demo-output';
+}
+
+function runPromiseChain(shouldResolve){
+  resetPromise();
+  const out=document.getElementById('a2out');
+  out.className='demo-output loading';
+  out.textContent='Promise 執行中...';
+
+  // Step 1
+  setTimeout(()=>{
+    document.getElementById('pc1').className='pchain-item active';
+  },100);
+  // Step 2
+  setTimeout(()=>{
+    document.getElementById('pc1').className='pchain-item done';
+    if(shouldResolve){
+      document.getElementById('pc2').className='pchain-item active';
+    } else {
+      document.getElementById('pc2').className='pchain-item reject';
+    }
+  },700);
+  // Step 3 or catch
+  setTimeout(()=>{
+    if(shouldResolve){
+      document.getElementById('pc2').className='pchain-item done';
+      document.getElementById('pc3').className='pchain-item active';
+    } else {
+      document.getElementById('pc4').className='pchain-item active';
+    }
+  },1400);
+  // Step 4
+  setTimeout(()=>{
+    if(shouldResolve){
+      document.getElementById('pc3').className='pchain-item done';
+    } else {
+      document.getElementById('pc4').className='pchain-item done';
+    }
+    document.getElementById('pc5').className='pchain-item active';
+  },2100);
+  // finally
+  setTimeout(()=>{
+    document.getElementById('pc5').className='pchain-item done';
+    if(shouldResolve){
+      out.className='demo-output success';
+      out.textContent='✓ Promise resolved\n→ .then() 依序執行\n→ .finally() 最後執行\n\n狀態：pending → fulfilled';
+    } else {
+      out.className='demo-output error';
+      out.textContent='✗ Promise rejected\n→ 跳過 .then()，直接進 .catch()\n→ .finally() 仍然執行\n\n狀態：pending → rejected';
+    }
+  },2800);
+}
+
+/* ─── ASYNC 03：fetch + async/await ─── */
+async function fetchUser(){
+  const uid = parseInt(document.getElementById('a3uid').value)||1;
+  const out = document.getElementById('a3out');
+  const card = document.getElementById('a3-card');
+  card.style.display='none';
+  card.className='fetch-card';
+  out.className='demo-output loading';
+  out.textContent=`正在 fetch https://jsonplaceholder.typicode.com/users/${uid} ...`;
+  try {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/users/${uid}`);
+    if(!res.ok) throw new Error(`HTTP ${res.status} — 找不到使用者`);
+    const data = await res.json();
+    document.getElementById('a3-name').textContent = `${data.name}  (@${data.username})`;
+    document.getElementById('a3-email').textContent = `✉ ${data.email}`;
+    document.getElementById('a3-phone').textContent = `☎ ${data.phone}`;
+    const badges = [data.address?.city, data.company?.name, `ID: ${data.id}`].filter(Boolean);
+    document.getElementById('a3-badges').innerHTML = badges.map(b=>`<span class="fc-badge">${b}</span>`).join('');
+    card.style.display='block';
+    setTimeout(()=>card.className='fetch-card loaded',50);
+    out.className='demo-output success';
+    out.textContent=`✓ 成功取得 User #${uid}\nres.ok: true  |  Content-Type: application/json\nawait res.json() → 解析為 JS 物件`;
+  } catch(e){
+    out.className='demo-output error';
+    out.textContent=`✗ 錯誤：${e.message}\n\ntry { ... } catch(e) { ... } 捕捉到例外`;
+  }
+}
+function fetchRandomUser(){
+  document.getElementById('a3uid').value = Math.ceil(Math.random()*10);
+  fetchUser();
+}
+
+/* ─── ASYNC 04：多個請求 ─── */
+function resetReqs(){
+  ['rq1','rq2','rq3','rq4'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.className='req-item pending';
+  });
+}
+function setReq(id, state){
+  document.getElementById(id).className=`req-item ${state}`;
+}
+function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+async function runParallel(){
+  resetReqs();
+  const out=document.getElementById('a4out');
+  out.className='demo-output loading';
+  out.textContent='⚡ Promise.all() — 全部同時發出請求...';
+  ['rq1','rq2','rq3'].forEach(id=>setReq(id,'loading'));
+  const t0=Date.now();
+  try{
+    const results = await Promise.all([
+      fetch('https://jsonplaceholder.typicode.com/users/1').then(r=>r.json()),
+      fetch('https://jsonplaceholder.typicode.com/users/2').then(r=>r.json()),
+      fetch('https://jsonplaceholder.typicode.com/users/3').then(r=>r.json()),
+    ]);
+    ['rq1','rq2','rq3'].forEach(id=>setReq(id,'done'));
+    setReq('rq4','pending');
+    const elapsed=Date.now()-t0;
+    out.className='demo-output success';
+    out.textContent=`✓ Promise.all() 完成，耗時 ${elapsed}ms\n並行：三個請求同時發出，等全部完成\n\n取得：${results.map(u=>u.name).join(' · ')}`;
+  }catch(e){
+    out.className='demo-output error';
+    out.textContent=`✗ ${e.message}`;
+  }
+}
+
+async function runSequential(){
+  resetReqs();
+  const out=document.getElementById('a4out');
+  out.className='demo-output loading';
+  out.textContent='⏩ Sequential — 逐一等待請求完成...';
+  const ids=[1,2,3];
+  const reqIds=['rq1','rq2','rq3'];
+  const names=[];
+  const t0=Date.now();
+  for(let i=0;i<ids.length;i++){
+    setReq(reqIds[i],'loading');
+    out.textContent=`⏩ Sequential — 正在請求 User #${ids[i]}...`;
+    const r = await fetch(`https://jsonplaceholder.typicode.com/users/${ids[i]}`);
+    const data = await r.json();
+    names.push(data.name);
+    setReq(reqIds[i],'done');
+    await delay(200);
+  }
+  setReq('rq4','pending');
+  const elapsed=Date.now()-t0;
+  out.className='demo-output success';
+  out.textContent=`✓ Sequential 完成，耗時 ${elapsed}ms\n序列：每次 await 完才發下一個請求\n（適合有依賴關係的場景）\n\n取得：${names.join(' · ')}`;
+}
+
+async function runAllSettled(){
+  resetReqs();
+  const out=document.getElementById('a4out');
+  out.className='demo-output loading';
+  out.textContent='🔀 Promise.allSettled() — 包含預期失敗的請求...';
+  ['rq1','rq2','rq3','rq4'].forEach(id=>setReq(id,'loading'));
+  const t0=Date.now();
+  const results = await Promise.allSettled([
+    fetch('https://jsonplaceholder.typicode.com/users/1').then(r=>{if(!r.ok)throw new Error('Not found');return r.json();}),
+    fetch('https://jsonplaceholder.typicode.com/users/2').then(r=>{if(!r.ok)throw new Error('Not found');return r.json();}),
+    fetch('https://jsonplaceholder.typicode.com/users/3').then(r=>{if(!r.ok)throw new Error('Not found');return r.json();}),
+    fetch('https://jsonplaceholder.typicode.com/users/9999').then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json();}),
+  ]);
+  const reqIds=['rq1','rq2','rq3','rq4'];
+  const elapsed=Date.now()-t0;
+  let summary='';
+  results.forEach((r,i)=>{
+    if(r.status==='fulfilled'){
+      setReq(reqIds[i],'done');
+      summary+=`✓ 請求 #${i+1}：${r.value.name}\n`;
+    } else {
+      setReq(reqIds[i],'fail');
+      summary+=`✗ 請求 #${i+1}：${r.reason.message}\n`;
+    }
+  });
+  out.className='demo-output';
+  out.textContent=`🔀 allSettled 完成，耗時 ${elapsed}ms\n不論成功失敗都回傳結果（不會 throw）\n\n${summary}`;
 }
 </script>
 </body>
