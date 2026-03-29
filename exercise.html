@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · 練習題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#faf7f2; --bg2:#f4efe6; --sf:#ede7db;
+  --bd:#d8cfc2; --bd2:#c9bfb0;
+  --tp:#1c1814; --ts:#5c5147; --tm:#9c9080;
+  --ac:#6b4c32; --ac2:#7d5a3c; --as:rgba(107,76,50,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+*{cursor:none!important}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--tp);min-height:100vh;display:flex;flex-direction:column;}
+
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
+
+#cur-dot{position:fixed;width:10px;height:10px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply;}
+#cur-ring{position:fixed;width:44px;height:44px;border:1.5px solid rgba(107,76,50,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+body.ch #cur-dot{width:5px;height:5px;}
+body.ch #cur-ring{width:60px;height:60px;border-color:var(--ac);background:rgba(107,76,50,.04);}
+
+#pc{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.7;}
+
+/* NAV */
+nav{position:sticky;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.3rem 3rem;backdrop-filter:blur(20px) saturate(1.6);background:rgba(250,247,242,.88);border-bottom:1px solid var(--bd);animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--tm);letter-spacing:.22em;text-transform:uppercase;text-decoration:none;}
+.nav-links{display:flex;gap:2.2rem;list-style:none;align-items:center;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ts);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--ac)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:transparent;border:none;padding:4px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--tm);border-radius:2px;transition:all .3s;}
+
+#live-clock{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--tm);letter-spacing:.1em;display:flex;align-items:center;gap:.5rem;}
+#live-clock .clock-dot{width:5px;height:5px;border-radius:50%;background:#6dbf7e;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* MAIN */
+main{flex:1;padding:3rem 3rem 5rem;position:relative;z-index:2;max-width:900px;margin:0 auto;width:100%;}
+
+/* PAGE HEADER */
+.page-eyebrow{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;animation:slideUp .7s .1s cubic-bezier(.16,1,.3,1) both;}
+.page-eyebrow::before{content:'';width:32px;height:1px;background:var(--ac);opacity:.7;}
+.eyebrow-text{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.4rem,5vw,4rem);line-height:1;margin-bottom:.6rem;letter-spacing:.01em;animation:slideUp .7s .2s cubic-bezier(.16,1,.3,1) both;}
+.page-title em{font-style:italic;color:var(--ac);}
+.page-sub{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.08em;margin-bottom:3rem;animation:slideUp .7s .3s cubic-bezier(.16,1,.3,1) both;}
+
+/* SECTION */
+.section{margin-bottom:3rem;animation:slideUp .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--sd,.4s);}
+.section-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--bd);}
+.section-num{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--ac);letter-spacing:.15em;background:var(--as);padding:.25rem .6rem;border:1px solid rgba(107,76,50,.15);}
+.section-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;color:var(--tp);}
+
+/* CARD */
+.ex-card{border:1px solid var(--bd);background:rgba(255,255,255,.55);margin-bottom:1rem;overflow:hidden;transition:border-color .25s,box-shadow .25s;}
+.ex-card:hover{border-color:var(--bd2);box-shadow:0 4px 24px rgba(107,76,50,.07);}
+.ex-card-header{display:flex;align-items:center;gap:1rem;padding:.9rem 1.25rem;border-bottom:1px solid var(--bd);background:rgba(244,239,230,.5);}
+.ex-num{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--tm);letter-spacing:.1em;}
+.ex-title{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tp);letter-spacing:.06em;font-weight:500;}
+.ex-body{padding:1.25rem;}
+.ex-desc{font-size:.88rem;color:var(--ts);line-height:1.8;margin-bottom:1rem;}
+
+.steps{list-style:none;margin:.5rem 0 1rem;}
+.steps li{padding:.3rem 0 .3rem 1.4rem;position:relative;font-size:.85rem;color:var(--ts);line-height:1.7;}
+.steps li::before{content:attr(data-n);position:absolute;left:0;color:var(--ac);font-family:'DM Mono',monospace;font-size:.75rem;font-weight:500;}
+
+.hint{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--tm);letter-spacing:.04em;background:var(--as);border-left:2px solid rgba(107,76,50,.3);padding:.5rem .85rem;margin-top:.75rem;}
+
+code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.07);color:var(--ac);padding:.1em .35em;}
+
+/* CODE BLOCK */
+.code-block{background:#1c1814;padding:1.1rem 1.25rem;margin:.75rem 0;font-family:'DM Mono',monospace;font-size:.75rem;line-height:1.8;overflow-x:auto;border-top:2px solid var(--ac);}
+.c-kw{color:#c792ea;}.c-fn{color:#82aaff;}.c-st{color:#c3e88d;}.c-nm{color:#f78c6c;}.c-cm{color:#546e7a;font-style:italic;}.c-pu{color:#89ddff;}
+
+/* RESULT */
+.result-area{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);}
+.run-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#faf7f2;background:var(--ac);border:1px solid var(--ac);padding:.5rem 1.2rem;transition:transform .2s;margin-bottom:.75rem;position:relative;overflow:hidden;}
+.run-btn::before{content:'';position:absolute;bottom:-110%;left:50%;width:130%;padding-bottom:130%;background:var(--ac2);border-radius:50%;transform:translate(-50%,0);transition:bottom .5s cubic-bezier(.16,1,.3,1);}
+.run-btn span{position:relative;z-index:1;}
+.run-btn:hover::before{bottom:-10%;}.run-btn:hover{transform:translateY(-2px);}
+
+.console-out{background:#1c1814;border:1px solid rgba(255,255,255,.06);padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:.72rem;min-height:56px;line-height:1.8;white-space:pre-wrap;}
+.log-ok{color:#c3e88d;display:block;}.log-er{color:#f07178;display:block;}.log-wa{color:#ffcb6b;display:block;}.log-mt{color:#546e7a;display:block;font-style:italic;}
+
+/* WIDGET */
+.widget{background:#1c1814;border:1px solid rgba(255,255,255,.06);padding:1rem;}
+.progress-wrap{margin:.75rem 0;}
+.progress-track{background:rgba(255,255,255,.07);height:6px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--ac);width:0%;transition:width .08s linear;}
+.progress-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);letter-spacing:.1em;margin-top:.4rem;}
+.countdown-controls{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.75rem;}
+.countdown-controls input{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#faf7f2;padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.75rem;width:62px;}
+.ctrl-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);background:transparent;border:1px solid rgba(255,255,255,.12);padding:.3rem .75rem;transition:color .2s,border-color .2s;}
+.ctrl-btn:hover{color:#faf7f2;border-color:rgba(255,255,255,.3);}
+.count-display{font-family:'Playfair Display',serif;font-size:3.5rem;color:#faf7f2;text-align:center;padding:1rem 0;letter-spacing:.05em;}
+.clock-display{font-family:'DM Mono',monospace;font-size:2rem;color:var(--ac);text-align:center;letter-spacing:.15em;padding:.75rem 0;}
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:.5rem;}
+.db-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:.75rem;text-align:center;}
+.db-num{font-family:'Playfair Display',serif;font-size:2rem;color:var(--ac);}
+.db-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--tm);letter-spacing:.1em;margin-top:.3rem;text-transform:uppercase;}
+.post-list{list-style:none;}
+.post-list li{font-family:'DM Mono',monospace;font-size:.65rem;color:rgba(250,247,242,.7);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.02em;line-height:1.5;}
+.post-list li:last-child{border-bottom:none;}
+.user-label{font-family:'Playfair Display',serif;font-size:1rem;color:#faf7f2;margin-bottom:.5rem;font-style:italic;}
+.bg-toggle-box{padding:2rem;text-align:center;transition:background .4s ease;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+.bg-note{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--tm);margin-top:.6rem;letter-spacing:.06em;}
+.ui-out{margin-top:.75rem;display:none;}
+
+/* TICKER */
+.ticker-wrap{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--bd);background:rgba(244,239,230,.92);backdrop-filter:blur(14px);overflow:hidden;height:32px;display:flex;align-items:center;z-index:100;}
+.ticker{display:flex;gap:0;white-space:nowrap;animation:tickerAnim 40s linear infinite;}
+.ticker-item{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;padding:0 2.4rem;border-right:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;}
+.ticker-item:hover{color:var(--ac);}
+.ticker-dot{width:3px;height:3px;border-radius:50%;background:var(--ac);opacity:.6;}
+
+#toast{position:fixed;bottom:50px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--tp);color:#faf7f2;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;padding:.6rem 1.4rem;border-radius:2px;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:500;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes tickerAnim{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+@media(max-width:640px){
+  nav{padding:1rem 1.5rem;flex-wrap:wrap;}
+  .nav-links{display:none;flex-direction:column;width:100%;gap:1rem;padding:1rem 0 .5rem;border-top:1px solid var(--bd);margin-top:.8rem;}
+  .nav-links.open{display:flex;}
+  .nav-hamburger{display:flex;}
+  main{padding:2rem 1.5rem 5rem;}
+  .dashboard-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<canvas id="pc"></canvas>
+<div id="toast"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">LYZ.dev</a>
+  <div id="live-clock"><span class="clock-dot"></span><span id="clock-time"></span></div>
+  <button class="nav-hamburger" id="hbg"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navlm">
+    <li><a href="about.html#hero">Portfolio</a></li>
+    <li><a href="about.html#about">About</a></li>
+    <li><a href="about.html#projects">Projects</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercises.html" class="active">練習題</a></li>
+    <li><a href="about.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="page-eyebrow"><span class="eyebrow-text">Exercises · 2026</span></div>
+  <h1 class="page-title">課後<em>練習題</em></h1>
+  <p class="page-sub">點擊「▶ Execute」查看每題的執行結果</p>
+
+  <!-- ═══ 01 setTimeout ═══ -->
+  <div class="section" style="--sd:.35s">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-name">非同步基礎 · setTimeout</span>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">預測輸出順序</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">先在腦中預測以下程式碼的輸出順序，再點執行驗證：</p>
+        <div class="code-block"><span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐱 貓"</span><span class="c-pu">)</span>
+
+<span class="c-fn">setTimeout</span><span class="c-pu">(</span><span class="c-kw">function</span><span class="c-pu">() {</span>
+  <span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐶 狗"</span><span class="c-pu">)</span>
+<span class="c-pu">},</span> <span class="c-nm">1000</span><span class="c-pu">)</span>
+
+<span class="c-fn">setTimeout</span><span class="c-pu">(</span><span class="c-kw">function</span><span class="c-pu">() {</span>
+  <span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐰 兔"</span><span class="c-pu">)</span>
+<span class="c-pu">},</span> <span class="c-nm">0</span><span class="c-pu">)</span>
+
+<span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐟 魚"</span><span class="c-pu">)</span></div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx1_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o1_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">模擬非同步場景</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">請寫一段程式碼，模擬以下場景：</p>
+        <ol class="steps">
+          <li data-n="1.">印出「📋 送出訂單」</li>
+          <li data-n="2.">3 秒後印出「🍕 披薩做好了！」</li>
+          <li data-n="3.">送出訂單後（不是等披薩好之後），立即印出「📱 滑手機等待中…」</li>
+        </ol>
+        <div class="hint">提示：你需要用 <code>setTimeout</code>，並且注意程式碼的擺放順序。</div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx1_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o1_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">思考題 — undefined 陷阱</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">下面這段程式碼有什麼問題？使用者會看到什麼？為什麼？</p>
+        <div class="code-block"><span class="c-kw">let</span> <span class="c-fn">data</span> <span class="c-pu">=</span> <span class="c-kw">undefined</span>
+
+<span class="c-fn">setTimeout</span><span class="c-pu">(</span><span class="c-kw">function</span><span class="c-pu">() {</span>
+  <span class="c-fn">data</span> <span class="c-pu">=</span> <span class="c-st">"從伺服器拿到的資料"</span>
+<span class="c-pu">},</span> <span class="c-nm">2000</span><span class="c-pu">)</span>
+
+<span class="c-cm">// 想要在這裡使用 data</span>
+<span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"資料是："</span> <span class="c-pu">+</span> <span class="c-fn">data</span><span class="c-pu">)</span></div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx1_3()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o1_3"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 02 Promise ═══ -->
+  <div class="section" style="--sd:.45s">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-name">Promise</span>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">建立你的第一個 Promise — 擲骰子</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">建立一個 Promise，模擬「擲骰子」：</p>
+        <ol class="steps">
+          <li data-n="1.">2 秒後隨機產生 1-6 的數字</li>
+          <li data-n="2.">如果擲到 6，呼叫 <code>resolve("恭喜！擲到 6！")</code></li>
+          <li data-n="3.">如果不是 6，呼叫 <code>reject("只擲到 X，再試一次")</code></li>
+          <li data-n="4.">用 <code>.then()</code> 和 <code>.catch()</code> 印出結果</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx2_1()"><span>▶ 擲骰子</span></button>
+          <div class="console-out" id="o2_1"><span class="log-mt">// 等待 2 秒後顯示結果…</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">Promise 鏈 — 早晨流程</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">模擬「早晨流程」，每一步用 Promise 包裝（各等 1 秒）：</p>
+        <ol class="steps">
+          <li data-n="1."><code>wakeUp()</code> → 回傳 "起床了！"</li>
+          <li data-n="2."><code>brushTeeth(msg)</code> → 接收上一步訊息，回傳 "刷好牙了！"</li>
+          <li data-n="3."><code>eatBreakfast(msg)</code> → 接收上一步訊息，回傳 "吃飽了！"</li>
+        </ol>
+        <p class="ex-desc" style="margin-top:.5rem;">用鏈式呼叫串起來，每一步都印出收到的訊息。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx2_2()"><span>▶ 開始早晨流程</span></button>
+          <div class="console-out" id="o2_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 03 async/await ═══ -->
+  <div class="section" style="--sd:.55s">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-name">async / await · fetch</span>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">取得待辦事項</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>async/await</code> 取得 <code>https://jsonplaceholder.typicode.com/todos/1</code> 的資料，並印出：</p>
+        <ol class="steps">
+          <li data-n="1.">待辦事項的 <code>title</code></li>
+          <li data-n="2.">是否完成（<code>completed</code>）</li>
+        </ol>
+        <div class="hint">記得加上 <code>try/catch</code> 做錯誤處理。</div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx3_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o3_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">顯示文章列表</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>async/await</code> 取得 <code>/posts</code>（會回傳一個陣列），然後：</p>
+        <ol class="steps">
+          <li data-n="1.">印出共有幾篇文章</li>
+          <li data-n="2.">印出前 5 篇文章的標題</li>
+          <li data-n="3.">（進階）在下方建立一個 <code>&lt;ul&gt;</code>，把前 5 篇標題用 <code>&lt;li&gt;</code> 顯示出來</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx3_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o3_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+          <div class="ui-out" id="o3_2_ui"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">錯誤處理 — fetch 不會因 404 而 reject</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">故意用一個不存在的網址來呼叫 <code>fetch()</code>，觀察：</p>
+        <ol class="steps">
+          <li data-n="1."><code>fetch()</code> 會不會進入 <code>catch</code>？</li>
+          <li data-n="2."><code>response.ok</code> 是什麼值？</li>
+          <li data-n="3."><code>response.status</code> 是什麼值？</li>
+        </ol>
+        <div class="hint">「fetch 不會因為 404 而 reject」— 非同步開發中最重要的觀念之一。</div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx3_3()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o3_3"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 04 綜合 ═══ -->
+  <div class="section" style="--sd:.65s">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-name">綜合應用</span>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">使用者 + 文章列表（串連請求）</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">寫一個函式，使用串連請求：</p>
+        <ol class="steps">
+          <li data-n="1.">先取得 <code>/users/1</code> 的使用者資料</li>
+          <li data-n="2.">再用 <code>user.id</code> 取得該使用者的所有文章 <code>/posts?userId=1</code></li>
+          <li data-n="3.">在下方顯示使用者名字和他的文章標題列表</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx4_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o4_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+          <div class="ui-out widget" id="o4_1_ui"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">Dashboard 並行載入 — Promise.all()</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>Promise.all()</code> 同時取得以下三個 API 的資料：</p>
+        <ol class="steps">
+          <li data-n="1."><code>/users</code> → 顯示「共 X 位使用者」</li>
+          <li data-n="2."><code>/posts</code> → 顯示「共 X 篇文章」</li>
+          <li data-n="3."><code>/todos</code> → 顯示「共 X 項待辦，其中 Y 項已完成」</li>
+        </ol>
+        <div class="hint">已完成的待辦可以用 <code>todos.filter(t => t.completed).length</code> 來計算。</div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx4_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o4_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+          <div class="ui-out" id="o4_2_ui"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">進階挑戰 — 改良倒數計時器</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">以綜合範例為基礎，加入以下功能：</p>
+        <ol class="steps">
+          <li data-n="1.">讓使用者可以自訂倒數秒數（用 <code>&lt;input&gt;</code>）</li>
+          <li data-n="2.">加入「暫停 / 繼續」按鈕</li>
+          <li data-n="3.">加入進度條，視覺化地顯示倒數進度</li>
+          <li data-n="4.">倒數結束時，使用 <code>Promise.all()</code> 同時取得趣味知識和圖片資料</li>
+        </ol>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div class="countdown-controls">
+              <input type="number" id="cd-sec" value="10" min="1" max="99">
+              <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);">秒</span>
+              <button class="ctrl-btn" onclick="startCountdown()">▶ 開始</button>
+              <button class="ctrl-btn" id="pauseBtn" onclick="togglePause()" style="display:none;">⏸ 暫停</button>
+              <button class="ctrl-btn" onclick="resetCountdown()">↺ 重置</button>
+            </div>
+            <div class="count-display" id="cdNum">--</div>
+            <div class="progress-wrap">
+              <div class="progress-track"><div class="progress-fill" id="cdBar"></div></div>
+              <div class="progress-label" id="cdPct">0%</div>
+            </div>
+            <div class="console-out" id="o4_3"><span class="log-mt">// 倒數結束後顯示結果</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 05 基礎 JS ═══ -->
+  <div class="section" style="--sd:.75s">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-name">基礎 JS · 函式 · map · filter</span>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">函式與陣列方法</span></div>
+      <div class="ex-body">
+        <ol class="steps">
+          <li data-n="1.">寫一個函式計算圓面積，參數為半徑。</li>
+          <li data-n="2.">使用 <code>if-else</code> 判斷給定數字是否為偶數。</li>
+          <li data-n="3.">使用 <code>map()</code> 將 <code>[1, 2, 3]</code> 轉換為 <code>[2, 4, 6]</code>。</li>
+          <li data-n="4.">使用 <code>filter()</code> 從 <code>[10, 25, 30, 5]</code> 過濾出大於 20 的數字。</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx5_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o5_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">動手實作 — 背景切換 · 進度條 · 數位時鐘</span></div>
+      <div class="ex-body">
+        <ol class="steps">
+          <li data-n="1.">按鈕切換背景顏色。</li>
+          <li data-n="2.">建立一個進度條，5 秒內從 0% 增加到 100%。</li>
+          <li data-n="3.">設計一個數位時鐘，即時顯示當前時間。</li>
+        </ol>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget" style="display:flex;flex-direction:column;gap:1rem;">
+            <div class="bg-toggle-box" id="bgBox">
+              <button class="run-btn" onclick="toggleBg()"><span>🎨 切換背景顏色</span></button>
+              <p class="bg-note">按鈕切換背景色</p>
+            </div>
+            <div>
+              <button class="run-btn" onclick="startProg()"><span>▶ 啟動進度條</span></button>
+              <div class="progress-wrap" style="margin-top:.5rem;">
+                <div class="progress-track"><div class="progress-fill" id="demoProg"></div></div>
+                <div class="progress-label" id="demoProgLbl">0%</div>
+              </div>
+            </div>
+            <div class="clock-display" id="demoClk">--:--:--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<script>
+/* ── 磁性游標 ── */
+const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,input').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+/* ── 即時時鐘 ── */
+function updateClock(){
+  const n=new Date(),pad=x=>String(x).padStart(2,'0');
+  const t=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
+  document.getElementById('clock-time').textContent=t;
+  document.getElementById('demoClk').textContent=t;
+}
+updateClock();setInterval(updateClock,1000);
+
+/* ── 粒子背景 ── */
+const cv=document.getElementById('pc'),cx=cv.getContext('2d');
+function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();window.addEventListener('resize',rsz);
+class P{constructor(){this.reset();this.y=Math.random()*innerHeight;}reset(){this.x=Math.random()*cv.width;this.y=cv.height+10;this.r=Math.random()*2.2+.4;this.vy=-(Math.random()*.55+.15);this.vx=(Math.random()-.5)*.25;this.a=Math.random()*.45+.08;this.life=0;this.ml=Math.random()*320+180;}upd(){this.x+=this.vx;this.y+=this.vy;this.life++;const dx=mx-this.x,dy=my-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){this.x+=dx*.0025;this.y+=dy*.0025;}if(this.life>this.ml||this.y<-10)this.reset();}draw(){const f=this.life<40?this.life/40:this.life>this.ml-60?(this.ml-this.life)/60:1;cx.beginPath();cx.arc(this.x,this.y,this.r,0,Math.PI*2);cx.fillStyle=`rgba(107,76,50,${this.a*f})`;cx.fill();}}
+let ps=[];for(let i=0;i<65;i++)ps.push(new P());
+(function anim(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach((p,i)=>{ps.slice(i+1).forEach(q=>{const dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<85){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.strokeStyle=`rgba(107,76,50,${(1-d/85)*.07})`;cx.lineWidth=.5;cx.stroke();}});p.upd();p.draw();});requestAnimationFrame(anim);})();
+
+/* ── 跑馬燈 ── */
+const ti=["setTimeout","setInterval","clearInterval","Promise","async/await","fetch","Array.map","Array.filter","JSON","querySelector","addEventListener","requestAnimationFrame","Promise.all","try/catch","resolve","reject",".then",".catch"];
+document.getElementById('ticker').innerHTML=ti.map(i=>`<span class="ticker-item"><span class="ticker-dot"></span>${i}</span>`).join('').repeat(2);
+
+/* ── Hamburger ── */
+document.getElementById('hbg').addEventListener('click',()=>document.getElementById('navlm').classList.toggle('open'));
+
+/* ════ EXERCISE RUNNERS ════ */
+
+function runEx1_1(){
+  const el=document.getElementById('o1_1');el.innerHTML='';
+  const log=(t,d)=>setTimeout(()=>{el.innerHTML+=`<span class="log-ok">${t}</span>`;},d);
+  log('🐱 貓',0);log('🐟 魚',10);log('🐰 兔',50);log('🐶 狗',1050);
+}
+
+function runEx1_2(){
+  const el=document.getElementById('o1_2');el.innerHTML='';
+  const log=(t,d=0)=>setTimeout(()=>{el.innerHTML+=`<span class="log-ok">${t}</span>`;},d);
+  log('📋 送出訂單');log('📱 滑手機等待中…');log('🍕 披薩做好了！',3000);
+}
+
+function runEx1_3(){
+  let data=undefined;
+  setTimeout(()=>{data="從伺服器拿到的資料";},2000);
+  document.getElementById('o1_3').innerHTML=
+    `<span class="log-wa">資料是：${data}</span>
+<span class="log-mt">→ console.log 在 setTimeout 之前執行</span>
+<span class="log-mt">→ data 仍是 undefined，這就是非同步的陷阱</span>
+<span class="log-mt">→ 這就是我們需要學 Callback / Promise 的原因！</span>`;
+}
+
+function runEx2_1(){
+  const el=document.getElementById('o2_1');
+  el.innerHTML='<span class="log-mt">🎲 擲骰子中，等待 2 秒…</span>';
+  new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+      const n=Math.floor(Math.random()*6)+1;
+      n===6?resolve(`恭喜！擲到 6！`):reject(`只擲到 ${n}，再試一次`);
+    },2000);
+  }).then(m=>{el.innerHTML=`<span class="log-ok">🎉 ${m}</span>`;})
+    .catch(m=>{el.innerHTML=`<span class="log-er">😢 ${m}</span>`;});
+}
+
+function runEx2_2(){
+  const el=document.getElementById('o2_2');
+  el.innerHTML='<span class="log-mt">⏳ 早晨流程開始…</span>';
+  const log=t=>{el.innerHTML+=`<span class="log-ok">${t}</span>`;};
+  const wakeUp=()=>new Promise(r=>setTimeout(()=>r("起床了！"),1000));
+  const brushTeeth=msg=>new Promise(r=>{log(`收到：${msg}`);setTimeout(()=>r("刷好牙了！"),1000);});
+  const eatBreakfast=msg=>new Promise(r=>{log(`收到：${msg}`);setTimeout(()=>r("吃飽了！"),1000);});
+  wakeUp().then(brushTeeth).then(eatBreakfast).then(msg=>log(`收到：${msg}  ✅ 完成！`));
+}
+
+async function runEx3_1(){
+  const el=document.getElementById('o3_1');
+  el.innerHTML='<span class="log-mt">⏳ 取得資料中…</span>';
+  try{
+    const res=await fetch('https://jsonplaceholder.typicode.com/todos/1');
+    const d=await res.json();
+    el.innerHTML=`<span class="log-ok">📌 title：${d.title}</span><span class="log-ok">✅ completed：${d.completed}</span>`;
+  }catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}
+}
+
+async function runEx3_2(){
+  const el=document.getElementById('o3_2'),ui=document.getElementById('o3_2_ui');
+  el.innerHTML='<span class="log-mt">⏳ 載入文章中…</span>';ui.style.display='none';
+  try{
+    const posts=await fetch('https://jsonplaceholder.typicode.com/posts').then(r=>r.json());
+    const top5=posts.slice(0,5);
+    el.innerHTML=`<span class="log-ok">📚 共 ${posts.length} 篇文章</span>${top5.map((p,i)=>`<span class="log-ok">${i+1}. ${p.title}</span>`).join('')}`;
+    ui.style.display='block';
+    ui.innerHTML=`<div class="widget"><ul class="post-list">${top5.map(p=>`<li>→ ${p.title}</li>`).join('')}</ul></div>`;
+  }catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}
+}
+
+async function runEx3_3(){
+  const el=document.getElementById('o3_3');
+  el.innerHTML='<span class="log-mt">⏳ 呼叫錯誤網址…</span>';
+  try{
+    const res=await fetch('https://jsonplaceholder.typicode.com/wrong-url');
+    el.innerHTML=`<span class="log-wa">⚠️ fetch() 沒有進入 catch！（404 不會 reject）</span>
+<span class="log-ok">response.ok     → ${res.ok}</span>
+<span class="log-ok">response.status → ${res.status}</span>
+<span class="log-mt">→ fetch 只有在網路斷線時才會 reject</span>`;
+  }catch(e){el.innerHTML=`<span class="log-er">❌ 進入 catch：${e.message}</span>`;}
+}
+
+async function runEx4_1(){
+  const el=document.getElementById('o4_1'),ui=document.getElementById('o4_1_ui');
+  el.innerHTML='<span class="log-mt">⏳ 串連請求中…</span>';ui.style.display='none';
+  try{
+    const user=await fetch('https://jsonplaceholder.typicode.com/users/1').then(r=>r.json());
+    el.innerHTML=`<span class="log-ok">👤 ${user.name}</span>`;
+    const posts=await fetch(`https://jsonplaceholder.typicode.com/posts?userId=${user.id}`).then(r=>r.json());
+    el.innerHTML+=`<span class="log-ok">📝 共 ${posts.length} 篇文章</span>`;
+    ui.style.display='block';
+    ui.innerHTML=`<div class="user-label">${user.name}</div><ul class="post-list">${posts.slice(0,5).map(p=>`<li>→ ${p.title}</li>`).join('')}<li style="color:var(--tm)">…還有 ${posts.length-5} 篇</li></ul>`;
+  }catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}
+}
+
+async function runEx4_2(){
+  const el=document.getElementById('o4_2'),ui=document.getElementById('o4_2_ui');
+  el.innerHTML='<span class="log-mt">⏳ 並行載入中…</span>';ui.style.display='none';
+  try{
+    const[users,posts,todos]=await Promise.all([
+      fetch('https://jsonplaceholder.typicode.com/users').then(r=>r.json()),
+      fetch('https://jsonplaceholder.typicode.com/posts').then(r=>r.json()),
+      fetch('https://jsonplaceholder.typicode.com/todos').then(r=>r.json()),
+    ]);
+    const done=todos.filter(t=>t.completed).length;
+    el.innerHTML=`<span class="log-ok">👥 共 ${users.length} 位使用者</span><span class="log-ok">📝 共 ${posts.length} 篇文章</span><span class="log-ok">✅ 共 ${todos.length} 項待辦，${done} 項已完成</span>`;
+    ui.style.display='block';
+    ui.innerHTML=`<div class="dashboard-grid">
+      <div class="db-card"><div class="db-num">${users.length}</div><div class="db-label">Users</div></div>
+      <div class="db-card"><div class="db-num">${posts.length}</div><div class="db-label">Posts</div></div>
+      <div class="db-card"><div class="db-num">${done}<span style="font-size:1rem;color:var(--tm)">/${todos.length}</span></div><div class="db-label">Done</div></div>
+    </div>`;
+  }catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}
+}
+
+let cdIv=null,cdPaused=false,cdRem=0,cdTotal=0;
+function startCountdown(){
+  if(cdIv)return;
+  cdRem=cdTotal=parseInt(document.getElementById('cd-sec').value)||10;
+  document.getElementById('pauseBtn').style.display='inline-block';
+  document.getElementById('o4_3').innerHTML='<span class="log-mt">⏳ 倒數中…</span>';
+  tickCd();cdIv=setInterval(tickCd,1000);
+}
+function tickCd(){
+  if(cdPaused)return;
+  const pct=Math.round(((cdTotal-cdRem)/cdTotal)*100);
+  document.getElementById('cdNum').textContent=cdRem;
+  document.getElementById('cdBar').style.width=pct+'%';
+  document.getElementById('cdPct').textContent=pct+'%';
+  if(cdRem<=0){
+    clearInterval(cdIv);cdIv=null;
+    document.getElementById('pauseBtn').style.display='none';
+    const el=document.getElementById('o4_3');
+    el.innerHTML='<span class="log-mt">⏳ 取得資料中…</span>';
+    Promise.all([
+      fetch('https://uselessfacts.jsph.pl/api/v2/facts/random?language=en').then(r=>r.json()).catch(()=>({text:'JavaScript is the language of the web!'})),
+      fetch('https://jsonplaceholder.typicode.com/photos/1').then(r=>r.json()).catch(()=>({id:1}))
+    ]).then(([fact,photo])=>{
+      el.innerHTML=`<span class="log-ok">🎉 倒數完成！</span><span class="log-ok">💡 ${fact.text}</span><span class="log-ok">🖼️  Photo ID：${photo.id}</span>`;
+    });
+    return;
+  }
+  cdRem--;
+}
+function togglePause(){
+  cdPaused=!cdPaused;
+  document.getElementById('pauseBtn').textContent=cdPaused?'▶ 繼續':'⏸ 暫停';
+}
+function resetCountdown(){
+  clearInterval(cdIv);cdIv=null;cdPaused=false;
+  document.getElementById('cdNum').textContent='--';
+  document.getElementById('cdBar').style.width='0%';
+  document.getElementById('cdPct').textContent='0%';
+  document.getElementById('pauseBtn').style.display='none';
+  document.getElementById('pauseBtn').textContent='⏸ 暫停';
+  document.getElementById('o4_3').innerHTML='<span class="log-mt">// 倒數結束後顯示結果</span>';
+}
+
+function runEx5_1(){
+  const circleArea=r=>(Math.PI*r*r).toFixed(2);
+  const isEven=n=>n%2===0;
+  const doubled=[1,2,3].map(x=>x*2);
+  const big=[10,25,30,5].filter(x=>x>20);
+  document.getElementById('o5_1').innerHTML=
+    `<span class="log-ok">圓面積（r=5）= ${circleArea(5)}</span>
+<span class="log-ok">isEven(4) = ${isEven(4)}　　isEven(7) = ${isEven(7)}</span>
+<span class="log-ok">[1,2,3].map(x=>x*2)         → [${doubled}]</span>
+<span class="log-ok">[10,25,30,5].filter(x>20)    → [${big}]</span>`;
+}
+
+const bgCols=['rgba(255,255,255,.04)','rgba(107,76,50,.12)','rgba(28,24,20,.8)','rgba(61,47,33,.2)','rgba(125,90,60,.15)'];
+let bgIdx=0;
+function toggleBg(){bgIdx=(bgIdx+1)%bgCols.length;document.getElementById('bgBox').style.background=bgCols[bgIdx];}
+
+function startProg(){
+  const bar=document.getElementById('demoProg'),lbl=document.getElementById('demoProgLbl');
+  bar.style.width='0%';lbl.textContent='0%';let p=0;
+  const t=setInterval(()=>{p=Math.min(p+1,100);bar.style.width=p+'%';lbl.textContent=p+'%';if(p>=100)clearInterval(t);},50);
+}
+</script>
+</body>
+</html>
