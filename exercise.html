@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · 練習題</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#faf7f2;--bg2:#f4efe6;--sf:#ede7db;
+  --bd:#d8cfc2;--bd2:#c9bfb0;
+  --tp:#1c1814;--ts:#5c5147;--tm:#9c9080;
+  --ac:#6b4c32;--ac2:#7d5a3c;--as:rgba(107,76,50,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+*{cursor:none!important}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--tp);min-height:100vh;display:flex;flex-direction:column;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
+#cur-dot{position:fixed;width:10px;height:10px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:multiply;}
+#cur-ring{position:fixed;width:44px;height:44px;border:1.5px solid rgba(107,76,50,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+body.ch #cur-dot{width:5px;height:5px;}
+body.ch #cur-ring{width:60px;height:60px;border-color:var(--ac);background:rgba(107,76,50,.04);}
+#pc{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.7;}
+
+nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.3rem 3rem;backdrop-filter:blur(20px) saturate(1.6);background:rgba(250,247,242,.88);border-bottom:1px solid var(--bd);animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--tm);letter-spacing:.22em;text-transform:uppercase;text-decoration:none;}
+.nav-links{display:flex;gap:2.2rem;list-style:none;align-items:center;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ts);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--ac)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:transparent;border:none;padding:4px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--tm);border-radius:2px;transition:all .3s;}
+#live-clock{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--tm);letter-spacing:.1em;display:flex;align-items:center;gap:.5rem;}
+#live-clock .clock-dot{width:5px;height:5px;border-radius:50%;background:#6dbf7e;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+main{flex:1;padding:3rem 3rem 5rem;position:relative;z-index:2;max-width:900px;margin:0 auto;width:100%;}
+.page-eyebrow{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;animation:slideUp .7s .1s cubic-bezier(.16,1,.3,1) both;}
+.page-eyebrow::before{content:'';width:32px;height:1px;background:var(--ac);opacity:.7;}
+.eyebrow-text{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.4rem,5vw,4rem);line-height:1;margin-bottom:.6rem;animation:slideUp .7s .2s cubic-bezier(.16,1,.3,1) both;}
+.page-title em{font-style:italic;color:var(--ac);}
+.page-sub{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.08em;margin-bottom:3rem;animation:slideUp .7s .3s cubic-bezier(.16,1,.3,1) both;}
+
+/* Unit Divider */
+.unit-divider{display:flex;align-items:center;gap:1rem;margin:3.5rem 0 2rem;animation:slideUp .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--sd,.3s);}
+.unit-divider:first-of-type{margin-top:0;}
+.unit-badge{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);border:1px solid rgba(107,76,50,.25);padding:.3rem .8rem;white-space:nowrap;}
+.unit-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--tp);}
+.unit-line{flex:1;height:1px;background:var(--bd);}
+
+.section{margin-bottom:2.5rem;animation:slideUp .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--sd,.4s);}
+.section-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;padding-bottom:.75rem;border-bottom:1px solid var(--bd);}
+.section-num{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--ac);letter-spacing:.15em;background:var(--as);padding:.25rem .6rem;border:1px solid rgba(107,76,50,.15);}
+.section-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;color:var(--tp);}
+
+.ex-card{border:1px solid var(--bd);background:rgba(255,255,255,.55);margin-bottom:1rem;overflow:hidden;transition:border-color .25s,box-shadow .25s;}
+.ex-card:hover{border-color:var(--bd2);box-shadow:0 4px 24px rgba(107,76,50,.07);}
+.ex-card-header{display:flex;align-items:center;gap:1rem;padding:.9rem 1.25rem;border-bottom:1px solid var(--bd);background:rgba(244,239,230,.5);}
+.ex-num{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--tm);letter-spacing:.1em;}
+.ex-title{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tp);letter-spacing:.06em;font-weight:500;}
+.ex-body{padding:1.25rem;}
+.ex-desc{font-size:.88rem;color:var(--ts);line-height:1.8;margin-bottom:1rem;}
+.steps{list-style:none;margin:.5rem 0 1rem;}
+.steps li{padding:.3rem 0 .3rem 1.4rem;position:relative;font-size:.85rem;color:var(--ts);line-height:1.7;}
+.steps li::before{content:attr(data-n);position:absolute;left:0;color:var(--ac);font-family:'DM Mono',monospace;font-size:.75rem;font-weight:500;}
+.hint{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--tm);letter-spacing:.04em;background:var(--as);border-left:2px solid rgba(107,76,50,.3);padding:.5rem .85rem;margin-top:.75rem;}
+code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.07);color:var(--ac);padding:.1em .35em;}
+
+.code-block{background:#1c1814;padding:1.1rem 1.25rem;margin:.75rem 0;font-family:'DM Mono',monospace;font-size:.75rem;line-height:1.8;overflow-x:auto;border-top:2px solid var(--ac);}
+.c-kw{color:#c792ea;}.c-fn{color:#82aaff;}.c-st{color:#c3e88d;}.c-nm{color:#f78c6c;}.c-cm{color:#546e7a;font-style:italic;}.c-pu{color:#89ddff;}
+
+.result-area{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bd);}
+.run-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#faf7f2;background:var(--ac);border:1px solid var(--ac);padding:.5rem 1.2rem;transition:transform .2s;margin-bottom:.75rem;position:relative;overflow:hidden;}
+.run-btn::before{content:'';position:absolute;bottom:-110%;left:50%;width:130%;padding-bottom:130%;background:var(--ac2);border-radius:50%;transform:translate(-50%,0);transition:bottom .5s cubic-bezier(.16,1,.3,1);}
+.run-btn span{position:relative;z-index:1;}
+.run-btn:hover::before{bottom:-10%;}.run-btn:hover{transform:translateY(-2px);}
+
+.console-out{background:#1c1814;border:1px solid rgba(255,255,255,.06);padding:.75rem 1rem;font-family:'DM Mono',monospace;font-size:.72rem;min-height:56px;line-height:1.8;white-space:pre-wrap;}
+.log-ok{color:#c3e88d;display:block;}.log-er{color:#f07178;display:block;}.log-wa{color:#ffcb6b;display:block;}.log-mt{color:#546e7a;display:block;font-style:italic;}
+
+.widget{background:#1c1814;border:1px solid rgba(255,255,255,.06);padding:1rem;}
+.progress-wrap{margin:.75rem 0;}
+.progress-track{background:rgba(255,255,255,.07);height:6px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--ac);width:0%;transition:width .08s linear;}
+.progress-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);letter-spacing:.1em;margin-top:.4rem;}
+.countdown-controls{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.75rem;}
+.countdown-controls input{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#faf7f2;padding:.3rem .6rem;font-family:'DM Mono',monospace;font-size:.75rem;width:62px;}
+.ctrl-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);background:transparent;border:1px solid rgba(255,255,255,.12);padding:.3rem .75rem;transition:color .2s,border-color .2s;}
+.ctrl-btn:hover{color:#faf7f2;border-color:rgba(255,255,255,.3);}
+.count-display{font-family:'Playfair Display',serif;font-size:3.5rem;color:#faf7f2;text-align:center;padding:1rem 0;letter-spacing:.05em;}
+.clock-display{font-family:'DM Mono',monospace;font-size:2rem;color:var(--ac);text-align:center;letter-spacing:.15em;padding:.75rem 0;}
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:.5rem;}
+.db-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:.75rem;text-align:center;}
+.db-num{font-family:'Playfair Display',serif;font-size:2rem;color:var(--ac);}
+.db-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--tm);letter-spacing:.1em;margin-top:.3rem;text-transform:uppercase;}
+.post-list{list-style:none;}
+.post-list li{font-family:'DM Mono',monospace;font-size:.65rem;color:rgba(250,247,242,.7);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.02em;line-height:1.5;}
+.post-list li:last-child{border-bottom:none;}
+.ui-out{margin-top:.75rem;display:none;}
+
+.demo-flex-box{display:flex;gap:8px;padding:.75rem;background:#1c1814;min-height:70px;align-items:center;transition:all .3s;}
+.demo-flex-item{background:rgba(107,76,50,.4);border:1px solid var(--ac);padding:.4rem .8rem;font-family:'DM Mono',monospace;font-size:.65rem;color:#faf7f2;text-align:center;flex-shrink:0;}
+.demo-grid-box{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:.75rem;background:#1c1814;transition:all .3s;}
+.demo-grid-item{background:rgba(107,76,50,.25);border:1px solid rgba(107,76,50,.5);padding:.5rem;font-family:'DM Mono',monospace;font-size:.65rem;color:#c3e88d;text-align:center;}
+.demo-select{background:#1c1814;border:1px solid rgba(255,255,255,.15);color:#faf7f2;padding:.35rem .7rem;font-family:'DM Mono',monospace;font-size:.65rem;margin-bottom:.75rem;width:100%;}
+
+.ticker-wrap{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--bd);background:rgba(244,239,230,.92);backdrop-filter:blur(14px);overflow:hidden;height:32px;display:flex;align-items:center;z-index:100;}
+.ticker{display:flex;white-space:nowrap;animation:tickerAnim 50s linear infinite;}
+.ticker-item{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;padding:0 2.4rem;border-right:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;}
+.ticker-dot{width:3px;height:3px;border-radius:50%;background:var(--ac);opacity:.6;}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes tickerAnim{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes spin-anim{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes bounce-anim{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+@keyframes pulse-anim{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+
+@media(max-width:640px){
+  nav{padding:1rem 1.5rem;flex-wrap:wrap;}
+  .nav-links{display:none;flex-direction:column;width:100%;gap:1rem;padding:1rem 0 .5rem;border-top:1px solid var(--bd);margin-top:.8rem;}
+  .nav-links.open{display:flex;}
+  .nav-hamburger{display:flex;}
+  main{padding:2rem 1.5rem 5rem;}
+  .dashboard-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<canvas id="pc"></canvas>
+
+<nav>
+  <a class="nav-logo" href="index.html">LYZ.dev</a>
+  <div id="live-clock"><span class="clock-dot"></span><span id="clock-time"></span></div>
+  <button class="nav-hamburger" id="hbg"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navlm">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html#hero">Portfolio</a></li>
+    <li><a href="about.html#about">About</a></li>
+    <li><a href="about.html#projects">Projects</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercise.html" class="active">練習題</a></li>
+    <li><a href="about.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="page-eyebrow"><span class="eyebrow-text">Exercises · 2026</span></div>
+  <h1 class="page-title">課後<em>練習題</em></h1>
+  <p class="page-sub">對應 Notes 各單元的課後練習，點擊「▶ Execute」查看執行結果</p>
+
+  <!-- ══ UNIT 01 ══ -->
+  <div class="unit-divider" style="--sd:.3s">
+    <span class="unit-badge">Unit 01</span>
+    <span class="unit-name">JavaScript 基礎</span>
+    <div class="unit-line"></div>
+  </div>
+
+  <!-- JS·01 變數、型別、函式 -->
+  <div class="section" style="--sd:.35s">
+    <div class="section-header"><span class="section-num">JS · 01</span><span class="section-name">變數、型別、函式</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">typeof 型別偵測</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>typeof</code> 偵測以下值的型別，思考 <code>null</code> 的結果為何特殊：</p>
+        <ol class="steps">
+          <li data-n="1."><code>42</code>、<code>"Hello"</code>、<code>true</code>、<code>undefined</code></li>
+          <li data-n="2."><code>null</code>（為什麼結果是 "object"？）</li>
+          <li data-n="3.">一個函式 <code>function f(){}</code></li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runJsEx1_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="jso1_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">函式 · 圓面積計算器</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">寫一個函式 <code>circleArea(r)</code> 計算圓面積，並用 template literal 格式化輸出：</p>
+        <ol class="steps">
+          <li data-n="1.">定義 <code>circleArea(r)</code>，回傳 <code>Math.PI * r * r</code></li>
+          <li data-n="2.">呼叫 r = 1, 5, 10 並印出結果</li>
+          <li data-n="3.">用 <code>if-else</code> 判斷面積是否大於 100</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runJsEx1_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="jso1_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">Template Literal 字串組合</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用反引號 template literal，不使用 <code>+</code>，完成以下輸出：</p>
+        <ol class="steps">
+          <li data-n="1.">定義 <code>name = "LYZ"</code>，<code>score = 95</code></li>
+          <li data-n="2.">印出「LYZ 的成績是 95 分」</li>
+          <li data-n="3.">用三元運算子判斷成績等級（≥90 → 優秀）</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runJsEx1_3()"><span>▶ Execute</span></button>
+          <div class="console-out" id="jso1_3"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS·02 陣列、物件、JSON -->
+  <div class="section" style="--sd:.4s">
+    <div class="section-header"><span class="section-num">JS · 02</span><span class="section-name">陣列、物件、JSON</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">map + filter 鏈式操作</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">給定 <code>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</code>：</p>
+        <ol class="steps">
+          <li data-n="1.">用 <code>filter()</code> 取出偶數</li>
+          <li data-n="2.">再用 <code>map()</code> 乘以 3</li>
+          <li data-n="3.">印出最終結果</li>
+        </ol>
+        <div class="hint">提示：可鏈式寫 <code>[...].filter(...).map(...)</code></div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runJsEx2_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="jso2_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">物件操作 · 學生成績單</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">建立並操作一個學生物件：</p>
+        <ol class="steps">
+          <li data-n="1.">建立含 <code>name</code>、<code>scores[]</code>、<code>grade</code> 的物件</li>
+          <li data-n="2.">用 <code>Array.push</code> 新增一個成績</li>
+          <li data-n="3.">計算平均分數</li>
+          <li data-n="4.">用 <code>JSON.stringify</code> 印出整個物件</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runJsEx2_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="jso2_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">JSON.stringify / JSON.parse</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">練習 JSON 序列化與反序列化，並思考邊界情況：</p>
+        <ol class="steps">
+          <li data-n="1.">stringify 一個物件 → 得到字串</li>
+          <li data-n="2.">parse 還原 → 取出屬性</li>
+          <li data-n="3."><code>JSON.stringify(undefined)</code> 回傳什麼？</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runJsEx2_3()"><span>▶ Execute</span></button>
+          <div class="console-out" id="jso2_3"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS·03 DOM -->
+  <div class="section" style="--sd:.45s">
+    <div class="section-header"><span class="section-num">JS · 03</span><span class="section-name">DOM 操作與事件處理</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">動態生成清單</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 JS 動態操作 DOM：</p>
+        <ol class="steps">
+          <li data-n="1.">準備陣列 <code>["蘋果", "香蕉", "芒果"]</code></li>
+          <li data-n="2.">用 <code>forEach</code> 動態建立 <code>&lt;li&gt;</code></li>
+          <li data-n="3.">點擊任一項目，用 <code>addEventListener</code> 印出名稱</li>
+        </ol>
+        <div class="result-area">
+          <button class="run-btn" onclick="runJsEx3_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="jso3_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+          <div id="jso3_1_ui" style="margin-top:.75rem;display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">點擊切換背景顏色</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>querySelector</code> 選取色塊，加上 click 事件，每次點擊切換顏色並印出次數：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div id="colorBox" style="height:80px;background:rgba(107,76,50,.3);border:1px solid rgba(107,76,50,.4);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.65rem;color:#faf7f2;transition:background .4s;margin-bottom:.75rem;">點擊我切換顏色</div>
+            <div class="console-out" id="jso3_2"><span class="log-mt">// 點擊上方色塊查看結果</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS·04 計時器 -->
+  <div class="section" style="--sd:.5s">
+    <div class="section-header"><span class="section-num">JS · 04</span><span class="section-name">計時器與動態效果</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">數位時鐘 · setInterval</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>setInterval</code> 每秒更新一次數位時鐘，格式 <code>HH:MM:SS</code>（記得 <code>padStart</code> 補零）：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div class="clock-display" id="exClock">--:--:--</div>
+            <div style="display:flex;gap:.5rem;">
+              <button class="ctrl-btn" onclick="startExClock()">▶ 啟動</button>
+              <button class="ctrl-btn" onclick="stopExClock()">⏹ 停止</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">進度條 · setInterval + clearInterval</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">5 秒內進度從 0% 增加到 100%，完成後 <code>clearInterval</code> 停止：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <button class="run-btn" onclick="startExProgress()"><span>▶ 啟動進度條</span></button>
+            <div class="progress-wrap">
+              <div class="progress-track"><div class="progress-fill" id="exProgBar"></div></div>
+              <div class="progress-label" id="exProgLbl">0%</div>
+            </div>
+            <div class="console-out" id="jso4_2"><span class="log-mt">// 點擊啟動後查看結果</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ UNIT 02 ══ -->
+  <div class="unit-divider" style="--sd:.55s">
+    <span class="unit-badge">Unit 02</span>
+    <span class="unit-name">CSS Layout</span>
+    <div class="unit-line"></div>
+  </div>
+
+  <!-- CSS·01 FlexBox -->
+  <div class="section" style="--sd:.6s">
+    <div class="section-header"><span class="section-num">CSS · 01</span><span class="section-name">FlexBox</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">justify-content 各屬性效果</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">切換 <code>justify-content</code> 值，觀察主軸上子元素的排列變化：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <select class="demo-select" id="flexJC" onchange="updateFlexDemo()">
+              <option value="flex-start">flex-start（靠左）</option>
+              <option value="center">center（置中）</option>
+              <option value="flex-end">flex-end（靠右）</option>
+              <option value="space-between" selected>space-between（兩端對齊）</option>
+              <option value="space-around">space-around（均勻分佈）</option>
+              <option value="space-evenly">space-evenly（完全均等）</option>
+            </select>
+            <div class="demo-flex-box" id="flexPreview">
+              <div class="demo-flex-item">A</div>
+              <div class="demo-flex-item">BB</div>
+              <div class="demo-flex-item">CCC</div>
+              <div class="demo-flex-item">D</div>
+            </div>
+            <div class="console-out" id="csso1_1" style="margin-top:.75rem;"><span class="log-mt">// 切換選單觀察變化</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">align-items · flex-wrap</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">同時控制 <code>align-items</code>（交叉軸）與 <code>flex-wrap</code>（換行）：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div style="display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap;">
+              <select class="demo-select" id="flexAI" onchange="updateFlexDemo2()" style="flex:1;margin-bottom:0;">
+                <option value="flex-start">align-items: flex-start</option>
+                <option value="center" selected>align-items: center</option>
+                <option value="flex-end">align-items: flex-end</option>
+                <option value="stretch">align-items: stretch</option>
+              </select>
+              <select class="demo-select" id="flexWrap" onchange="updateFlexDemo2()" style="flex:1;margin-bottom:0;">
+                <option value="nowrap" selected>flex-wrap: nowrap</option>
+                <option value="wrap">flex-wrap: wrap</option>
+              </select>
+            </div>
+            <div class="demo-flex-box" id="flexPreview2" style="height:100px;align-items:center;">
+              <div class="demo-flex-item" style="height:30px;">A</div>
+              <div class="demo-flex-item" style="height:50px;">BB</div>
+              <div class="demo-flex-item" style="height:40px;">CCC</div>
+              <div class="demo-flex-item" style="height:60px;">D</div>
+              <div class="demo-flex-item" style="height:35px;">EE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS·02 Grid -->
+  <div class="section" style="--sd:.65s">
+    <div class="section-header"><span class="section-num">CSS · 02</span><span class="section-name">Grid</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">grid-template-columns · fr 單位</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">切換欄位設定，體驗 <code>fr</code> 彈性單位的效果：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <select class="demo-select" id="gridCols" onchange="updateGridDemo()">
+              <option value="1fr">1 欄 (1fr)</option>
+              <option value="1fr 1fr">2 欄 (1fr 1fr)</option>
+              <option value="1fr 1fr 1fr" selected>3 欄 (1fr 1fr 1fr)</option>
+              <option value="1fr 2fr 1fr">3 欄 (1fr 2fr 1fr — 中間較寬)</option>
+              <option value="repeat(4, 1fr)">4 欄 repeat(4, 1fr)</option>
+            </select>
+            <div class="demo-grid-box" id="gridPreview">
+              <div class="demo-grid-item">1</div><div class="demo-grid-item">2</div><div class="demo-grid-item">3</div>
+              <div class="demo-grid-item">4</div><div class="demo-grid-item">5</div><div class="demo-grid-item">6</div>
+            </div>
+            <div class="console-out" id="csso2_1" style="margin-top:.75rem;"><span class="log-mt">// 切換欄位設定觀察變化</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">gap 間距調整</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">拖曳滑桿調整 <code>gap</code>（0–32px），觀察格線間距變化：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;">
+              <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);">gap:</span>
+              <input type="range" id="gridGap" min="0" max="32" value="8" oninput="updateGapDemo()" style="flex:1;accent-color:var(--ac);">
+              <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ac);" id="gridGapVal">8px</span>
+            </div>
+            <div class="demo-grid-box" id="gapPreview" style="gap:8px;">
+              <div class="demo-grid-item">1</div><div class="demo-grid-item">2</div><div class="demo-grid-item">3</div>
+              <div class="demo-grid-item">4</div><div class="demo-grid-item">5</div><div class="demo-grid-item">6</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS·03 RWD -->
+  <div class="section" style="--sd:.7s">
+    <div class="section-header"><span class="section-num">CSS · 03</span><span class="section-name">RWD 響應式設計</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">模擬斷點切換</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">點按鈕模擬不同螢幕的 <code>@media query</code> 斷點效果：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div style="display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap;">
+              <button class="ctrl-btn" onclick="setRwdMode('mobile')">📱 手機 (1欄)</button>
+              <button class="ctrl-btn" onclick="setRwdMode('tablet')">📟 平板 (2欄)</button>
+              <button class="ctrl-btn" onclick="setRwdMode('desktop')">🖥 電腦 (3欄)</button>
+            </div>
+            <div class="demo-grid-box" id="rwdPreview" style="transition:grid-template-columns .4s;">
+              <div class="demo-grid-item">Card 1</div>
+              <div class="demo-grid-item">Card 2</div>
+              <div class="demo-grid-item">Card 3</div>
+            </div>
+            <div class="console-out" id="csso3_1" style="margin-top:.75rem;"><span class="log-mt">// 點擊按鈕模擬斷點</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">clamp() 響應式字體</span></div>
+      <div class="ex-body">
+        <p class="ex-desc"><code>clamp(min, val, max)</code> 讓字體在不同視窗寬度下自動縮放，不需要 <code>@media</code>：</p>
+        <div class="code-block"><span class="c-fn">font-size</span><span class="c-pu">:</span> <span class="c-fn">clamp</span><span class="c-pu">(</span><span class="c-nm">1rem</span><span class="c-pu">,</span> <span class="c-nm">4vw</span><span class="c-pu">,</span> <span class="c-nm">3rem</span><span class="c-pu">);</span>
+<span class="c-cm">/* 最小 16px，最大 48px，中間跟著視窗寬度縮放 */</span></div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runClampDemo()"><span>▶ Execute</span></button>
+          <div class="console-out" id="csso3_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS·04 Animation -->
+  <div class="section" style="--sd:.75s">
+    <div class="section-header"><span class="section-num">CSS · 04</span><span class="section-name">CSS Animation</span></div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">@keyframes 動畫切換</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">點擊按鈕切換動畫類型，觀察 <code>@keyframes</code> 與 <code>animation</code> 搭配效果：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div style="display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap;">
+              <button class="ctrl-btn" onclick="setAnim('spin-anim')">🔄 旋轉</button>
+              <button class="ctrl-btn" onclick="setAnim('bounce-anim')">⬆ 彈跳</button>
+              <button class="ctrl-btn" onclick="setAnim('pulse-anim')">💓 脈衝</button>
+              <button class="ctrl-btn" onclick="setAnim('none')">⏹ 停止</button>
+            </div>
+            <div style="display:flex;justify-content:center;align-items:center;height:120px;">
+              <div id="animBox" style="width:64px;height:64px;background:rgba(107,76,50,.4);border:2px solid var(--ac);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.65rem;color:#faf7f2;">CSS</div>
+            </div>
+            <div class="console-out" id="csso4_1" style="margin-top:.75rem;"><span class="log-mt">// 點擊按鈕切換動畫</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">transition 速度比較</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">三個色塊各有不同的 <code>transition</code> 時長，滑鼠移上去觀察過渡速度差異：</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div style="display:flex;gap:.75rem;">
+              <div id="tb1" style="flex:1;height:70px;background:rgba(107,76,50,.25);border:1px solid rgba(107,76,50,.4);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(250,247,242,.7);transition:background .1s;">0.1s</div>
+              <div id="tb2" style="flex:1;height:70px;background:rgba(107,76,50,.25);border:1px solid rgba(107,76,50,.4);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(250,247,242,.7);transition:background .6s;">0.6s</div>
+              <div id="tb3" style="flex:1;height:70px;background:rgba(107,76,50,.25);border:1px solid rgba(107,76,50,.4);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(250,247,242,.7);transition:background 1.5s ease-in-out;">1.5s ease</div>
+            </div>
+            <div class="console-out" id="csso4_2" style="margin-top:.75rem;"><span class="log-mt">// 將滑鼠移到色塊上觀察</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ UNIT 03 ══ -->
+  <div class="unit-divider" style="--sd:.8s">
+    <span class="unit-badge">Unit 03</span>
+    <span class="unit-name">非同步操作與 API 串接</span>
+    <div class="unit-line"></div>
+  </div>
+
+  <!-- ASYNC·01 setTimeout -->
+  <div class="section" style="--sd:.85s">
+    <div class="section-header"><span class="section-num">ASYNC · 01</span><span class="section-name">非同步基礎 · setTimeout</span></div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">預測輸出順序</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">先在腦中預測輸出順序，再點執行驗證：</p>
+        <div class="code-block"><span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐱 貓"</span><span class="c-pu">)</span>
+<span class="c-fn">setTimeout</span><span class="c-pu">(() => </span><span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐶 狗"</span><span class="c-pu">),</span> <span class="c-nm">1000</span><span class="c-pu">)</span>
+<span class="c-fn">setTimeout</span><span class="c-pu">(() => </span><span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐰 兔"</span><span class="c-pu">),</span> <span class="c-nm">0</span><span class="c-pu">)</span>
+<span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"🐟 魚"</span><span class="c-pu">)</span></div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx1_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o1_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">模擬非同步場景</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">模擬「送出訂單 → 滑手機 → 披薩做好」的非同步流程（3秒後）：</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx1_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o1_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">思考題 — undefined 陷阱</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">以下程式有什麼問題？使用者會看到什麼？</p>
+        <div class="code-block"><span class="c-kw">let</span> <span class="c-fn">data</span> <span class="c-pu">=</span> <span class="c-kw">undefined</span>
+<span class="c-fn">setTimeout</span><span class="c-pu">(() => {</span> <span class="c-fn">data</span> <span class="c-pu">=</span> <span class="c-st">"從伺服器拿到的資料"</span> <span class="c-pu">},</span> <span class="c-nm">2000</span><span class="c-pu">)</span>
+<span class="c-fn">console</span><span class="c-pu">.</span><span class="c-fn">log</span><span class="c-pu">(</span><span class="c-st">"資料是："</span> <span class="c-pu">+</span> <span class="c-fn">data</span><span class="c-pu">)</span></div>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx1_3()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o1_3"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASYNC·02 Promise -->
+  <div class="section" style="--sd:.9s">
+    <div class="section-header"><span class="section-num">ASYNC · 02</span><span class="section-name">Promise</span></div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">建立你的第一個 Promise — 擲骰子</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">建立一個 Promise 模擬擲骰子：擲到 6 → resolve，否則 → reject，用 <code>.then()</code> 和 <code>.catch()</code> 處理結果。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx2_1()"><span>▶ 擲骰子</span></button>
+          <div class="console-out" id="o2_1"><span class="log-mt">// 等待 2 秒後顯示結果…</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">Promise 鏈 — 早晨流程</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 Promise 鏈串起「起床 → 刷牙 → 吃早餐」，每步間隔 1 秒，每步印出收到的訊息。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx2_2()"><span>▶ 開始早晨流程</span></button>
+          <div class="console-out" id="o2_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASYNC·03 async/await -->
+  <div class="section" style="--sd:.95s">
+    <div class="section-header"><span class="section-num">ASYNC · 03</span><span class="section-name">async / await · fetch</span></div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">取得待辦事項</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>async/await</code> 取得 todos/1，印出 title 和 completed，記得加 <code>try/catch</code>。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx3_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o3_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">顯示文章列表</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">取得 <code>/posts</code>，印出總篇數與前 5 篇標題，並在下方建立 <code>&lt;ul&gt;</code> 顯示。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx3_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o3_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+          <div class="ui-out" id="o3_2_ui"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">錯誤處理 — fetch 不會因 404 而 reject</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">故意呼叫不存在的網址，觀察 <code>response.ok</code> 與 <code>response.status</code> 的值。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx3_3()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o3_3"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASYNC·04 綜合 -->
+  <div class="section" style="--sd:1s">
+    <div class="section-header"><span class="section-num">ASYNC · 04</span><span class="section-name">綜合應用</span></div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 01</span><span class="ex-title">使用者 + 文章列表（串連請求）</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">先取得 User #1，再取得其所有文章，顯示名字與文章清單。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx4_1()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o4_1"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+          <div class="ui-out widget" id="o4_1_ui"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 02</span><span class="ex-title">Dashboard 並行載入 — Promise.all()</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">用 <code>Promise.all()</code> 同時取得 users、posts、todos，顯示統計 Dashboard。</p>
+        <div class="result-area">
+          <button class="run-btn" onclick="runEx4_2()"><span>▶ Execute</span></button>
+          <div class="console-out" id="o4_2"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
+          <div class="ui-out" id="o4_2_ui"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">進階挑戰 — 改良倒數計時器</span></div>
+      <div class="ex-body">
+        <p class="ex-desc">自訂秒數、暫停/繼續、進度條視覺化，倒數結束後用 <code>Promise.all()</code> 同時取得資料。</p>
+        <div class="result-area" style="border-top:none;padding-top:0;">
+          <div class="widget">
+            <div class="countdown-controls">
+              <input type="number" id="cd-sec" value="10" min="1" max="99">
+              <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);">秒</span>
+              <button class="ctrl-btn" onclick="startCountdown()">▶ 開始</button>
+              <button class="ctrl-btn" id="pauseBtn" onclick="togglePause()" style="display:none;">⏸ 暫停</button>
+              <button class="ctrl-btn" onclick="resetCountdown()">↺ 重置</button>
+            </div>
+            <div class="count-display" id="cdNum">--</div>
+            <div class="progress-wrap">
+              <div class="progress-track"><div class="progress-fill" id="cdBar"></div></div>
+              <div class="progress-label" id="cdPct">0%</div>
+            </div>
+            <div class="console-out" id="o4_3"><span class="log-mt">// 倒數結束後顯示結果</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<script>
+/* ── cursor ── */
+const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,input,select').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+/* ── clock ── */
+function updateClock(){const n=new Date(),p=x=>String(x).padStart(2,'0');document.getElementById('clock-time').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;}
+updateClock();setInterval(updateClock,1000);
+
+/* ── particles ── */
+const cv=document.getElementById('pc'),cx=cv.getContext('2d');
+function rsz(){cv.width=innerWidth;cv.height=innerHeight;}rsz();window.addEventListener('resize',rsz);
+class P{constructor(){this.reset();this.y=Math.random()*innerHeight;}reset(){this.x=Math.random()*cv.width;this.y=cv.height+10;this.r=Math.random()*2.2+.4;this.vy=-(Math.random()*.55+.15);this.vx=(Math.random()-.5)*.25;this.a=Math.random()*.45+.08;this.life=0;this.ml=Math.random()*320+180;}upd(){this.x+=this.vx;this.y+=this.vy;this.life++;const dx=mx-this.x,dy=my-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){this.x+=dx*.0025;this.y+=dy*.0025;}if(this.life>this.ml||this.y<-10)this.reset();}draw(){const f=this.life<40?this.life/40:this.life>this.ml-60?(this.ml-this.life)/60:1;cx.beginPath();cx.arc(this.x,this.y,this.r,0,Math.PI*2);cx.fillStyle=`rgba(107,76,50,${this.a*f})`;cx.fill();}}
+let ps=[];for(let i=0;i<65;i++)ps.push(new P());
+(function anim(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach((p,i)=>{ps.slice(i+1).forEach(q=>{const dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<85){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.strokeStyle=`rgba(107,76,50,${(1-d/85)*.07})`;cx.lineWidth=.5;cx.stroke();}});p.upd();p.draw();});requestAnimationFrame(anim);})();
+
+/* ── ticker ── */
+const ti=["typeof","let·const","function","template literal","Array.map","Array.filter","JSON","querySelector","innerHTML","addEventListener","setTimeout","setInterval","clearInterval","display:flex","justify-content","align-items","display:grid","fr單位","gap","@media","clamp()","@keyframes","transition","transform","Promise","async/await","fetch","Promise.all","try/catch"];
+document.getElementById('ticker').innerHTML=ti.map(i=>`<span class="ticker-item"><span class="ticker-dot"></span>${i}</span>`).join('').repeat(2);
+
+/* ── hamburger ── */
+document.getElementById('hbg').addEventListener('click',()=>document.getElementById('navlm').classList.toggle('open'));
+
+/* ══ UNIT 01 — JS ══ */
+function runJsEx1_1(){
+  function f(){}
+  document.getElementById('jso1_1').innerHTML=
+    `<span class="log-ok">typeof 42          → "${typeof 42}"</span>`+
+    `<span class="log-ok">typeof "Hello"     → "${typeof "Hello"}"</span>`+
+    `<span class="log-ok">typeof true        → "${typeof true}"</span>`+
+    `<span class="log-ok">typeof undefined   → "${typeof undefined}"</span>`+
+    `<span class="log-wa">typeof null        → "${typeof null}"  ← JS 歷史遺留 Bug，null 並非 object</span>`+
+    `<span class="log-ok">typeof function f(){} → "${typeof f}"</span>`;
+}
+
+function runJsEx1_2(){
+  const circleArea=r=>Math.PI*r*r;
+  document.getElementById('jso1_2').innerHTML=[1,5,10].map(r=>{
+    const a=circleArea(r).toFixed(2);
+    return `<span class="log-ok">r=${r} → 面積 = ${a}　${parseFloat(a)>100?'🔴 大於 100':'🟢 不超過 100'}</span>`;
+  }).join('');
+}
+
+function runJsEx1_3(){
+  const name="LYZ",score=95;
+  document.getElementById('jso1_3').innerHTML=
+    `<span class="log-ok">\`${name} 的成績是 ${score} 分\`</span>`+
+    `<span class="log-ok">\`成績等級：${score>=90?'優秀':'普通'}\`</span>`+
+    `<span class="log-mt">→ 使用反引號 + \${} 取代 + 字串相加</span>`;
+}
+
+function runJsEx2_1(){
+  const arr=[1,2,3,4,5,6,7,8,9,10];
+  const result=arr.filter(x=>x%2===0).map(x=>x*3);
+  document.getElementById('jso2_1').innerHTML=
+    `<span class="log-ok">原始：[${arr}]</span>`+
+    `<span class="log-ok">filter(偶數)：[${arr.filter(x=>x%2===0)}]</span>`+
+    `<span class="log-ok">map(×3)：[${result}]</span>`+
+    `<span class="log-mt">→ 鏈式：[...].filter(x=>x%2===0).map(x=>x*3)</span>`;
+}
+
+function runJsEx2_2(){
+  const student={name:"LYZ",scores:[88,92,76],grade:"大學部"};
+  student.scores.push(95);
+  const avg=(student.scores.reduce((a,b)=>a+b,0)/student.scores.length).toFixed(1);
+  document.getElementById('jso2_2').innerHTML=
+    `<span class="log-ok">學生：${student.name}（${student.grade}）</span>`+
+    `<span class="log-ok">成績（push 後）：[${student.scores}]</span>`+
+    `<span class="log-ok">平均：${avg} 分</span>`+
+    `<span class="log-ok">JSON：${JSON.stringify(student)}</span>`;
+}
+
+function runJsEx2_3(){
+  const obj={name:"LYZ",lang:"JavaScript",year:2026};
+  const str=JSON.stringify(obj);
+  const back=JSON.parse(str);
+  document.getElementById('jso2_3').innerHTML=
+    `<span class="log-ok">stringify → ${str}</span>`+
+    `<span class="log-ok">parse 後 .name → "${back.name}"</span>`+
+    `<span class="log-wa">JSON.stringify(undefined) → ${String(JSON.stringify(undefined))}  ← 回傳 undefined（不是字串）</span>`;
+}
+
+function runJsEx3_1(){
+  const fruits=["🍎 蘋果","🍌 香蕉","🥭 芒果"];
+  const el=document.getElementById('jso3_1');
+  const ui=document.getElementById('jso3_1_ui');
+  el.innerHTML=fruits.map(f=>`<span class="log-ok">動態建立 &lt;li&gt;：${f}</span>`).join('');
+  ui.style.display='block';
+  ui.innerHTML=`<div class="widget"><ul style="list-style:none;">${fruits.map(f=>`<li onclick="fruitClick('${f}')" style="font-family:'DM Mono',monospace;font-size:.68rem;padding:.4rem .6rem;border-bottom:1px solid rgba(255,255,255,.07);color:rgba(250,247,242,.8);">${f}</li>`).join('')}</ul></div>`;
+}
+function fruitClick(name){document.getElementById('jso3_1').innerHTML+=`<span class="log-ok">addEventListener click → ${name}</span>`;}
+
+let colorClickCount=0;
+const boxColors=['rgba(107,76,50,.3)','rgba(109,191,126,.25)','rgba(130,170,255,.25)','rgba(240,113,120,.25)','rgba(255,203,107,.25)'];
+document.getElementById('colorBox').addEventListener('click',()=>{
+  colorClickCount++;
+  document.getElementById('colorBox').style.background=boxColors[colorClickCount%boxColors.length];
+  document.getElementById('jso3_2').innerHTML+=`<span class="log-ok">第 ${colorClickCount} 次點擊 → 背景已切換</span>`;
+});
+
+let exClockIv=null;
+function startExClock(){if(exClockIv)return;exClockIv=setInterval(()=>{const n=new Date(),p=x=>String(x).padStart(2,'0');document.getElementById('exClock').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;},1000);}
+function stopExClock(){clearInterval(exClockIv);exClockIv=null;}
+
+function startExProgress(){
+  const bar=document.getElementById('exProgBar'),lbl=document.getElementById('exProgLbl'),out=document.getElementById('jso4_2');
+  bar.style.width='0%';lbl.textContent='0%';out.innerHTML='<span class="log-mt">進度條啟動中…</span>';
+  let p=0;const t=setInterval(()=>{p=Math.min(p+1,100);bar.style.width=p+'%';lbl.textContent=p+'%';if(p>=100){clearInterval(t);out.innerHTML='<span class="log-ok">✅ 完成！clearInterval 已停止計時器。</span>';}},50);
+}
+
+/* ══ UNIT 02 — CSS ══ */
+function updateFlexDemo(){
+  const jc=document.getElementById('flexJC').value;
+  document.getElementById('flexPreview').style.justifyContent=jc;
+  document.getElementById('csso1_1').innerHTML=`<span class="log-ok">justify-content: ${jc}</span><span class="log-mt">→ 控制主軸（水平）方向的子元素分佈方式</span>`;
+}
+function updateFlexDemo2(){
+  const p=document.getElementById('flexPreview2');
+  p.style.alignItems=document.getElementById('flexAI').value;
+  p.style.flexWrap=document.getElementById('flexWrap').value;
+}
+function updateGridDemo(){
+  const cols=document.getElementById('gridCols').value;
+  document.getElementById('gridPreview').style.gridTemplateColumns=cols;
+  document.getElementById('csso2_1').innerHTML=`<span class="log-ok">grid-template-columns: ${cols}</span>`;
+}
+function updateGapDemo(){
+  const g=document.getElementById('gridGap').value;
+  document.getElementById('gapPreview').style.gap=g+'px';
+  document.getElementById('gridGapVal').textContent=g+'px';
+}
+function setRwdMode(mode){
+  const p=document.getElementById('rwdPreview'),out=document.getElementById('csso3_1');
+  const map={mobile:{cols:'1fr',label:'📱 手機模式',bp:'max-width: 640px'},tablet:{cols:'1fr 1fr',label:'📟 平板模式',bp:'max-width: 960px'},desktop:{cols:'1fr 1fr 1fr',label:'🖥 電腦模式',bp:'min-width: 961px'}};
+  const m=map[mode];
+  p.style.gridTemplateColumns=m.cols;
+  out.innerHTML=`<span class="log-ok">${m.label}</span><span class="log-mt">@media (${m.bp}) { grid-template-columns: ${m.cols}; }</span>`;
+}
+function runClampDemo(){
+  const w=window.innerWidth,min=16,max=48,pref=w*0.04,clamped=Math.min(Math.max(pref,min),max);
+  document.getElementById('csso3_2').innerHTML=
+    `<span class="log-ok">視窗寬度：${w}px</span>`+
+    `<span class="log-ok">偏好值 4vw：${pref.toFixed(1)}px</span>`+
+    `<span class="log-ok">clamp(1rem, 4vw, 3rem) → ${clamped.toFixed(1)}px</span>`+
+    `<span class="log-mt">→ 最小 16px，最大 48px，中間跟視窗縮放</span>`;
+}
+function setAnim(type){
+  const box=document.getElementById('animBox'),out=document.getElementById('csso4_1');
+  const map={'spin-anim':{css:'spin-anim 1.2s linear infinite',desc:'rotate(0) → rotate(360deg)'},'bounce-anim':{css:'bounce-anim .8s ease-in-out infinite',desc:'translateY(0) → translateY(-22px)'},'pulse-anim':{css:'pulse-anim 1s ease-in-out infinite',desc:'scale(1) → scale(1.4)'},none:{css:'none',desc:'無動畫'}};
+  const m=map[type];
+  box.style.animation=m.css;
+  out.innerHTML=type==='none'?'<span class="log-mt">// 動畫已停止</span>':`<span class="log-ok">animation: ${m.css}</span><span class="log-mt">→ ${m.desc}</span>`;
+}
+['tb1','tb2','tb3'].forEach((id,i)=>{
+  const el=document.getElementById(id),out=document.getElementById('csso4_2');
+  const cols=['rgba(107,76,50,.7)','rgba(109,191,126,.35)','rgba(130,170,255,.35)'];
+  const durs=['0.1s','0.6s','1.5s ease-in-out'];
+  el.addEventListener('mouseenter',()=>{el.style.background=cols[i];out.innerHTML=`<span class="log-ok">transition: background ${durs[i]}  ← 滑入色塊 ${i+1}</span>`;});
+  el.addEventListener('mouseleave',()=>{el.style.background='rgba(107,76,50,.25)';});
+});
+
+/* ══ UNIT 03 — ASYNC ══ */
+function runEx1_1(){const el=document.getElementById('o1_1');el.innerHTML='';const log=(t,d)=>setTimeout(()=>{el.innerHTML+=`<span class="log-ok">${t}</span>`;},d);log('🐱 貓',0);log('🐟 魚',10);log('🐰 兔',50);log('🐶 狗',1050);}
+function runEx1_2(){const el=document.getElementById('o1_2');el.innerHTML='';const log=(t,d=0)=>setTimeout(()=>{el.innerHTML+=`<span class="log-ok">${t}</span>`;},d);log('📋 送出訂單');log('📱 滑手機等待中…');log('🍕 披薩做好了！',3000);}
+function runEx1_3(){let data=undefined;setTimeout(()=>{data="從伺服器拿到的資料";},2000);document.getElementById('o1_3').innerHTML=`<span class="log-wa">資料是：${data}</span><span class="log-mt">→ console.log 在 setTimeout 前執行，data 仍是 undefined</span><span class="log-mt">→ 這就是需要 Callback / Promise 的原因！</span>`;}
+function runEx2_1(){const el=document.getElementById('o2_1');el.innerHTML='<span class="log-mt">🎲 擲骰子中，等待 2 秒…</span>';new Promise((resolve,reject)=>{setTimeout(()=>{const n=Math.floor(Math.random()*6)+1;n===6?resolve(`恭喜！擲到 6！`):reject(`只擲到 ${n}，再試一次`);},2000);}).then(m=>{el.innerHTML=`<span class="log-ok">🎉 ${m}</span>`;}).catch(m=>{el.innerHTML=`<span class="log-er">😢 ${m}</span>`;});}
+function runEx2_2(){const el=document.getElementById('o2_2');el.innerHTML='<span class="log-mt">⏳ 早晨流程開始…</span>';const log=t=>{el.innerHTML+=`<span class="log-ok">${t}</span>`;};const wakeUp=()=>new Promise(r=>setTimeout(()=>r("起床了！"),1000));const brushTeeth=msg=>new Promise(r=>{log(`收到：${msg}`);setTimeout(()=>r("刷好牙了！"),1000);});const eatBreakfast=msg=>new Promise(r=>{log(`收到：${msg}`);setTimeout(()=>r("吃飽了！"),1000);});wakeUp().then(brushTeeth).then(eatBreakfast).then(msg=>log(`收到：${msg}  ✅ 完成！`));}
+async function runEx3_1(){const el=document.getElementById('o3_1');el.innerHTML='<span class="log-mt">⏳ 取得資料中…</span>';try{const res=await fetch('https://jsonplaceholder.typicode.com/todos/1');const d=await res.json();el.innerHTML=`<span class="log-ok">📌 title：${d.title}</span><span class="log-ok">✅ completed：${d.completed}</span>`;}catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}}
+async function runEx3_2(){const el=document.getElementById('o3_2'),ui=document.getElementById('o3_2_ui');el.innerHTML='<span class="log-mt">⏳ 載入文章中…</span>';ui.style.display='none';try{const posts=await fetch('https://jsonplaceholder.typicode.com/posts').then(r=>r.json());const top5=posts.slice(0,5);el.innerHTML=`<span class="log-ok">📚 共 ${posts.length} 篇文章</span>${top5.map((p,i)=>`<span class="log-ok">${i+1}. ${p.title}</span>`).join('')}`;ui.style.display='block';ui.innerHTML=`<div class="widget"><ul class="post-list">${top5.map(p=>`<li>→ ${p.title}</li>`).join('')}</ul></div>`;}catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}}
+async function runEx3_3(){const el=document.getElementById('o3_3');el.innerHTML='<span class="log-mt">⏳ 呼叫錯誤網址…</span>';try{const res=await fetch('https://jsonplaceholder.typicode.com/wrong-url');el.innerHTML=`<span class="log-wa">⚠️ fetch() 沒有進入 catch！（404 不會 reject）</span><span class="log-ok">response.ok     → ${res.ok}</span><span class="log-ok">response.status → ${res.status}</span><span class="log-mt">→ fetch 只有在網路斷線時才會 reject</span>`;}catch(e){el.innerHTML=`<span class="log-er">❌ 進入 catch：${e.message}</span>`;}}
+async function runEx4_1(){const el=document.getElementById('o4_1'),ui=document.getElementById('o4_1_ui');el.innerHTML='<span class="log-mt">⏳ 串連請求中…</span>';ui.style.display='none';try{const user=await fetch('https://jsonplaceholder.typicode.com/users/1').then(r=>r.json());el.innerHTML=`<span class="log-ok">👤 ${user.name}</span>`;const posts=await fetch(`https://jsonplaceholder.typicode.com/posts?userId=${user.id}`).then(r=>r.json());el.innerHTML+=`<span class="log-ok">📝 共 ${posts.length} 篇文章</span>`;ui.style.display='block';ui.innerHTML=`<div style="font-family:'Playfair Display',serif;font-size:1rem;color:#faf7f2;margin-bottom:.5rem;font-style:italic;">${user.name}</div><ul class="post-list">${posts.slice(0,5).map(p=>`<li>→ ${p.title}</li>`).join('')}<li style="color:var(--tm)">…還有 ${posts.length-5} 篇</li></ul>`;}catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}}
+async function runEx4_2(){const el=document.getElementById('o4_2'),ui=document.getElementById('o4_2_ui');el.innerHTML='<span class="log-mt">⏳ 並行載入中…</span>';ui.style.display='none';try{const[users,posts,todos]=await Promise.all([fetch('https://jsonplaceholder.typicode.com/users').then(r=>r.json()),fetch('https://jsonplaceholder.typicode.com/posts').then(r=>r.json()),fetch('https://jsonplaceholder.typicode.com/todos').then(r=>r.json())]);const done=todos.filter(t=>t.completed).length;el.innerHTML=`<span class="log-ok">👥 共 ${users.length} 位使用者</span><span class="log-ok">📝 共 ${posts.length} 篇文章</span><span class="log-ok">✅ 共 ${todos.length} 項待辦，${done} 項已完成</span>`;ui.style.display='block';ui.innerHTML=`<div class="dashboard-grid"><div class="db-card"><div class="db-num">${users.length}</div><div class="db-label">Users</div></div><div class="db-card"><div class="db-num">${posts.length}</div><div class="db-label">Posts</div></div><div class="db-card"><div class="db-num">${done}<span style="font-size:1rem;color:var(--tm)">/${todos.length}</span></div><div class="db-label">Done</div></div></div>`;}catch(e){el.innerHTML=`<span class="log-er">❌ ${e.message}</span>`;}}
+let cdIv=null,cdPaused=false,cdRem=0,cdTotal=0;
+function startCountdown(){if(cdIv)return;cdRem=cdTotal=parseInt(document.getElementById('cd-sec').value)||10;document.getElementById('pauseBtn').style.display='inline-block';document.getElementById('o4_3').innerHTML='<span class="log-mt">⏳ 倒數中…</span>';tickCd();cdIv=setInterval(tickCd,1000);}
+function tickCd(){if(cdPaused)return;const pct=Math.round(((cdTotal-cdRem)/cdTotal)*100);document.getElementById('cdNum').textContent=cdRem;document.getElementById('cdBar').style.width=pct+'%';document.getElementById('cdPct').textContent=pct+'%';if(cdRem<=0){clearInterval(cdIv);cdIv=null;document.getElementById('pauseBtn').style.display='none';const el=document.getElementById('o4_3');el.innerHTML='<span class="log-mt">⏳ 取得資料中…</span>';Promise.all([fetch('https://uselessfacts.jsph.pl/api/v2/facts/random?language=en').then(r=>r.json()).catch(()=>({text:'JavaScript is the language of the web!'})),fetch('https://jsonplaceholder.typicode.com/photos/1').then(r=>r.json()).catch(()=>({id:1}))]).then(([fact,photo])=>{el.innerHTML=`<span class="log-ok">🎉 倒數完成！</span><span class="log-ok">💡 ${fact.text}</span><span class="log-ok">🖼️  Photo ID：${photo.id}</span>`;});return;}cdRem--;}
+function togglePause(){cdPaused=!cdPaused;document.getElementById('pauseBtn').textContent=cdPaused?'▶ 繼續':'⏸ 暫停';}
+function resetCountdown(){clearInterval(cdIv);cdIv=null;cdPaused=false;document.getElementById('cdNum').textContent='--';document.getElementById('cdBar').style.width='0%';document.getElementById('cdPct').textContent='0%';document.getElementById('pauseBtn').style.display='none';document.getElementById('pauseBtn').textContent='⏸ 暫停';document.getElementById('o4_3').innerHTML='<span class="log-mt">// 倒數結束後顯示結果</span>';}
+</script>
+</body>
+</html>
