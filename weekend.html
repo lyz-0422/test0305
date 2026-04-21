@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · 週末去哪玩？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#faf7f2;--bg2:#f4efe6;--sf:#ede7db;
+  --bd:#d8cfc2;--bd2:#c9bfb0;
+  --tp:#1c1814;--ts:#5c5147;--tm:#9c9080;
+  --ac:#6b4c32;--ac2:#7d5a3c;--as:rgba(107,76,50,.09);
+  --wk:#2e7d5a;--wk2:#256b4c;--wkbg:rgba(46,125,90,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+*{cursor:none!important}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--tp);min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
+#cur-dot{position:fixed;width:10px;height:10px;background:var(--wk);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:multiply;}
+#cur-ring{position:fixed;width:44px;height:44px;border:1.5px solid rgba(46,125,90,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s;}
+body.ch #cur-dot{width:5px;height:5px;}
+body.ch #cur-ring{width:62px;height:62px;border-color:var(--wk);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;backdrop-filter:blur(20px) saturate(1.6);background:rgba(250,247,242,.9);border-bottom:1px solid var(--bd);animation:navIn .6s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-left{display:flex;align-items:center;gap:1.5rem;}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:color .2s;}
+.nav-logo:hover{color:var(--wk);}
+.nav-div{width:1px;height:14px;background:var(--bd);}
+.nav-back{font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:color .2s;}
+.nav-back:hover{color:var(--wk);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ts);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--wk);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--wk);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:transparent;border:none;padding:4px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--tm);border-radius:2px;transition:all .3s;}
+#live-clock{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--tm);letter-spacing:.1em;display:flex;align-items:center;gap:.5rem;}
+.clock-dot{width:5px;height:5px;border-radius:50%;background:#6dbf7e;animation:pulseDot 2s ease-in-out infinite;}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* MAIN */
+main{position:relative;z-index:2;padding:110px 3rem 80px;max-width:1000px;margin:0 auto;}
+
+/* HERO */
+.hero{margin-bottom:3rem;animation:slideUp .7s .1s cubic-bezier(.16,1,.3,1) both;}
+.hero-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:2rem;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--wk);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:1rem;}
+.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--wk);opacity:.6;}
+.hero-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.4rem,5.5vw,4rem);line-height:1;letter-spacing:-.01em;margin-bottom:.5rem;}
+.hero-h1 em{font-style:italic;color:var(--wk);}
+.hero-sub{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.06em;}
+.hero-badge{background:var(--wkbg);border:1px solid rgba(46,125,90,.3);padding:.8rem 1.2rem;text-align:center;flex-shrink:0;}
+.hero-badge-num{font-family:'Playfair Display',serif;font-size:2rem;color:var(--wk);font-weight:600;display:block;}
+.hero-badge-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--tm);letter-spacing:.12em;text-transform:uppercase;}
+
+/* CONFIG */
+.config-card{border:1px solid var(--bd);background:var(--bg2);padding:2rem 2.2rem;margin-bottom:2rem;position:relative;animation:slideUp .7s .2s cubic-bezier(.16,1,.3,1) both;box-shadow:4px 4px 0 var(--bd);}
+.config-card::before{content:'';position:absolute;top:8px;right:8px;width:22px;height:22px;border-top:1px solid rgba(46,125,90,.3);border-right:1px solid rgba(46,125,90,.3);}
+.config-title{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--wk);margin-bottom:1.4rem;display:flex;align-items:center;gap:.7rem;}
+.config-title::before{content:'';width:20px;height:1px;background:var(--wk);opacity:.6;}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.4rem;}
+.form-group{display:flex;flex-direction:column;gap:.45rem;}
+.form-label{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;}
+.form-select{background:rgba(255,255,255,.6);border:1px solid var(--bd);padding:.6rem .8rem;font-family:'DM Mono',monospace;font-size:.74rem;color:var(--tp);outline:none;transition:border-color .25s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239c9080' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .7rem center;background-size:10px;padding-right:1.8rem;width:100%;}
+.form-select:focus{border-color:var(--wk);}
+
+/* AVOID CHIPS */
+.chips-label{font-family:'DM Mono',monospace;font-size:.56rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem;}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.4rem;}
+.chip{font-family:'DM Mono',monospace;font-size:.58rem;padding:.22rem .7rem;border:1px solid var(--bd);color:var(--ts);background:rgba(255,255,255,.5);transition:all .2s;}
+.chip.sel{background:var(--wk);color:#fff;border-color:var(--wk);}
+
+/* GENERATE BTN */
+.gen-btn{width:100%;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#faf7f2;background:var(--wk);border:none;padding:.95rem 2rem;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;position:relative;overflow:hidden;}
+.gen-btn::before{content:'';position:absolute;bottom:-110%;left:50%;width:130%;padding-bottom:130%;background:var(--wk2);border-radius:50%;transform:translate(-50%,0);transition:bottom .55s cubic-bezier(.16,1,.3,1);}
+.gen-btn span{position:relative;z-index:1;}
+.gen-btn:hover::before{bottom:-10%;}
+.gen-btn:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(46,125,90,.3);}
+.gen-btn:disabled{opacity:.5;transform:none;box-shadow:none;}
+
+/* RESULT GRID */
+.results-section{animation:slideUp .7s .3s cubic-bezier(.16,1,.3,1) both;}
+.results-label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--wk);margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem;}
+.results-label::before{content:'';width:20px;height:1px;background:var(--wk);opacity:.6;}
+.results-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);margin-bottom:2rem;}
+
+/* PLACE CARD */
+.place-card{background:var(--bg);padding:1.8rem;position:relative;transition:background .25s,transform .3s cubic-bezier(.16,1,.3,1);overflow:hidden;}
+.place-card:hover{background:var(--bg2);}
+.place-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--wk);transform:scaleY(0);transform-origin:bottom;transition:transform .35s cubic-bezier(.16,1,.3,1);}
+.place-card:hover::after{transform:scaleY(1);}
+.place-card.featured{grid-column:1/-1;background:var(--wkbg);}
+.place-card.featured::after{width:4px;}
+.place-rank{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--wk);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem;}
+.place-emoji{font-size:2rem;display:block;margin-bottom:.6rem;transition:transform .3s cubic-bezier(.16,1,.3,1);}
+.place-card:hover .place-emoji{transform:scale(1.15) rotate(-5deg);}
+.place-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;margin-bottom:.35rem;line-height:1.15;}
+.place-name em{font-style:italic;color:var(--wk);}
+.place-desc{font-size:.82rem;color:var(--ts);line-height:1.75;margin-bottom:.9rem;}
+.place-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.9rem;}
+.meta-badge{font-family:'DM Mono',monospace;font-size:.56rem;padding:.18rem .6rem;display:flex;align-items:center;gap:.3rem;}
+.meta-badge.dist{border:1px solid rgba(46,125,90,.3);color:var(--wk);background:var(--wkbg);}
+.meta-badge.cost{border:1px solid var(--bd);color:var(--ts);}
+.meta-badge.type{border:1px solid var(--bd);color:var(--ts);}
+.place-tags{display:flex;flex-wrap:wrap;gap:.3rem;}
+.place-tag{font-family:'DM Mono',monospace;font-size:.56rem;padding:.16rem .5rem;border:1px solid var(--bd);color:var(--tm);}
+.place-tip{margin-top:.8rem;padding:.6rem .8rem;background:rgba(46,125,90,.06);border-left:2px solid rgba(46,125,90,.4);font-size:.78rem;color:var(--ts);line-height:1.65;font-style:italic;}
+
+/* ROULETTE */
+.roulette-section{margin-bottom:2rem;animation:slideUp .7s .25s cubic-bezier(.16,1,.3,1) both;}
+.roulette-wrap{display:flex;align-items:center;gap:2rem;}
+.wheel-container{position:relative;flex-shrink:0;}
+.wheel-pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:20px solid var(--wk);z-index:10;filter:drop-shadow(0 2px 4px rgba(46,125,90,.3));}
+canvas#weekendWheel{border-radius:50%;box-shadow:0 6px 30px rgba(46,125,90,.15),0 0 0 3px var(--bg),0 0 0 5px var(--bd);display:block;}
+
+/* SPIN RESULT */
+.spin-result{flex:1;min-width:0;}
+.spin-result-empty{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--tm);text-align:center;padding:2rem 1rem;border:1px dashed var(--bd);font-style:italic;line-height:1.8;}
+.spin-result-card{display:none;border:1px solid rgba(46,125,90,.3);background:var(--wkbg);padding:1.6rem;animation:resIn .4s cubic-bezier(.16,1,.3,1) both;}
+@keyframes resIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.spin-res-tag{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--wk);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+.spin-res-tag::before{content:'';width:16px;height:1px;background:var(--wk);opacity:.7;}
+.spin-res-emoji{font-size:2.4rem;display:block;margin-bottom:.5rem;animation:popIn .4s .1s cubic-bezier(.16,1,.3,1) both;}
+@keyframes popIn{from{transform:scale(0) rotate(-15deg)}to{transform:scale(1) rotate(0)}}
+.spin-res-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;margin-bottom:.35rem;}
+.spin-res-name em{font-style:italic;color:var(--wk);}
+.spin-res-desc{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--tm);line-height:1.7;margin-bottom:.8rem;}
+.spin-res-meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem;}
+.spin-btn-row{display:flex;gap:.6rem;}
+.res-retry{flex:1;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ts);background:transparent;border:1px solid var(--bd2);padding:.6rem;transition:background .2s;}
+.res-retry:hover{background:var(--sf);}
+.res-add{flex:1;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--wk);border:none;padding:.6rem;transition:opacity .2s;}
+.res-add:hover{opacity:.85;}
+
+/* WISHLIST */
+.wishlist-section{margin-top:2rem;animation:slideUp .7s .4s cubic-bezier(.16,1,.3,1) both;}
+.wishlist-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
+.wishlist-title{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--wk);}
+.wishlist-line{flex:1;height:1px;background:var(--bd);}
+.wishlist-clear{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--tm);background:transparent;border:none;transition:color .2s;}
+.wishlist-clear:hover{color:var(--wk);}
+.wishlist-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);}
+.wish-item{background:var(--bg);padding:.9rem 1rem;display:flex;align-items:center;gap:.7rem;transition:background .2s;}
+.wish-item:hover{background:var(--bg2);}
+.wish-emoji{font-size:1rem;flex-shrink:0;}
+.wish-name{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--ts);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.wish-del{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tm);background:transparent;border:none;transition:color .2s;padding:0;}
+.wish-del:hover{color:#c0392b;}
+.wishlist-empty{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--tm);text-align:center;padding:1.2rem;border:1px solid var(--bd);font-style:italic;}
+
+/* EMPTY STATE */
+.results-empty{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--tm);text-align:center;padding:3rem 1rem;border:1px dashed var(--bd);font-style:italic;line-height:1.9;}
+
+/* TICKER */
+.ticker-wrap{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--bd);background:rgba(244,239,230,.92);backdrop-filter:blur(14px);overflow:hidden;height:32px;display:flex;align-items:center;z-index:100;}
+.ticker{display:flex;white-space:nowrap;animation:tickerAnim 55s linear infinite;}
+.ticker-item{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;padding:0 2.2rem;border-right:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;}
+.ticker-dot{width:3px;height:3px;border-radius:50%;background:var(--wk);opacity:.6;}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes tickerAnim{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+@media(max-width:760px){
+  nav{padding:1rem 1.5rem;flex-wrap:wrap;}
+  .nav-links{display:none;flex-direction:column;width:100%;gap:1rem;padding:1rem 0 .5rem;border-top:1px solid var(--bd);margin-top:.8rem;}
+  .nav-links.open{display:flex;}
+  .nav-hamburger{display:flex;}
+  main{padding:90px 1.5rem 70px;}
+  .form-grid{grid-template-columns:1fr 1fr;}
+  .results-grid{grid-template-columns:1fr;}
+  .place-card.featured{grid-column:auto;}
+  .roulette-wrap{flex-direction:column;align-items:center;}
+  .wishlist-grid{grid-template-columns:1fr 1fr;}
+  .hero-grid{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .form-grid{grid-template-columns:1fr;}
+  .wishlist-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<nav>
+  <div class="nav-left">
+    <a class="nav-logo" href="index.html">LYZ.dev</a>
+    <div class="nav-div"></div>
+    <a class="nav-back" href="index.html">← Home</a>
+  </div>
+  <div id="live-clock"><span class="clock-dot"></span><span id="clock-time"></span></div>
+  <button class="nav-hamburger" id="hbg"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navlm">
+    <li><a href="about.html">Portfolio</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercise.html">練習題</a></li>
+    <li><a href="decide.html">今日決策</a></li>
+    <li><a href="weekend.html" class="active">週末去哪</a></li>
+  </ul>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">Weekend Planner · 2026</div>
+        <h1 class="hero-h1">週末<br><em>去哪玩？</em></h1>
+        <p class="hero-sub">輸入你的條件，讓系統推薦最適合的台灣景點</p>
+      </div>
+      <div class="hero-badge">
+        <span class="hero-badge-num" id="placeCount">0</span>
+        <span class="hero-badge-label">個景點推薦</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div class="config-card">
+    <div class="config-title">設定你的週末條件</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">願意開多遠</label>
+        <select class="form-select" id="distance">
+          <option value="near">30 分鐘內</option>
+          <option value="mid" selected>1 小時內</option>
+          <option value="far">2–3 小時</option>
+          <option value="any">不限距離</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">每人預算</label>
+        <select class="form-select" id="cost">
+          <option value="free">免費</option>
+          <option value="low">NT$500 以下</option>
+          <option value="mid" selected>NT$500–1500</option>
+          <option value="high">NT$1500 以上</option>
+          <option value="any">不限</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">室內 / 戶外</label>
+        <select class="form-select" id="indoorOutdoor">
+          <option value="any" selected>都可以</option>
+          <option value="outdoor">戶外</option>
+          <option value="indoor">室內</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">幾個人</label>
+        <select class="form-select" id="groupSize">
+          <option value="solo">1 人</option>
+          <option value="couple">2 人（約會）</option>
+          <option value="friends" selected>3–5 人</option>
+          <option value="family">家庭出遊</option>
+        </select>
+      </div>
+    </div>
+    <div class="chips-label">不想去</div>
+    <div class="chips" id="avoid-chips"></div>
+    <button class="gen-btn" id="genBtn" onclick="generatePlaces()"><span>🗺 幫我找景點！</span></button>
+  </div>
+
+  <!-- ROULETTE -->
+  <div class="roulette-section">
+    <div class="roulette-wrap">
+      <div class="wheel-container">
+        <div class="wheel-pointer"></div>
+        <canvas id="weekendWheel" width="260" height="260"></canvas>
+      </div>
+      <div class="spin-result">
+        <div class="spin-result-empty" id="spin-empty">先搜尋景點，然後點轉盤<br>讓它幫你隨機選一個！</div>
+        <div class="spin-result-card" id="spin-card">
+          <div class="spin-res-tag">轉盤推薦</div>
+          <span class="spin-res-emoji" id="s-emoji"></span>
+          <div class="spin-res-name" id="s-name"></div>
+          <div class="spin-res-desc" id="s-desc"></div>
+          <div class="spin-res-meta" id="s-meta"></div>
+          <div class="spin-btn-row">
+            <button class="res-retry" onclick="spinWheel()">再轉一次 ↻</button>
+            <button class="res-add" onclick="addToWishlist()">加入願望清單 ♡</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section">
+    <div class="results-label">推薦景點</div>
+    <div id="results-container">
+      <div class="results-empty">設定好條件後點擊「幫我找景點！」<br>系統會根據你的偏好推薦最適合的地點 🌿</div>
+    </div>
+  </div>
+
+  <!-- WISHLIST -->
+  <div class="wishlist-section">
+    <div class="wishlist-header">
+      <span class="wishlist-title">願望清單</span>
+      <div class="wishlist-line"></div>
+      <button class="wishlist-clear" onclick="clearWishlist()">清除</button>
+    </div>
+    <div id="wishlist-container"></div>
+  </div>
+</main>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<script>
+/* ── Cursor ── */
+const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,select').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+/* ── Clock ── */
+function updateClock(){const n=new Date(),p=x=>String(x).padStart(2,'0');document.getElementById('clock-time').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;}
+updateClock();setInterval(updateClock,1000);
+document.getElementById('hbg').addEventListener('click',()=>document.getElementById('navlm').classList.toggle('open'));
+
+/* ── Ticker ── */
+const tItems=["🗺 週末去哪玩","🏔 爬山健行","🎨 美術館","🛍 逛市集","🌊 海邊","🎡 主題樂園","🍃 自然步道","🌆 城市探索","📸 拍照景點","✨ 今日決策中心"];
+document.getElementById('ticker').innerHTML=tItems.map(i=>`<span class="ticker-item"><span class="ticker-dot"></span>${i}</span>`).join('').repeat(4);
+
+/* ══════════════ PLACE DATA ══════════════ */
+const PLACES = [
+  // NEAR + FREE/LOW
+  {id:1,name:"大安森林公園",emoji:"🌳",desc:"台北市中心的城市之肺，適合散步、野餐、騎腳踏車，也常有免費音樂表演。",dist:"near",cost:"free",type:"outdoor",group:["solo","couple","friends","family"],tags:["公園","散步","野餐","免費"],tip:"週末早上去人比較少，傍晚時常有街頭表演"},
+  {id:2,name:"饒河街夜市",emoji:"🌃",desc:"台北老字號夜市，各種道地小吃，胡椒餅和藥燉排骨是必吃。",dist:"near",cost:"low",type:"outdoor",group:["solo","couple","friends","family"],tags:["夜市","小吃","熱鬧"],tip:"建議 6:30–7:00 PM 去，人潮稍少但攤位都開"},
+  {id:3,name:"國立故宮博物院",emoji:"🏛️",desc:"世界四大博物館之一，收藏中華文明精髓，翠玉白菜和肉形石必看。",dist:"near",cost:"low",type:"indoor",group:["solo","couple","friends","family"],tags:["文化","歷史","藝術"],tip:"平日下午人最少，週末記得先預約票"},
+  {id:4,name:"信義區商圈",emoji:"🏙️",desc:"台北最時尚的商業區，有百貨、書店、電影院，下雨天也很好逛。",dist:"near",cost:"any",type:"indoor",group:["solo","couple","friends"],tags:["購物","美食","電影"],tip:"誠品書店24小時都開，深夜逛書也很療癒"},
+  {id:5,name:"華山1914文創園區",emoji:"🎨",desc:"老酒廠改建的文創空間，常有展覽、市集和音樂活動，文青必去。",dist:"near",cost:"free",type:"outdoor",group:["solo","couple","friends"],tags:["文創","展覽","市集"],tip:"記得先查當週有什麼特別展覽或活動"},
+  {id:6,name:"貓空纜車＋茶館",emoji:"🚡",desc:"搭貓空纜車俯瞰台北盆地，上山後找間茶館喝茶聊天，消磨一個下午。",dist:"near",cost:"low",type:"outdoor",group:["couple","friends","family"],tags:["纜車","山景","茶館"],tip:"晴天搭乘視野最佳，傍晚下山時可看夜景"},
+
+  // MID DISTANCE
+  {id:7,name:"九份老街",emoji:"⛰️",desc:"山城石板路、紅燈籠與海景，宮崎駿《神隱少女》的靈感來源，夜景特別迷人。",dist:"mid",cost:"low",type:"outdoor",group:["couple","friends","family"],tags:["山城","夜景","老街","打卡"],tip:"建議傍晚5點前到，先逛老街再等夜景，雨天霧氣更有氛圍"},
+  {id:8,name:"平溪天燈節",emoji:"🏮",desc:"施放天燈的浪漫體驗，平溪老街、十分瀑布、菁桐都可以順遊。",dist:"mid",cost:"low",type:"outdoor",group:["couple","friends","family"],tags:["天燈","瀑布","老街"],tip:"十分瀑布建議早上去，下午去九份或平溪老街"},
+  {id:9,name:"淡水老街",emoji:"🌅",desc:"漁人碼頭夕陽、阿給和魚丸湯，適合沿著河岸漫步，輕鬆一日遊。",dist:"mid",cost:"low",type:"outdoor",group:["solo","couple","friends","family"],tags:["河岸","夕陽","小吃"],tip:"阿婆鐵蛋是必買伴手禮，夕陽時間看漁人碼頭超美"},
+  {id:10,name:"宜蘭礁溪溫泉",emoji:"♨️",desc:"平價碳酸氫納泉，泡完皮膚超滑，順便吃宜蘭三星蔥料理。",dist:"mid",cost:"mid",type:"outdoor",group:["couple","friends","family"],tags:["溫泉","宜蘭","美食"],tip:"礁溪市區有多家免費足湯，可以邊泡邊休息"},
+  {id:11,name:"烏來溫泉老街",emoji:"🌿",desc:"原住民文化與溫泉的結合，溪邊餐廳景色美，還可以搭台車體驗。",dist:"mid",cost:"mid",type:"outdoor",group:["couple","friends","family"],tags:["溫泉","原住民","山林"],tip:"台車是必搭體驗，到雲仙樂園可以加碼玩索道纜車"},
+  {id:12,name:"北投溫泉博物館",emoji:"🏯",desc:"日式建築改建的免費博物館，搭配北投溫泉街，一個下午好好走逛。",dist:"near",cost:"free",type:"indoor",group:["solo","couple","friends"],tags:["日式建築","溫泉","免費"],tip:"免費入場，假日有志工導覽，可預約報名"},
+
+  // FAR
+  {id:13,name:"墾丁海灘",emoji:"🏖️",desc:"台灣最南端的熱帶海岸，浮潛、衝浪、貝殼撿拾，夏天是最佳選擇。",dist:"far",cost:"mid",type:"outdoor",group:["friends","couple","family"],tags:["海灘","浮潛","南台灣"],tip:"建議住一晚，清晨衝浪人少，夜晚大灣夜市也很熱鬧"},
+  {id:14,name:"阿里山日出雲海",emoji:"🌄",desc:"搭乘阿里山小火車看神木，清晨觀看日出雲海，壯觀到令人窒息。",dist:"far",cost:"mid",type:"outdoor",group:["friends","couple","family"],tags:["日出","雲海","小火車","森林"],tip:"需提前預訂阿里山小火車日出班次，清晨4:30出發"},
+  {id:15,name:"花蓮太魯閣",emoji:"🏔️",desc:"鬼斧神工的大理石峽谷，錐麓古道、燕子口步道，自然壯觀令人驚嘆。",dist:"far",cost:"low",type:"outdoor",group:["friends","family"],tags:["峽谷","步道","花蓮","健行"],tip:"部分步道需申請入園許可，建議提前1週上官網申請"},
+  {id:16,name:"台南老城區",emoji:"🏮",desc:"赤崁樓、安平古堡、神農街，融合歷史文化與文青咖啡館，美食天堂。",dist:"far",cost:"low",type:"any",group:["solo","couple","friends","family"],tags:["歷史","文化","美食","文青"],tip:"神農街傍晚最美，牛肉湯記得選早上6–9點去最新鮮"},
+  {id:17,name:"澎湖海島跳島",emoji:"🏝️",desc:"搭船跳島探訪無人島，浮潛看珊瑚礁，天堂路奇景，絕對難忘。",dist:"far",cost:"high",type:"outdoor",group:["friends","couple"],tags:["海島","浮潛","跳島","珊瑚礁"],tip:"5–10月天氣最佳，跳島行程建議找在地業者安排"},
+  {id:18,name:"日月潭環湖",emoji:"🚲",desc:"租腳踏車或搭船遊湖，走訪玄光寺、文武廟，下午喝杯紅茶放鬆。",dist:"far",cost:"mid",type:"outdoor",group:["couple","friends","family"],tags:["湖泊","腳踏車","寺廟"],tip:"騎自行車環湖約1.5小時，沿途有多個景觀台"},
+
+  // INDOOR / RAINY DAY
+  {id:19,name:"台北市立美術館",emoji:"🖼️",desc:"北部最大現代美術館，常設展加特展豐富，文青拍照熱點。",dist:"near",cost:"low",type:"indoor",group:["solo","couple","friends"],tags:["藝術","展覽","拍照"],tip:"學生票享半價，週六下午3點後特展免費入場"},
+  {id:20,name:"國立科學教育館",emoji:"🔬",desc:"科學互動體驗，適合帶小孩或自己玩一下午，附設天文館可看星象。",dist:"near",cost:"low",type:"indoor",group:["family","friends"],tags:["科學","互動","天文館"],tip:"天象廳需另購票，建議網路預購以免現場售完"},
+  {id:21,name:"誠品生活松菸",emoji:"📚",desc:"文創市集加書店，不時有展覽和設計師品牌，逛一整天都不膩。",dist:"near",cost:"free",type:"indoor",group:["solo","couple","friends"],tags:["書店","文創","展覽"],tip:"地下樓常有限定快閃店，每季都有主題市集"},
+];
+
+/* ── AVOID CHIPS ── */
+const AVOID_OPTS = ["人多的地方","登山健行","海邊","溫泉","夜市","博物館","購物商場","需要開車"];
+let selectedAvoid = [];
+const chipsEl = document.getElementById('avoid-chips');
+AVOID_OPTS.forEach(opt=>{
+  const chip = document.createElement('span');
+  chip.className = 'chip';
+  chip.textContent = opt;
+  chip.onclick = ()=>{
+    if(selectedAvoid.includes(opt)){
+      selectedAvoid = selectedAvoid.filter(x=>x!==opt);
+      chip.classList.remove('sel');
+    } else {
+      selectedAvoid.push(opt);
+      chip.classList.add('sel');
+    }
+  };
+  chipsEl.appendChild(chip);
+});
+
+/* ── COUNT BADGE ── */
+document.getElementById('placeCount').textContent = PLACES.length;
+
+/* ══════════════ FILTER LOGIC ══════════════ */
+let currentPlaces = [];
+let currentSpinResult = null;
+let wishlist = JSON.parse(localStorage.getItem('weekendWishlist')||'[]');
+
+function generatePlaces(){
+  const dist = document.getElementById('distance').value;
+  const cost = document.getElementById('cost').value;
+  const io = document.getElementById('indoorOutdoor').value;
+  const group = document.getElementById('groupSize').value;
+
+  let pool = PLACES.filter(p=>{
+    const distOk = dist==='any' || p.dist===dist || (dist==='far'&&p.dist==='far') || (dist==='mid'&&(p.dist==='mid'||p.dist==='near')) || (dist==='near'&&p.dist==='near');
+    const costOk = cost==='any' || p.cost===cost || p.cost==='any' || (cost==='high'&&p.cost!=='free');
+    const ioOk = io==='any' || p.type===io || p.type==='any';
+    const groupOk = p.group.includes(group) || p.group.includes('friends');
+    const avoidOk = !selectedAvoid.some(av => p.tags.some(t=>t.includes(av.slice(0,3))) || p.name.includes(av.slice(0,2)));
+    return distOk && costOk && ioOk && groupOk && avoidOk;
+  });
+
+  if(!pool.length) pool = PLACES.filter(p=>p.dist===dist||dist==='any').slice(0,6);
+  if(!pool.length) pool = PLACES.slice(0,6);
+
+  // Shuffle and pick top 6
+  pool = pool.sort(()=>Math.random()-.5).slice(0,6);
+  currentPlaces = pool;
+
+  renderResults(pool);
+  drawWheelWithPlaces(pool);
+  document.getElementById('spin-empty').style.display = 'block';
+  document.getElementById('spin-card').style.display = 'none';
+}
+
+/* ── RENDER RESULTS ── */
+function renderResults(places){
+  const container = document.getElementById('results-container');
+  if(!places.length){ container.innerHTML='<div class="results-empty">沒找到符合條件的景點，試試放寬條件！</div>'; return; }
+
+  container.innerHTML = `<div class="results-grid">${places.map((p,i)=>`
+    <div class="place-card ${i===0?'featured':''}">
+      <div class="place-rank">${i===0?'✦ 首選推薦':'Option ' + (i+1).toString().padStart(2,'0')}</div>
+      <span class="place-emoji">${p.emoji}</span>
+      <div class="place-name">${p.name.slice(0,-1)}<em>${p.name.slice(-1)}</em></div>
+      <p class="place-desc">${p.desc}</p>
+      <div class="place-meta">
+        <span class="meta-badge dist">📍 ${{near:'30分內',mid:'1小時',far:'2–3小時',any:'距離不限'}[p.dist]}</span>
+        <span class="meta-badge cost">💰 ${{free:'免費',low:'低消費',mid:'中等',high:'較高',any:'不限'}[p.cost]}</span>
+        <span class="meta-badge type">${p.type==='outdoor'?'🌿 戶外':p.type==='indoor'?'🏠 室內':'🔀 室內外'}</span>
+      </div>
+      <div class="place-tags">${p.tags.map(t=>`<span class="place-tag">${t}</span>`).join('')}</div>
+      ${p.tip?`<div class="place-tip">💡 ${p.tip}</div>`:''}
+    </div>
+  `).join('')}</div>`;
+}
+
+/* ══════════════ WHEEL ══════════════ */
+let wAngle = 0;
+let wSpinning = false;
+const COLORS = [
+  'rgba(46,125,90,.75)','rgba(70,160,115,.7)','rgba(150,210,180,.85)',
+  'rgba(30,100,70,.8)','rgba(100,180,145,.75)','rgba(200,230,215,.9)',
+];
+
+function drawWheelWithPlaces(places){
+  const c = document.getElementById('weekendWheel');
+  const ctx = c.getContext('2d');
+  const S=260, CX=S/2, CY=S/2, R=S/2-8;
+  ctx.clearRect(0,0,S,S);
+  if(!places.length){
+    ctx.fillStyle='rgba(216,207,194,.5)';
+    ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#9c9080';ctx.font='11px "DM Mono",monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('搜尋景點後',CX,CY-8);ctx.fillText('即可轉動！',CX,CY+10);
+    return;
+  }
+  const sliceAngle = (Math.PI*2)/places.length;
+  places.forEach((p,i)=>{
+    const start=wAngle+i*sliceAngle, end=start+sliceAngle;
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,R,start,end);ctx.closePath();
+    ctx.fillStyle=COLORS[i%COLORS.length];ctx.fill();
+    ctx.strokeStyle='rgba(250,247,242,.5)';ctx.lineWidth=1.5;ctx.stroke();
+    const mid=start+sliceAngle/2;
+    const er=R*.62, ex=CX+er*Math.cos(mid), ey=CY+er*Math.sin(mid);
+    ctx.save();ctx.translate(ex,ey);ctx.rotate(mid+Math.PI/2);
+    ctx.font=places.length>5?'14px serif':'18px serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(p.emoji,0,0);ctx.restore();
+    const tr=R*.3, tx=CX+tr*Math.cos(mid), ty=CY+tr*Math.sin(mid);
+    ctx.save();ctx.translate(tx,ty);ctx.rotate(mid+Math.PI/2);
+    ctx.fillStyle='rgba(250,247,242,.9)';
+    ctx.font=`300 ${places.length>5?8:9}px "Noto Sans TC",sans-serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    const label=p.name.length>5?p.name.slice(0,4)+'…':p.name;
+    ctx.fillText(label,0,0);ctx.restore();
+  });
+  ctx.beginPath();ctx.arc(CX,CY,18,0,Math.PI*2);
+  ctx.fillStyle='#faf7f2';ctx.fill();
+  ctx.strokeStyle='rgba(46,125,90,.4)';ctx.lineWidth=2;ctx.stroke();
+  ctx.font='12px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🗺',CX,CY);
+}
+drawWheelWithPlaces([]);
+
+// Make wheel clickable
+document.getElementById('weekendWheel').addEventListener('click',()=>{
+  if(currentPlaces.length) spinWheel();
+});
+
+function spinWheel(){
+  if(wSpinning||!currentPlaces.length) return;
+  wSpinning = true;
+  const winIdx = Math.floor(Math.random()*currentPlaces.length);
+  const sliceAngle=(Math.PI*2)/currentPlaces.length;
+  const targetAngle = -Math.PI/2 - (winIdx*sliceAngle+sliceAngle/2);
+  const totalSpins=(Math.random()*4+6)*Math.PI*2;
+  const finalAngle=wAngle+totalSpins+(targetAngle-((wAngle+totalSpins)%(Math.PI*2)));
+  const startAngle=wAngle, startTime=performance.now(), duration=4000+Math.random()*1500;
+  function easeOut(t){return 1-Math.pow(1-t,4);}
+  function frame(now){
+    const elapsed=now-startTime, progress=Math.min(elapsed/duration,1);
+    wAngle=startAngle+(finalAngle-startAngle)*easeOut(progress);
+    drawWheelWithPlaces(currentPlaces);
+    if(progress<1){requestAnimationFrame(frame);}
+    else{
+      wAngle=finalAngle; wSpinning=false;
+      showSpinResult(currentPlaces[winIdx]);
+    }
+  }
+  requestAnimationFrame(frame);
+  document.getElementById('spin-card').style.display='none';
+  document.getElementById('spin-empty').style.display='block';
+}
+
+function showSpinResult(place){
+  currentSpinResult = place;
+  document.getElementById('s-emoji').textContent = place.emoji;
+  document.getElementById('s-name').innerHTML = place.name.slice(0,-1)+'<em>'+place.name.slice(-1)+'</em>';
+  document.getElementById('s-desc').textContent = place.desc;
+  document.getElementById('s-meta').innerHTML = [
+    `<span class="meta-badge dist">📍 ${{near:'30分內',mid:'1小時',far:'2–3小時',any:'不限'}[place.dist]}</span>`,
+    `<span class="meta-badge cost">💰 ${{free:'免費',low:'低消費',mid:'中等',high:'較高',any:'不限'}[place.cost]}</span>`,
+  ].join('');
+  const card = document.getElementById('spin-card');
+  card.style.display='block';
+  card.style.animation='none';
+  setTimeout(()=>{card.style.animation='resIn .4s cubic-bezier(.16,1,.3,1) both';},10);
+  document.getElementById('spin-empty').style.display='none';
+}
+
+/* ── WISHLIST ── */
+function addToWishlist(){
+  if(!currentSpinResult) return;
+  if(wishlist.some(w=>w.id===currentSpinResult.id)){
+    renderWishlist(); return;
+  }
+  wishlist.unshift({id:currentSpinResult.id,name:currentSpinResult.name,emoji:currentSpinResult.emoji});
+  if(wishlist.length>9) wishlist.pop();
+  localStorage.setItem('weekendWishlist',JSON.stringify(wishlist));
+  renderWishlist();
+}
+
+function renderWishlist(){
+  const container = document.getElementById('wishlist-container');
+  if(!wishlist.length){ container.innerHTML='<div class="wishlist-empty">還沒有收藏景點，轉盤選好後加入願望清單！</div>'; return; }
+  container.innerHTML=`<div class="wishlist-grid">${wishlist.map((w,i)=>`<div class="wish-item"><span class="wish-emoji">${w.emoji}</span><span class="wish-name">${w.name}</span><button class="wish-del" onclick="removeWish(${i})">✕</button></div>`).join('')}</div>`;
+}
+function removeWish(i){ wishlist.splice(i,1); localStorage.setItem('weekendWishlist',JSON.stringify(wishlist)); renderWishlist(); }
+function clearWishlist(){ wishlist=[]; localStorage.removeItem('weekendWishlist'); renderWishlist(); }
+renderWishlist();
+</script>
+</body>
+</html>
