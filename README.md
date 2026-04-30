@@ -424,7 +424,7 @@ myproject: {
 
 | 平台 | 帳號 / 連結 |
 |------|------------|
-| 📧 Email | [lyz0422work@gmail.com](mailto:zoe920422@gmail.com) |
+| 📧 Email | [zoe920422@gmail.com](mailto:zoe920422@gmail.com) |
 | 🐙 GitHub | [@lyz-0422](https://github.com/lyz-0422) |
 | 📸 Instagram | [@lyzzz_0422](https://www.instagram.com/lyzzz_0422/) |
 | 🧵 Threads | [@lyzzz_0422](https://www.threads.com/@lyzzz_0422) |
