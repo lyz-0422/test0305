@@ -336,7 +336,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
         </div>
         <div class="hero-divider"></div>
         <div class="hero-stats">
-          <div><div class="stat-num">6</div><div class="stat-label" data-i18n="stat_projects">Projects</div></div>
+          <div><div class="stat-num">7</div><div class="stat-label" data-i18n="stat_projects">Projects</div></div>
           <div><div class="stat-num">97%+</div><div class="stat-label" data-i18n="stat_f1">Model F1</div></div>
         </div>
       </div>
@@ -431,7 +431,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
         <span class="notes-cta-ico">📝</span>
         <div>
           <div class="notes-cta-label" data-i18n="notes_cta_label">學習筆記</div>
-          <div class="notes-cta-title" data-i18n="notes_cta_title">JavaScript · CSS Layout 上課筆記</div>
+          <div class="notes-cta-title" data-i18n="notes_cta_title">JavaScript · Vue 3 · Firebase · Tailwind · Pinia · Vercel</div>
         </div>
       </div>
       <span class="notes-cta-arrow">↗</span>
@@ -519,7 +519,7 @@ const i18n={
     about_p2:'我的興趣主要圍繞在 AI 與程式開發上，喜歡探索模型最佳化、從零建構一個能跑起來的應用，也享受用技術解決真實問題的過程。學生時期也透過課程接觸過電路板製作與硬體實驗，累積了一些動手實作的基礎經驗。',
     about_p3:'目前積極尋找能將深度學習落地於真實場景的機會，也期待更多跨領域的合作與挑戰。',
     tl_cta_label:'學習時間軸',tl_cta_title:'查看完整學習歷程 →',
-    notes_cta_label:'學習筆記',notes_cta_title:'JavaScript · CSS Layout 上課筆記',
+    notes_cta_label:'學習筆記',notes_cta_title:'JavaScript · Vue 3 · Firebase · Tailwind · Pinia · Vercel',
     contact_p:'不管是合作機會、實習詢問，還是想聊聊 AI 與技術，都歡迎聯繫我。',
   },
   en:{
@@ -536,10 +536,10 @@ const i18n={
     about_p2:'My interests center on AI and software development — I enjoy optimizing models, building applications from scratch, and using technology to solve real problems. I\'ve also gained hands-on experience in PCB design and hardware through coursework.',
     about_p3:'I\'m actively looking for opportunities to bring deep learning into real-world applications, and welcome cross-disciplinary collaborations.',
     tl_cta_label:'Learning Timeline',tl_cta_title:'View my full journey →',
-    notes_cta_label:'Study Notes',notes_cta_title:'JavaScript · CSS Layout course notes',
+    notes_cta_label:'Study Notes',notes_cta_title:'Vue 3 · Firebase · Tailwind · PrimeVue · Pinia · Vercel',
     contact_p:'Whether it\'s a collaboration, internship inquiry, or just a chat about AI — feel free to reach out.',
   }
-};
+,vue:{ico:"⚡",cat:"Vue Ecosystem",title:["前端全棧 &","<em>Vue Ecosystem</em>"],sub:"學習 Vue 3 Composition API、Firebase/Firestore 即時資料庫、Tailwind CSS、PrimeVue UI 元件、Pinia 狀態管理、Vue Router、Vercel 部署，建立完整前端開發能力。",meta:[{label:"核心框架",val:"Vue 3 + Vite"},{label:"後端服務",val:"Firebase / Firestore"},{label:"UI 工具",val:"Tailwind CSS · PrimeVue"}],sections:[{h:"Vue 3 Composition API",p:"使用 ref、reactive、computed、watch 建立響應式狀態；Composables 封裝可複用邏輯（useTodos、useAuth、useFetch）；SFC 單文件元件搭配 <script setup> 語法。"},{h:"Firebase & Firestore",p:"Firestore NoSQL 即時資料庫 CRUD 操作；onSnapshot 實現多裝置即時同步；Firebase Authentication 支援 Email/Password 與 Google 登入；環境變數安全存放金鑰。"},{h:"Tailwind CSS + PrimeVue",p:"Utility-First CSS 快速排版；PrimeVue 提供豐富企業級元件（DataTable、Dialog、Toast）；搭配 tailwindcss-primeui 插件讓兩者和平共存。"},{h:"Pinia + Vue Router + Vercel",p:"Pinia Setup Store 管理全域狀態（登入者、設定），搭配 pinia-plugin-persistedstate 持久化；Vue Router 4 導航守衛保護需要登入的路由；Vercel GitHub 自動部署，環境變數安全管理。"}],sidebar:[{title:"技術棧",rows:[["框架","Vue 3 + Vite"],["資料庫","Firebase Firestore"],["樣式","Tailwind CSS"],["UI 元件","PrimeVue"],["狀態管理","Pinia"],["路由","Vue Router 4"],["部署","Vercel"]]},{title:"相關學習頁",rows:[["筆記","notes.html Unit 04-14"],["練習題","exercise.html Unit 04"]]}]}};
 
 let currentLang=localStorage.getItem('lyz-lang')||'zh';
 let currentTheme=localStorage.getItem('lyz-theme')||'light';
