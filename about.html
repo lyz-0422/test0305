@@ -290,7 +290,7 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
     <li><button onclick="goTo('about')" data-i18n="nav_about">about</button></li>
     <li><button onclick="goTo('skills')" data-i18n="nav_skills">skills</button></li>
     <li><button onclick="goTo('projects')" data-i18n="nav_projects">projects</button></li>
-    <li><a href="timeline.html" data-i18n="nav_timeline">timeline</a></li>
+    <li><a href="#projects" data-i18n="nav_timeline">timeline</a></li>
     <li><a href="notes.html" data-i18n="nav_notes">notes</a></li>
     <li><button onclick="goTo('contact')" data-i18n="nav_contact">contact</button></li>
   </ul>
@@ -414,12 +414,12 @@ td{font-size:.82rem;color:var(--ts);padding:.48rem .8rem;border-bottom:1px solid
     </div>
 
     <!-- Timeline CTA（新增）-->
-    <a class="timeline-cta reveal" href="timeline.html">
+    <a class="timeline-cta reveal" href="#projects">
       <div class="timeline-cta-left">
         <span class="timeline-cta-ico">🗓</span>
         <div>
-          <div class="timeline-cta-label" data-i18n="tl_cta_label">學習時間軸</div>
-          <div class="timeline-cta-title" data-i18n="tl_cta_title">查看完整學習歷程 →</div>
+          <div class="timeline-cta-label" data-i18n="tl_cta_label">學習歷程</div>
+          <div class="timeline-cta-title" data-i18n="tl_cta_title">查看所有專案作品 →</div>
         </div>
       </div>
       <span class="timeline-cta-arrow">↗</span>
@@ -518,7 +518,7 @@ const i18n={
     about_p1:'我目前就讀於 <span class="hl">中原大學電機工程學系</span>，在此之前完成了 <span class="hl">逢甲大學通訊工程學系</span> 的學業，並在畢業專題中深入研究深度學習應用於醫療影像分類的課題。',
     about_p2:'我的興趣主要圍繞在 AI 與程式開發上，喜歡探索模型最佳化、從零建構一個能跑起來的應用，也享受用技術解決真實問題的過程。學生時期也透過課程接觸過電路板製作與硬體實驗，累積了一些動手實作的基礎經驗。',
     about_p3:'目前積極尋找能將深度學習落地於真實場景的機會，也期待更多跨領域的合作與挑戰。',
-    tl_cta_label:'學習時間軸',tl_cta_title:'查看完整學習歷程 →',
+    tl_cta_label:'學習歷程',tl_cta_title:'查看所有專案作品 →',
     notes_cta_label:'學習筆記',notes_cta_title:'JavaScript · Vue 3 · Firebase · Tailwind · Pinia · Vercel',
     contact_p:'不管是合作機會、實習詢問，還是想聊聊 AI 與技術，都歡迎聯繫我。',
   },
@@ -535,7 +535,7 @@ const i18n={
     about_p1:'I\'m currently studying at <span class="hl">Chung Yuan Christian University (EE)</span>, having previously completed my degree at <span class="hl">Feng Chia University (Communications Engineering)</span>, where my thesis focused on deep learning for medical image classification.',
     about_p2:'My interests center on AI and software development — I enjoy optimizing models, building applications from scratch, and using technology to solve real problems. I\'ve also gained hands-on experience in PCB design and hardware through coursework.',
     about_p3:'I\'m actively looking for opportunities to bring deep learning into real-world applications, and welcome cross-disciplinary collaborations.',
-    tl_cta_label:'Learning Timeline',tl_cta_title:'View my full journey →',
+    tl_cta_label:'Projects',tl_cta_title:'View all project work →',
     notes_cta_label:'Study Notes',notes_cta_title:'Vue 3 · Firebase · Tailwind · PrimeVue · Pinia · Vercel',
     contact_p:'Whether it\'s a collaboration, internship inquiry, or just a chat about AI — feel free to reach out.',
   }
