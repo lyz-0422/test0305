@@ -158,6 +158,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
     <li><a href="exercise.html">練習題</a></li>
     <li><a href="decide.html" class="food-link">🎯 今日決策</a></li>
     <li><a href="weekend.html" class="food-link">🗺 週末去哪</a></li>
+    <li><a href="geo.html" class="food-link">🌍 地理測驗</a></li>
     <li><a href="about.html#contact">Contact</a></li>
   </ul>
 </nav>
@@ -178,6 +179,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
       <a class="btn-notes" href="notes.html">學習筆記 · Vue/Firebase 📝</a>
       <a class="btn-food" href="decide.html">今日決策中心 🎯</a>
       <a class="btn-food" href="weekend.html">週末去哪玩？🗺</a>
+      <a class="btn-food" href="geo.html">🌍 世界地理測驗</a>
       <a class="btn-about" href="about.html#about">關於我 →</a>
     </div>
   </div>
@@ -265,8 +267,14 @@ skillsData.forEach(skill => {
   tag.setAttribute('data-cat', skill.cat);
   tag.innerHTML = `<span>${skill.name}</span>`;
   tag.addEventListener('mouseenter', () => showToast(`${skill.cat === 'js' ? 'JS' : 'CSS'} · ${skill.category}`));
-  tag.addEventListener('click', () => { window.location.href = 'notes.html'; });
-  tagsContainer.appendChild(tag);
+  tag.addEventListener('click', () => { 
+    const geoSkills = ["Firebase", "Firestore", "Vue 3", "Pinia"];
+    if (geoSkills.includes(skill.name)) {
+      window.location.href = 'geo.html'; 
+    } else {
+      window.location.href = 'notes.html'; 
+    }
+  });
 });
 
 let toastTimer = null;
@@ -374,6 +382,7 @@ const tickerItems = [
   "Deep Learning", "PyTorch", "DenseNet121", "Streamlit",
   "Arduino", "PCB Design", "EAGLE", "CUDA 12.1",
   "🍜 今天吃什麼", "🎰 轉盤決策", "🍱 便當", "🍣 壽司","Vue 3","Pinia","Vue Router","Firestore","Firebase","Tailwind CSS","PrimeVue","Composables","Vercel部署",
+  "🌍 世界地理測驗", "REST Countries API", "onSnapshot 即時同步", "全班即時排行榜 🏆"
 ];
 
 const tickerHTML = tickerItems.map(item => `<span class="ticker-item"><span class="ticker-dot"></span>${item}</span>`).join('');
