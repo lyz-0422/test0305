@@ -1,0 +1,970 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>誰是DAVID蛇?</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0a0a0f;
+            --panel-bg: #12121a;
+            --accent-green: #32c850;
+            --accent-blue: #3296ff;
+            --accent-gold: #ffd700;
+            --accent-red: #ff3232;
+            --text: #e0e0f0;
+            --dim: #666680;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Noto Sans TC', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ── 頂部 ── */
+        .site-header {
+            width: 100%;
+            max-width: 900px;
+            padding: 32px 32px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .site-header h1 {
+            color: var(--accent-blue);
+            font-size: 28px;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 2px;
+        }
+
+        .btn-classic {
+            background: linear-gradient(135deg, #1a6fff, #00b4d8);
+            color: #fff;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: transform .1s, box-shadow .2s;
+            box-shadow: 0 0 20px #1a6fff44;
+        }
+
+        .btn-classic:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 30px #1a6fff88;
+        }
+
+        /* ── 遊戲區塊 ── */
+        #game-wrapper {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 16px 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .game-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ── 名字輸入畫面 ── */
+        #name-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 32px;
+            background: var(--panel-bg);
+            border: 1px solid #1e1e40;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .name-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .name-row label {
+            width: 130px;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .name-row input {
+            flex: 1;
+            background: #0e0e1a;
+            border: 1px solid #2a2a50;
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .name-row input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #1a6fff, #00b4d8);
+            color: #fff;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: transform .1s, box-shadow .2s;
+            box-shadow: 0 0 20px #1a6fff44;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 30px #1a6fff88;
+        }
+
+        .controls-hint {
+            display: flex;
+            gap: 32px;
+            font-size: 13px;
+            color: var(--dim);
+        }
+
+        .controls-hint span {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ══ 4. 新分數條 ══ */
+        #scorebar {
+            width: 100%;
+            max-width: 820px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-panel {
+            flex: 1;
+            background: #0e0e1a;
+            border-radius: 10px;
+            padding: 8px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border: 1px solid #1e1e40;
+            min-width: 0;
+        }
+
+        .player-panel.p1 {
+            border-color: #32c85044;
+        }
+
+        .player-panel.p2 {
+            border-color: #3296ff44;
+        }
+
+        .player-panel.p1.boosted {
+            border-color: #32c850;
+            box-shadow: 0 0 10px #32c85066;
+        }
+
+        .player-panel.p2.boosted {
+            border-color: #3296ff;
+            box-shadow: 0 0 10px #3296ff66;
+        }
+
+        .panel-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .panel-score {
+            font-family: 'Orbitron', monospace;
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .p1 .panel-name,
+        .p1 .panel-score {
+            color: var(--accent-green);
+        }
+
+        .p2 .panel-name,
+        .p2 .panel-score {
+            color: var(--accent-blue);
+        }
+
+        .score-bar-wrap {
+            height: 5px;
+            background: #1e1e30;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width .4s ease;
+        }
+
+        .p1 .score-bar-fill {
+            background: linear-gradient(90deg, #32c850, #00ff88);
+        }
+
+        .p2 .score-bar-fill {
+            background: linear-gradient(90deg, #3296ff, #00b4ff);
+        }
+
+        .boost-label {
+            font-size: 11px;
+            color: var(--dim);
+            text-align: right;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+            min-height: 14px;
+        }
+
+        .p1 .boost-label.on {
+            color: #32c850;
+        }
+
+        .p2 .boost-label.on {
+            color: #3296ff;
+        }
+
+        /* 中間星星面板 */
+        .stars-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            min-width: 90px;
+        }
+
+        .stars-count {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            color: var(--accent-gold);
+            font-weight: 900;
+        }
+
+        .stars-label {
+            font-size: 11px;
+            color: var(--dim);
+            letter-spacing: 1px;
+        }
+
+        .mode-badge {
+            font-size: 10px;
+            font-family: 'Orbitron', monospace;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #1e1e30;
+            color: var(--dim);
+            letter-spacing: 1px;
+        }
+
+        .mode-badge.extreme {
+            background: #3d0a0a;
+            color: var(--accent-red);
+            border: 1px solid #ff323244;
+        }
+
+        /* ══ Canvas 包裝 ══ */
+        #canvas-outer {
+            width: 100%;
+            max-width: 820px;
+            display: none;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            /* 保持 4:3 (800×600) 比例 */
+            aspect-ratio: 800 / 600;
+            border: 2px solid #1e1e40;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 40px #0008;
+        }
+
+        #canvas-container.extreme {
+            border-color: #ff3232;
+            box-shadow: 0 0 40px #ff323244;
+        }
+
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ══ 3. 遊戲結束彈窗 ══ */
+        #gameover-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #gameover-modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #0e0e1a;
+            border: 1px solid #2a2a60;
+            border-radius: 16px;
+            padding: 36px 40px 32px;
+            min-width: 340px;
+            max-width: 92vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            animation: modalIn .35s cubic-bezier(.34, 1.56, .64, 1) both;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(.7) translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-winner {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(16px, 4vw, 26px);
+            font-weight: 900;
+            color: var(--accent-gold);
+            text-align: center;
+            animation: winnerPop .5s .25s cubic-bezier(.34, 1.56, .64, 1) both;
+            letter-spacing: 1px;
+        }
+
+        @keyframes winnerPop {
+            from {
+                transform: scale(.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 分數對比條 */
+        .score-compare {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .score-compare-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sc-name {
+            width: 70px;
+            font-size: 13px;
+            font-family: 'Orbitron', monospace;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .sc-bar-wrap {
+            flex: 1;
+            height: 20px;
+            background: #1a1a2e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .sc-bar {
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 12px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            color: #000;
+            transition: width .8s cubic-bezier(.34, 1.1, .64, 1);
+            min-width: 28px;
+        }
+
+        .sc-bar.p1 {
+            background: linear-gradient(90deg, #32c850, #00ff88);
+        }
+
+        .sc-bar.p2 {
+            background: linear-gradient(90deg, #3296ff, #00b4ff);
+        }
+
+        .modal-hint {
+            font-size: 13px;
+            color: var(--dim);
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 11px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: transform .1s, box-shadow .2s;
+            letter-spacing: 1px;
+        }
+
+        .modal-btn.restart {
+            background: linear-gradient(135deg, #1a6fff, #00b4d8);
+            color: #fff;
+            box-shadow: 0 0 16px #1a6fff44;
+        }
+
+        .modal-btn.restart:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 24px #1a6fff88;
+        }
+
+        .modal-btn.quit {
+            background: #1a1a2e;
+            color: var(--dim);
+            border: 1px solid #2a2a50;
+        }
+
+        .modal-btn.quit:hover {
+            color: var(--text);
+            border-color: #4a4a80;
+        }
+
+        /* ══ 5. 響應式 ══ */
+        @media (max-width: 600px) {
+            .site-header h1 {
+                font-size: 20px;
+            }
+
+            .game-title {
+                font-size: 20px;
+                letter-spacing: 2px;
+            }
+
+            #name-screen {
+                padding: 20px 16px;
+            }
+
+            .name-row label {
+                width: 110px;
+                font-size: 12px;
+            }
+
+            .controls-hint {
+                font-size: 11px;
+                gap: 16px;
+            }
+
+            .panel-score {
+                font-size: 18px;
+            }
+
+            .stars-count {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── 原有網頁內容 ── -->
+    <div class="site-header" id="site-header">
+        <h1>歡迎來到誰是David蛇</h1>
+        <button class="btn-classic" id="btn">點我</button>
+    </div>
+
+    <div id="app"></div>
+
+    <!-- ── 遊戲區塊 ── -->
+    <div id="game-wrapper" style="display:none">
+        <div class="game-title">誰是DAVID蛇?</div>
+
+        <!-- 名字輸入畫面 -->
+        <div id="name-screen" style="display:flex">
+            <div class="name-row">
+                <label style="color:#64ff96">🟢 P1 (WASD)：</label>
+                <input id="p1input" maxlength="8" placeholder="玩家1名稱" value="P1" />
+            </div>
+            <div class="name-row">
+                <label style="color:#64b4ff">🔵 P2 (方向鍵)：</label>
+                <input id="p2input" maxlength="8" placeholder="玩家2名稱" value="P2" />
+            </div>
+            <div class="controls-hint">
+                <span><strong style="color:#64ff96">P1</strong> W A S D 移動<br>同向再按 → 加速切換</span>
+                <span><strong style="color:#64b4ff">P2</strong> ↑ ← ↓ → 移動<br>同向再按 → 加速切換</span>
+            </div>
+            <button class="start-btn" id="startBtn">開始遊戲 ▶</button>
+        </div>
+
+        <!-- 4. 新分數條 -->
+        <div id="scorebar">
+            <div class="player-panel p1" id="panel-p1">
+                <div class="panel-top">
+                    <span class="panel-name" id="sb-p1name">P1</span>
+                    <span class="panel-score" id="sb-p1score">00</span>
+                </div>
+                <div class="score-bar-wrap">
+                    <div class="score-bar-fill p1" id="bar-p1" style="width:0%"></div>
+                </div>
+                <div class="boost-label" id="boost-p1"></div>
+            </div>
+
+            <div class="stars-panel">
+                <div class="stars-count" id="sb-stars">16</div>
+                <div class="stars-label">⭐ STARS</div>
+                <div class="mode-badge" id="sb-mode">NORMAL</div>
+            </div>
+
+            <div class="player-panel p2" id="panel-p2">
+                <div class="panel-top">
+                    <span class="panel-name" id="sb-p2name">P2</span>
+                    <span class="panel-score" id="sb-p2score">00</span>
+                </div>
+                <div class="score-bar-wrap">
+                    <div class="score-bar-fill p2" id="bar-p2" style="width:0%"></div>
+                </div>
+                <div class="boost-label" id="boost-p2"></div>
+            </div>
+        </div>
+
+        <!-- 5. 響應式 canvas 包裝 -->
+        <div id="canvas-outer">
+            <div id="canvas-container">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 遊戲結束彈窗 -->
+    <div id="gameover-modal">
+        <div class="modal-box">
+            <div class="modal-winner" id="modal-winner">—</div>
+            <div class="score-compare" id="score-compare">
+                <div class="score-compare-row">
+                    <div class="sc-name" id="sc-p1name" style="color:var(--accent-green)">P1</div>
+                    <div class="sc-bar-wrap">
+                        <div class="sc-bar p1" id="sc-bar-p1" style="width:0%">0</div>
+                    </div>
+                </div>
+                <div class="score-compare-row">
+                    <div class="sc-name" id="sc-p2name" style="color:var(--accent-blue)">P2</div>
+                    <div class="sc-bar-wrap">
+                        <div class="sc-bar p2" id="sc-bar-p2" style="width:0%">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-hint">按 R 重新開始 | ESC 離開</div>
+            <div class="modal-buttons">
+                <button class="modal-btn restart" id="modal-restart">▶ 再來一局</button>
+                <button class="modal-btn quit" id="modal-quit">✕ 離開</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Vue（保留掛載點）──
+        const { createApp } = Vue;
+        createApp({}).mount("#app");
+
+        // ── 點我進入遊戲 ──
+        document.getElementById("btn").addEventListener("click", () => {
+            document.getElementById("site-header").style.display = "none";
+            document.getElementById("game-wrapper").style.display = "flex";
+            setTimeout(() => document.getElementById("game-wrapper").scrollIntoView({ behavior: "smooth" }), 50);
+        });
+
+        // ══════════════════════════════════════════
+        //  貪食蛇遊戲引擎
+        // ══════════════════════════════════════════
+        const CELL = 20, GW = 40, GH = 30;
+        const W = GW * CELL, H = GH * CELL;
+
+        const C = {
+            bg: "#1e1e23", bgEx: "#321010", grid: "#28282d",
+            p1: "#32c850", p1h: "#64ff96", p2: "#3296ff", p2h: "#64c8ff",
+            worm: "#9370db", star: "#ffd700", starSm: "#c8c8c8",
+            lightning: "#ffff32",
+        };
+
+        function rng(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+        function posEq(a, b) { return a[0] === b[0] && a[1] === b[1]; }
+        function posIn(pos, arr) { return arr.some(p => posEq(p, pos)); }
+
+        class Snake {
+            constructor(sx, sy, color, headColor, keys, name) {
+                this.coord = [[sx, sy], [sx - 1, sy], [sx - 2, sy]];
+                this.color = color; this.headColor = headColor;
+                this.name = name; this.keys = keys;
+                this.dir = [1, 0]; this.score = 0; this.alive = true;
+                this.boosted = false; this.lastMoveTime = 0; this.lastToggleTime = 0;
+            }
+            handleKey(key) {
+                const nd = this.keys[key]; if (!nd) return;
+                if (nd[0] === this.dir[0] && nd[1] === this.dir[1]) {
+                    const now = performance.now();
+                    if (now - this.lastToggleTime > 150) { this.boosted = !this.boosted; this.lastToggleTime = now; }
+                    return;
+                }
+                if (this.coord.length >= 2) {
+                    const dx = this.coord[1][0] - this.coord[0][0], dy = this.coord[1][1] - this.coord[0][1];
+                    const back = (Math.abs(dx) > 1 || Math.abs(dy) > 1) ? [-this.dir[0], -this.dir[1]] : [dx, dy];
+                    if (nd[0] !== back[0] || nd[1] !== back[1]) this.dir = nd;
+                } else {
+                    if (nd[0] !== -this.dir[0] || nd[1] !== -this.dir[1]) this.dir = nd;
+                }
+            }
+            nextHead(wh) {
+                const c = this.coord[0];
+                for (let i = 0; i < 2; i++) if (posEq(c, wh[i])) { const o = wh[1 - i]; return [o[0] + this.dir[0], o[1] + this.dir[1]]; }
+                return [c[0] + this.dir[0], c[1] + this.dir[1]];
+            }
+        }
+
+        class Game {
+            constructor(canvas, p1name, p2name) {
+                this.cv = canvas; this.ctx = canvas.getContext("2d");
+                this.p1name = p1name; this.p2name = p2name;
+                this.reset();
+            }
+            reset() {
+                const p1k = { KeyW: [0, -1], KeyS: [0, 1], KeyA: [-1, 0], KeyD: [1, 0] };
+                const p2k = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
+                this.p1 = new Snake(Math.floor(GW / 3), Math.floor(GH / 3), C.p1, C.p1h, p1k, this.p1name);
+                this.p2 = new Snake(Math.floor(GW / 3 * 2), Math.floor(GH / 3 * 2), C.p2, C.p2h, p2k, this.p2name);
+                this.wormholes = []; this.spawnWormholes();
+                this.foods = []; this.totalSpawned = 0; this.maxStars = 16;
+                this.extreme = false; this.extremeStart = 0; this.state = "playing";
+                for (let i = 0; i < 3; i++) this.spawnStar();
+                const now = performance.now();
+                this.p1.lastMoveTime = now; this.p2.lastMoveTime = now;
+            }
+            spawnWormholes() {
+                while (true) {
+                    const a = [rng(2, GW - 3), rng(2, GH - 3)], b = [rng(2, GW - 3), rng(2, GH - 3)];
+                    if (!posEq(a, b)) { this.wormholes = [a, b]; break; }
+                }
+            }
+            spawnStar() {
+                if (this.totalSpawned >= this.maxStars) return;
+                for (let t = 0; t < 30; t++) {
+                    const pos = [rng(1, GW - 2), rng(2, GH - 2)];
+                    if (!posIn(pos, this.p1.coord) && !posIn(pos, this.p2.coord) &&
+                        !this.foods.some(f => posEq(f.pos, pos)) && !posIn(pos, this.wormholes)) {
+                        this.foods.push({ pos, type: Math.random() < 0.5 ? "big" : "small" });
+                        this.totalSpawned++; break;
+                    }
+                }
+            }
+            moveSnake(s, enemy) {
+                if (!s.alive) return;
+                const nh = s.nextHead(this.wormholes);
+                if (nh[0] < 0 || nh[0] >= GW || nh[1] < 0 || nh[1] >= GH) { s.alive = false; return; }
+                if (posIn(nh, s.coord) || posIn(nh, enemy.coord)) { s.alive = false; return; }
+                s.coord.unshift(nh);
+                const fi = this.foods.findIndex(f => posEq(nh, f.pos));
+                if (fi >= 0) { s.score += this.foods[fi].type === "big" ? 1 : 3; this.foods.splice(fi, 1); this.spawnStar(); }
+                else s.coord.pop();
+            }
+            get remaining() { return (this.maxStars - this.totalSpawned) + this.foods.length; }
+
+            handleKey(code) {
+                if (this.state === "playing" || this.state === "extreme") {
+                    this.p1.handleKey(code); this.p2.handleKey(code);
+                }
+                if (this.state === "extreme_unlock" && code === "Enter") {
+                    this.extreme = true; this.extremeStart = performance.now();
+                    this.totalSpawned = 0; this.foods = [];
+                    for (let i = 0; i < 16; i++) this.spawnStar();
+                    const now = performance.now();
+                    this.p1.lastMoveTime = now; this.p2.lastMoveTime = now;
+                    this.state = "extreme";
+                    document.getElementById("canvas-container").classList.add("extreme");
+                    const badge = document.getElementById("sb-mode");
+                    badge.textContent = "EXTREME"; badge.className = "mode-badge extreme";
+                }
+                if (this.state === "gameover" && code === "KeyR") this._restartFromModal();
+            }
+
+            _restartFromModal() {
+                document.getElementById("gameover-modal").classList.remove("show");
+                document.getElementById("canvas-container").classList.remove("extreme");
+                const badge = document.getElementById("sb-mode");
+                badge.textContent = "NORMAL"; badge.className = "mode-badge";
+                this.reset();
+            }
+
+            showGameover() {
+                let msg = "";
+                if (!this.p1.alive && !this.p2.alive) msg = "DRAW - 雙方同時陣亡!";
+                else if (!this.p1.alive) msg = `${this.p2.name} is David! 🏆`;
+                else if (!this.p2.alive) msg = `${this.p1.name} is David! 🏆`;
+                else if (this.p1.score > this.p2.score) msg = `${this.p1.name} 靠分數碾壓獲勝!`;
+                else if (this.p2.score > this.p1.score) msg = `${this.p2.name} 靠分數碾壓獲勝!`;
+                else msg = "Two Jokers! (Score Draw)!";
+                document.getElementById("modal-winner").textContent = msg;
+
+                // 分數條形圖
+                const max = Math.max(this.p1.score, this.p2.score, 1);
+                const w1 = Math.max(8, Math.round(this.p1.score / max * 100));
+                const w2 = Math.max(8, Math.round(this.p2.score / max * 100));
+                document.getElementById("sc-p1name").textContent = this.p1.name;
+                document.getElementById("sc-p2name").textContent = this.p2.name;
+                // 先設為 0，動畫延遲後展開
+                const b1 = document.getElementById("sc-bar-p1");
+                const b2 = document.getElementById("sc-bar-p2");
+                b1.style.width = "0%"; b1.textContent = this.p1.score;
+                b2.style.width = "0%"; b2.textContent = this.p2.score;
+                document.getElementById("gameover-modal").classList.add("show");
+                setTimeout(() => { b1.style.width = w1 + "%"; b2.style.width = w2 + "%"; }, 100);
+            }
+
+            update(now) {
+                const BASE = 130, BOOST = 40;
+                if (this.state === "extreme") {
+                    const elapsed = now - this.extremeStart;
+                    if (elapsed >= 5000) { this.p1.boosted = true; this.p2.boosted = true; }
+                    else { this.p1.boosted = false; this.p2.boosted = false; }
+                }
+                if (this.state === "playing" || this.state === "extreme") {
+                    for (const [s, e] of [[this.p1, this.p2], [this.p2, this.p1]]) {
+                        const spd = s.boosted ? BOOST : BASE;
+                        if (now - s.lastMoveTime >= spd) { this.moveSnake(s, e); s.lastMoveTime = now; }
+                    }
+                    if (this.state === "playing" && !this.extreme && this.p1.alive && this.p2.alive && this.remaining === 0)
+                        this.state = "extreme_unlock";
+                    if ((this.state === "playing" || this.state === "extreme") &&
+                        (!this.p1.alive || !this.p2.alive || (this.state === "extreme" && this.remaining === 0))) {
+                        this.state = "gameover";
+                        this.showGameover();
+                    }
+                }
+
+                // 更新 4. 分數條
+                const maxScore = Math.max(this.p1.score, this.p2.score, 1);
+                document.getElementById("sb-p1name").textContent = this.p1.name;
+                document.getElementById("sb-p2name").textContent = this.p2.name;
+                document.getElementById("sb-p1score").textContent = String(this.p1.score).padStart(2, "0");
+                document.getElementById("sb-p2score").textContent = String(this.p2.score).padStart(2, "0");
+                document.getElementById("bar-p1").style.width = (this.p1.score / maxScore * 100) + "%";
+                document.getElementById("bar-p2").style.width = (this.p2.score / maxScore * 100) + "%";
+                document.getElementById("sb-stars").textContent = String(this.remaining).padStart(2, "0");
+
+                // boost 標籤 + 面板發光
+                const pp1 = document.getElementById("panel-p1"), pp2 = document.getElementById("panel-p2");
+                const bl1 = document.getElementById("boost-p1"), bl2 = document.getElementById("boost-p2");
+                if (this.p1.boosted) { pp1.classList.add("boosted"); bl1.textContent = "⚡ BOOST"; bl1.classList.add("on"); }
+                else { pp1.classList.remove("boosted"); bl1.textContent = ""; bl1.classList.remove("on"); }
+                if (this.p2.boosted) { pp2.classList.add("boosted"); bl2.textContent = "⚡ BOOST"; bl2.classList.add("on"); }
+                else { pp2.classList.remove("boosted"); bl2.textContent = ""; bl2.classList.remove("on"); }
+            }
+
+            draw(now) {
+                const ctx = this.ctx;
+                ctx.fillStyle = this.extreme ? C.bgEx : C.bg;
+                ctx.fillRect(0, 0, W, H);
+                ctx.strokeStyle = C.grid; ctx.lineWidth = 0.5;
+                for (let x = 0; x <= W; x += CELL) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+                for (let y = 0; y <= H; y += CELL) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+                for (const wh of this.wormholes) {
+                    const cx = wh[0] * CELL + CELL / 2, cy = wh[1] * CELL + CELL / 2;
+                    ctx.beginPath(); ctx.arc(cx, cy, CELL / 2 - 2, 0, Math.PI * 2); ctx.fillStyle = C.worm; ctx.fill();
+                    ctx.beginPath(); ctx.arc(cx, cy, CELL / 4, 0, Math.PI * 2); ctx.fillStyle = "#000"; ctx.fill();
+                }
+                for (const f of this.foods) {
+                    const cx = f.pos[0] * CELL + CELL / 2, cy = f.pos[1] * CELL + CELL / 2;
+                    ctx.beginPath();
+                    if (f.type === "big") { ctx.arc(cx, cy, CELL / 2 - 3, 0, Math.PI * 2); ctx.fillStyle = C.star; }
+                    else { ctx.arc(cx, cy, CELL / 4, 0, Math.PI * 2); ctx.fillStyle = C.starSm; }
+                    ctx.fill();
+                }
+                for (const s of [this.p1, this.p2]) {
+                    if (!s.alive) continue;
+                    for (let i = 0; i < s.coord.length; i++) {
+                        const p = s.coord[i], x = p[0] * CELL + 1, y = p[1] * CELL + 1, sz = CELL - 2;
+                        ctx.fillStyle = i === 0 ? s.headColor : s.color;
+                        this._rr(ctx, x, y, sz, sz, 4); ctx.fill();
+                    }
+                    if (s.boosted && s.coord.length >= 2) {
+                        const tail = s.coord[s.coord.length - 1], prev = s.coord[s.coord.length - 2];
+                        const dx = tail[0] - prev[0], dy = tail[1] - prev[1];
+                        if (Math.abs(dx) <= 1 && Math.abs(dy) <= 1) {
+                            const lx = tail[0] + dx, ly = tail[1] + dy;
+                            if (lx >= 0 && lx < GW && ly >= 0 && ly < GH) this._lightning(ctx, lx, ly);
+                        }
+                    }
+                }
+
+                // extreme_unlock overlay（仍在 canvas 上顯示）
+                if (this.state === "extreme_unlock") {
+                    ctx.fillStyle = "rgba(0,0,0,0.75)"; ctx.fillRect(0, 0, W, H);
+                    ctx.textAlign = "center";
+                    ctx.fillStyle = "#ff3232"; ctx.font = "bold 36px 'Orbitron',monospace";
+                    ctx.fillText("⚠ 極限模式解鎖 ⚠", W / 2, H / 2 - 60);
+                    ctx.fillStyle = "#ffcccc"; ctx.font = "bold 18px 'Noto Sans TC',sans-serif";
+                    ctx.fillText("規則：繼承狀態 / 16星全開 / 5秒後全程強制極速", W / 2, H / 2 + 10);
+                    ctx.fillStyle = "#ffff00"; ctx.font = "bold 18px 'Noto Sans TC',sans-serif";
+                    ctx.fillText("按 [ENTER] 進入死亡飆車...", W / 2, H / 2 + 50);
+                }
+                if (this.state === "extreme") {
+                    const elapsed = now - this.extremeStart;
+                    if (elapsed < 5000) {
+                        const cnt = Math.ceil((5000 - elapsed) / 1000);
+                        ctx.textAlign = "center";
+                        ctx.fillStyle = "rgba(255,50,50,0.85)"; ctx.font = "bold 96px 'Orbitron',monospace";
+                        ctx.fillText(cnt, W / 2, H / 2 + 30);
+                        ctx.fillStyle = "rgba(255,200,200,0.9)"; ctx.font = "bold 24px 'Noto Sans TC',sans-serif";
+                        ctx.fillText("極限暴衝倒數...", W / 2, H / 2 + 80);
+                    }
+                }
+                // gameover 不再畫 canvas overlay，由 HTML modal 接管
+            }
+
+            _rr(ctx, x, y, w, h, r) {
+                ctx.beginPath();
+                ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+                ctx.lineTo(x + w, y + h - r); ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+                ctx.lineTo(x + r, y + h); ctx.arcTo(x, y + h, x, y + h - r, r);
+                ctx.lineTo(x, y + r); ctx.arcTo(x, y, x + r, y, r); ctx.closePath();
+            }
+            _lightning(ctx, lx, ly) {
+                const cx = lx * CELL + CELL / 2, cy = ly * CELL + CELL / 2;
+                ctx.fillStyle = C.lightning; ctx.beginPath();
+                ctx.moveTo(cx + 2, cy - 8); ctx.lineTo(cx - 6, cy + 1); ctx.lineTo(cx - 1, cy + 1);
+                ctx.lineTo(cx - 3, cy + 9); ctx.lineTo(cx + 5, cy - 1); ctx.lineTo(cx, cy - 1);
+                ctx.closePath(); ctx.fill();
+            }
+        }
+
+        // ── 主控制 ──
+        let game = null, animId = null;
+
+        document.getElementById("startBtn").addEventListener("click", startGame);
+        document.getElementById("modal-restart").addEventListener("click", () => { if (game) game._restartFromModal(); });
+        document.getElementById("modal-quit").addEventListener("click", quitToMenu);
+
+        function startGame() {
+            const p1 = document.getElementById("p1input").value.trim() || "P1";
+            const p2 = document.getElementById("p2input").value.trim() || "P2";
+            document.getElementById("name-screen").style.display = "none";
+            document.getElementById("scorebar").style.display = "flex";
+            document.getElementById("canvas-outer").style.display = "block";
+            const canvas = document.getElementById("gameCanvas");
+            game = new Game(canvas, p1, p2);
+            if (animId) cancelAnimationFrame(animId);
+            loop();
+        }
+
+        function quitToMenu() {
+            document.getElementById("gameover-modal").classList.remove("show");
+            document.getElementById("canvas-container").classList.remove("extreme");
+            document.getElementById("scorebar").style.display = "none";
+            document.getElementById("canvas-outer").style.display = "none";
+            document.getElementById("name-screen").style.display = "flex";
+            if (animId) { cancelAnimationFrame(animId); animId = null; }
+            game = null;
+        }
+
+        function loop() {
+            const now = performance.now();
+            game.update(now);
+            game.draw(now);
+            animId = requestAnimationFrame(loop);
+        }
+
+        document.addEventListener("keydown", e => {
+            if (!game) return;
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
+            if (game.state === "gameover" && e.code === "Escape") { quitToMenu(); return; }
+            game.handleKey(e.code);
+        });
+    </script>
+</body>
+
+</html>
