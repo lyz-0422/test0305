@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · 2048</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
+  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+  --t2:#EAE3D5;--t4:#DFD5BF;--t8:#C5A059;--t16:#B8843A;
+  --t32:#A94442;--t64:#8B2E2E;--t128:#6b4c32;--t256:#4A3520;
+  --t512:#2E1F10;--t1024:#1A1210;--t2048:#0A0806;
+}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+/* ── Nav ── */
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-logo:hover{color:var(--ac);}
+.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+
+/* ── Page ── */
+.page{width:100%;max-width:560px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;gap:0;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;letter-spacing:.02em;}
+.page-title em{font-style:italic;color:var(--ac);}
+.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:32px;}
+
+/* ── Score bar ── */
+.score-row{display:flex;gap:12px;width:100%;margin-bottom:20px;}
+.score-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;}
+.score-box.main{border-color:var(--ac);}
+.score-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
+.score-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);}
+.score-box.main .score-val{color:var(--ac);}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:10px;margin-bottom:20px;width:100%;}
+.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 24px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
+.btn:hover{background:var(--text);color:var(--bg);}
+.btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
+.btn.primary:hover{background:var(--ac);border-color:var(--ac);}
+
+/* ── Board ── */
+.board-wrap{width:100%;position:relative;}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:var(--bd);padding:10px;width:100%;}
+.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--t2);font-family:'Playfair Display',serif;font-weight:600;transition:transform .08s ease;position:relative;overflow:hidden;}
+.cell.pop{animation:pop .12s ease-out;}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+.cell.new{animation:appear .15s ease-out;}
+@keyframes appear{0%{transform:scale(0);opacity:0}80%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+
+/* tile colours */
+.cell[data-v="0"]{background:var(--t2);}
+.cell[data-v="2"]{background:var(--t2);color:var(--text);}
+.cell[data-v="4"]{background:var(--t4);color:var(--text);}
+.cell[data-v="8"]{background:var(--t8);color:#fff;}
+.cell[data-v="16"]{background:var(--t16);color:#fff;}
+.cell[data-v="32"]{background:var(--t32);color:#fff;}
+.cell[data-v="64"]{background:var(--t64);color:#fff;}
+.cell[data-v="128"]{background:var(--t128);color:#fff;}
+.cell[data-v="256"]{background:var(--t256);color:#fff;}
+.cell[data-v="512"]{background:var(--t512);color:#fff;}
+.cell[data-v="1024"]{background:var(--t1024);color:#fff;}
+.cell[data-v="2048"]{background:var(--t2048);color:var(--ac);border:2px solid var(--ac);}
+
+/* ── Overlay ── */
+.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.88);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:10;}
+.overlay.show{display:flex;}
+.overlay-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
+.overlay-title em{font-style:italic;color:var(--ac);}
+.overlay-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;}
+
+/* ── Hint ── */
+.hint-row{display:flex;gap:16px;margin-top:20px;width:100%;}
+.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;}
+.hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--dim);line-height:1.7;}
+
+/* ── Responsive ── */
+@media(max-width:500px){
+  .site-nav{padding:0 16px;}
+  .nav-links{gap:12px;}
+  .page{padding:70px 16px 40px;}
+  .board{gap:7px;padding:7px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">LYZ.dev</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="game.html">Game</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercise.html">Exercises</a></li>
+    <li><a href="decide.html">🎯 今日決策</a></li>
+    <li><a href="weekend.html">🗺 週末去哪</a></li>
+    <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
+    <li><a href="game2.html">🧱 磚塊爆破樂</a></li>
+    <li><a href="game3.html">🎮 2048</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <div class="eyebrow">Puzzle Game · 益智</div>
+  <h1 class="page-title"><em>2048</em></h1>
+  <p class="page-sub">合併相同數字，拼出 2048</p>
+
+  <div class="score-row">
+    <div class="score-box main">
+      <div class="score-label">Score</div>
+      <div class="score-val" id="score">0</div>
+    </div>
+    <div class="score-box">
+      <div class="score-label">Best</div>
+      <div class="score-val" id="best">0</div>
+    </div>
+    <div class="score-box">
+      <div class="score-label">Moves</div>
+      <div class="score-val" id="moves">0</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary" id="newBtn">New Game</button>
+    <button class="btn" id="undoBtn">Undo</button>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+    <div class="overlay" id="overlay">
+      <div class="overlay-title" id="overlay-title">Game <em>Over</em></div>
+      <div class="overlay-sub" id="overlay-sub">— 沒有可移動的方塊 —</div>
+      <button class="btn primary" id="overlay-btn" style="width:160px;">再來一局</button>
+    </div>
+  </div>
+
+  <div class="hint-row">
+    <div class="hint-card">
+      <div class="hint-title">操作方式</div>
+      <div class="hint-text">鍵盤方向鍵 / WASD 移動<br>手機可左右上下滑動</div>
+    </div>
+    <div class="hint-card">
+      <div class="hint-title">規則</div>
+      <div class="hint-text">相同數字碰撞時合併<br>拼出 2048 即勝利</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SIZE = 4;
+let grid, score, best, moves, prev;
+
+function init() {
+  grid  = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
+  score = 0; moves = 0; prev = null;
+  best  = parseInt(localStorage.getItem('2048-best') || '0');
+  addTile(); addTile();
+  render();
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function addTile(isNew = true) {
+  const empty = [];
+  for (let r = 0; r < SIZE; r++)
+    for (let c = 0; c < SIZE; c++)
+      if (grid[r][c] === 0) empty.push([r, c]);
+  if (!empty.length) return false;
+  const [r, c] = empty[Math.floor(Math.random() * empty.length)];
+  grid[r][c] = Math.random() < 0.85 ? 2 : 4;
+  if (isNew) markNew(r, c);
+  return true;
+}
+
+const newCells = new Set();
+const popCells = new Set();
+function markNew(r, c) { newCells.add(`${r},${c}`); }
+function markPop(r, c) { popCells.add(`${r},${c}`); }
+
+function render() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      const div = document.createElement('div');
+      div.className = 'cell';
+      const v = grid[r][c];
+      div.setAttribute('data-v', v);
+      const key = `${r},${c}`;
+      if (newCells.has(key))  div.classList.add('new');
+      if (popCells.has(key))  div.classList.add('pop');
+
+      // font-size by digit count
+      const fs = v >= 1024 ? '1.1rem' : v >= 128 ? '1.4rem' : v >= 16 ? '1.7rem' : '2rem';
+      div.style.fontSize = fs;
+      if (v) div.textContent = v;
+      board.appendChild(div);
+    }
+  }
+  newCells.clear(); popCells.clear();
+  document.getElementById('score').textContent = score;
+  document.getElementById('best').textContent  = best;
+  document.getElementById('moves').textContent = moves;
+}
+
+function slide(row) {
+  let arr = row.filter(x => x);
+  let merged = false;
+  let gained = 0;
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i] === arr[i+1]) {
+      arr[i] *= 2; gained += arr[i]; arr.splice(i+1, 1); merged = true;
+    }
+  }
+  while (arr.length < SIZE) arr.push(0);
+  return { arr, gained };
+}
+
+function move(dir) {
+  prev = grid.map(r => [...r]);
+  let changed = false;
+  let gained  = 0;
+
+  for (let i = 0; i < SIZE; i++) {
+    let row;
+    if (dir === 'left')  row = grid[i];
+    if (dir === 'right') row = [...grid[i]].reverse();
+    if (dir === 'up')    row = grid.map(r => r[i]);
+    if (dir === 'down')  row = grid.map(r => r[i]).reverse();
+
+    const { arr, gained: g } = slide(row);
+    gained += g;
+
+    const result = dir === 'right' || dir === 'down' ? [...arr].reverse() : arr;
+    for (let j = 0; j < SIZE; j++) {
+      let old, cur;
+      if (dir === 'left')  { old = grid[i][j]; grid[i][j] = result[j]; cur = grid[i][j]; }
+      if (dir === 'right') { old = grid[i][j]; grid[i][j] = result[j]; cur = grid[i][j]; }
+      if (dir === 'up')    { old = grid[j][i]; grid[j][i] = result[j]; cur = grid[j][i]; }
+      if (dir === 'down')  { old = grid[j][i]; grid[j][i] = result[j]; cur = grid[j][i]; }
+      if (old !== cur) changed = true;
+      if (cur > 0 && cur !== old) {
+        const r = (dir === 'up' || dir === 'down') ? j : i;
+        const c = (dir === 'up' || dir === 'down') ? i : j;
+        markPop(r, c);
+      }
+    }
+  }
+
+  if (!changed) return;
+  score += gained; moves++;
+  if (score > best) { best = score; localStorage.setItem('2048-best', best); }
+  addTile();
+  render();
+  checkEnd();
+}
+
+function checkEnd() {
+  // win
+  for (let r = 0; r < SIZE; r++)
+    for (let c = 0; c < SIZE; c++)
+      if (grid[r][c] === 2048) { showOverlay('You Win!', '— 恭喜拼出 2048 🏆 —'); return; }
+  // lose
+  for (let r = 0; r < SIZE; r++)
+    for (let c = 0; c < SIZE; c++) {
+      if (grid[r][c] === 0) return;
+      if (r+1 < SIZE && grid[r][c] === grid[r+1][c]) return;
+      if (c+1 < SIZE && grid[r][c] === grid[r][c+1]) return;
+    }
+  showOverlay('Game Over', '— 沒有可移動的方塊 —');
+}
+
+function showOverlay(title, sub) {
+  document.getElementById('overlay-title').innerHTML = title.includes('Win')
+    ? 'You <em>Win!</em>' : 'Game <em>Over</em>';
+  document.getElementById('overlay-sub').textContent = sub;
+  document.getElementById('overlay').classList.add('show');
+}
+
+// Keyboard
+const KEYS = {ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',
+               KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down'};
+document.addEventListener('keydown', e => {
+  if (KEYS[e.code]) { e.preventDefault(); move(KEYS[e.code]); }
+});
+
+// Touch swipe
+let tx, ty;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  const dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+  if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'right' : 'left');
+  else move(dy > 0 ? 'down' : 'up');
+}, {passive:true});
+
+// Undo
+document.getElementById('undoBtn').addEventListener('click', () => {
+  if (!prev) return;
+  grid = prev.map(r => [...r]); prev = null;
+  if (moves > 0) moves--;
+  render();
+  document.getElementById('overlay').classList.remove('show');
+});
+
+document.getElementById('newBtn').addEventListener('click', init);
+document.getElementById('overlay-btn').addEventListener('click', init);
+
+init();
+</script>
+</body>
+</html>
