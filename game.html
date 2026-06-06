@@ -302,6 +302,7 @@
             font-size: 11px;
             color: var(--dim);
             letter-spacing: 1px;
+            padding-top: 52px;
         }
 
         .mode-badge {
@@ -548,129 +549,20 @@
             }
         }
 
-        /* ── 主站風格導覽列 ── */
-        .site-nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 999;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: .9rem 2.4rem;
-            background: rgba(245,242,235,.92);
-            border-bottom: 1px solid #D0C9BC;
-            backdrop-filter: blur(16px);
-        }
-        .site-nav .nav-logo {
-            font-family: 'Courier New', monospace; font-size: .68rem;
-            letter-spacing: .18em; text-transform: uppercase;
-            color: #8A827B; text-decoration: none; transition: color .2s;
-        }
-        .site-nav .nav-logo:hover { color: #3A322D; }
-        .site-nav .nav-links-row {
-            display: flex; gap: 1.8rem; list-style: none; align-items: center;
-        }
-        .site-nav .nav-links-row a {
-            font-family: 'Courier New', monospace; font-size: .6rem;
-            letter-spacing: .12em; text-transform: uppercase;
-            color: #8A827B; text-decoration: none; transition: color .2s;
-        }
-        .site-nav .nav-links-row a:hover,
-        .site-nav .nav-links-row a.active { color: #3A322D; }
-        .site-nav .nav-clock {
-            font-family: 'Courier New', monospace; font-size: .62rem;
-            color: #8A827B; letter-spacing: .1em;
-        }
-
-        /* ── 開場頁重設計 ── */
-        .landing-wrap {
-            display: flex; flex-direction: column; align-items: center;
-            gap: 0; padding: 120px 32px 80px; max-width: 860px;
-            width: 100%; margin: 0 auto;
-        }
-        .landing-eyebrow {
-            font-family: 'Courier New', monospace; font-size: .6rem;
-            letter-spacing: .28em; text-transform: uppercase;
-            color: #8A827B; margin-bottom: 1.2rem;
-            display: flex; align-items: center; gap: 1rem;
-        }
-        .landing-eyebrow::before { content:''; width:28px; height:1px; background:#8A827B; opacity:.5; }
-        .landing-h1 {
-            font-size: 2.8rem; font-weight: 300;
-            letter-spacing: .45rem; text-align: center;
-            color: #3A322D; margin-bottom: 1rem;
-            font-family: "Times New Roman", Georgia, serif;
-        }
-        .landing-sub {
-            font-family: 'Courier New', monospace; font-size: .68rem;
-            color: #8A827B; letter-spacing: .1em; line-height: 1.8;
-            text-align: center; margin-bottom: 2.5rem;
-        }
-        /* 控制說明卡 */
-        .ctrl-cards {
-            display: flex; gap: 1rem; margin-bottom: 2.5rem; width: 100%;
-            max-width: 520px;
-        }
-        .ctrl-card {
-            flex: 1; border: 1px solid #D0C9BC; padding: 1.2rem;
-            background: #FFFFFF; display: flex; flex-direction: column;
-            align-items: center; gap: .6rem;
-        }
-        .ctrl-card-title {
-            font-family: 'Courier New', monospace; font-size: .58rem;
-            letter-spacing: .18em; text-transform: uppercase;
-            color: #8A827B; margin-bottom: .2rem;
-        }
-        .ctrl-key-grid {
-            display: grid; grid-template-columns: repeat(3,1fr);
-            gap: 3px; width: 80px;
-        }
-        .ctrl-key {
-            border: 1px solid #D0C9BC; background: #F5F2EB;
-            font-family: 'Courier New', monospace; font-size: .6rem;
-            color: #3A322D; padding: .3rem .2rem; text-align: center;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .ctrl-key.wide { grid-column: span 3; }
-        .ctrl-key.empty { border-color: transparent; background: transparent; }
-        .ctrl-hint {
-            font-family: 'Courier New', monospace; font-size: .52rem;
-            color: #8A827B; letter-spacing: .06em; text-align: center;
-            line-height: 1.6;
-        }
-        /* 規則說明 */
-        .rules-row {
-            display: flex; gap: 1.5rem; margin-bottom: 2.5rem;
-            flex-wrap: wrap; justify-content: center;
-        }
-        .rule-item {
-            display: flex; align-items: flex-start; gap: .5rem;
-            font-family: 'Courier New', monospace; font-size: .58rem;
-            color: #8A827B; letter-spacing: .06em; line-height: 1.7;
-            max-width: 160px;
-        }
-        .rule-num {
-            font-size: .55rem; color: #C5A059; flex-shrink: 0;
-            border: 1px solid #D0C9BC; padding: .15rem .4rem;
-        }
-
-        /* ── 倒數動畫蓋層 ── */
-        #countdown-overlay {
-            position: fixed; inset: 0; z-index: 500;
-            background: rgba(245,242,235,.92);
-            display: none; align-items: center; justify-content: center;
-            flex-direction: column; gap: 1rem;
-        }
-        #countdown-overlay.show { display: flex; }
-        #countdown-num {
-            font-family: "Times New Roman", Georgia, serif;
-            font-size: 8rem; font-weight: 300; color: #3A322D;
-            line-height: 1; animation: cdPulse .85s ease-in-out infinite;
-        }
-        #countdown-label {
-            font-family: 'Courier New', monospace; font-size: .65rem;
-            letter-spacing: .22em; text-transform: uppercase; color: #8A827B;
-        }
-        @keyframes cdPulse {
-            0%,100% { opacity:1; transform: scale(1); }
-            50%      { opacity:.6; transform: scale(.92); }
-        }
+        /* ── 導覽列 ── */
+        .site-nav{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:.85rem 2.4rem;background:rgba(245,242,235,.93);border-bottom:1px solid #D0C9BC;backdrop-filter:blur(16px);}
+        .site-nav a.nav-logo{font-family:'Noto Sans TC',sans-serif;font-size:.68rem;font-weight:300;letter-spacing:.22em;text-transform:uppercase;color:#8A827B;text-decoration:none;transition:color .2s;}
+        .site-nav a.nav-logo:hover{color:#3A322D;}
+        .site-nav .nav-r{display:flex;align-items:center;gap:2rem;}
+        .site-nav a.nav-lnk{font-family:'Noto Sans TC',sans-serif;font-size:.62rem;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:#8A827B;text-decoration:none;transition:color .2s;}
+        .site-nav a.nav-lnk:hover,.site-nav a.nav-lnk.cur{color:#3A322D;}
+        .site-nav .nav-clock{font-size:.6rem;font-weight:300;color:#8A827B;letter-spacing:.1em;}
+        /* ── 倒數蓋層 ── */
+        #cd-overlay{position:fixed;inset:0;z-index:500;background:rgba(245,242,235,.95);display:none;flex-direction:column;align-items:center;justify-content:center;gap:1rem;}
+        #cd-overlay.show{display:flex;}
+        #cd-num{font-family:"Times New Roman",Georgia,serif;font-size:9rem;font-weight:300;color:#3A322D;line-height:1;animation:cdp .9s ease-in-out infinite;}
+        #cd-lbl{font-size:.65rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:#8A827B;}
+        @keyframes cdp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.88)}}
 
     </style>
 </head>
@@ -686,7 +578,7 @@
     <div id="app"></div>
 
     <!-- ── 遊戲區塊 ── -->
-    <div id="game-wrapper" style="display:none" id="game-wrapper">
+    <div id="game-wrapper" style="display:none">
         <div class="game-title">誰是DAVID蛇?</div>
 
         <!-- 名字輸入畫面 -->
@@ -777,7 +669,11 @@
         createApp({}).mount("#app");
 
         // ── 點我進入遊戲 ──
-        // landing 頁已直接顯示 game-wrapper 區塊，無需此監聽
+        document.getElementById("btn").addEventListener("click", () => {
+            document.getElementById("site-header").style.display = "none";
+            document.getElementById("game-wrapper").style.display = "flex";
+            setTimeout(() => document.getElementById("game-wrapper").scrollIntoView({ behavior: "smooth" }), 50);
+        });
 
         // ══════════════════════════════════════════
         //  貪食蛇遊戲引擎
@@ -839,8 +735,7 @@
                 this.p2 = new Snake(Math.floor(GW / 3 * 2), Math.floor(GH / 3 * 2), C.p2, C.p2h, p2k, this.p2name);
                 this.wormholes = []; this.spawnWormholes();
                 this.foods = []; this.totalSpawned = 0; this.maxStars = 16;
-                this.extreme = false; this.extremeStart = 0; this.state = "playing";
-                this.ripples = [];
+                this.extreme = false; this.extremeStart = 0; this.state = "playing"; this.ripples = [];
                 for (let i = 0; i < 3; i++) this.spawnStar();
                 const now = performance.now();
                 this.p1.lastMoveTime = now; this.p2.lastMoveTime = now;
@@ -869,13 +764,7 @@
                 if (posIn(nh, s.coord) || posIn(nh, enemy.coord)) { s.alive = false; return; }
                 s.coord.unshift(nh);
                 const fi = this.foods.findIndex(f => posEq(nh, f.pos));
-                if (fi >= 0) {
-                    const fpos = this.foods[fi].pos;
-                    s.score += this.foods[fi].type === "big" ? 1 : 3;
-                    // 漣漪
-                    this.ripples.push({ x: fpos[0]*CELL+CELL/2, y: fpos[1]*CELL+CELL/2, r: 2, maxR: CELL*1.4, color: s.color });
-                    this.foods.splice(fi, 1); this.spawnStar();
-                }
+                if (fi >= 0) { const fp=this.foods[fi].pos; s.score+=this.foods[fi].type==="big"?1:3; this.ripples.push({x:fp[0]*CELL+CELL/2,y:fp[1]*CELL+CELL/2,r:2,maxR:CELL*1.5,color:s.color}); this.foods.splice(fi,1); this.spawnStar(); }
                 else s.coord.pop();
             }
             get remaining() { return (this.maxStars - this.totalSpawned) + this.foods.length; }
@@ -979,19 +868,8 @@
                 for (let x = 0; x <= W; x += CELL) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
                 for (let y = 0; y <= H; y += CELL) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-                // ── 漣漪動畫 ──
-                this.ripples = this.ripples.filter(rp => rp.r < rp.maxR);
-                for (const rp of this.ripples) {
-                    const alpha = 1 - rp.r / rp.maxR;
-                    ctx.beginPath();
-                    ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI*2);
-                    ctx.strokeStyle = rp.color;
-                    ctx.globalAlpha = alpha * 0.5;
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                    ctx.globalAlpha = 1;
-                    rp.r += 2.2;
-                }
+                this.ripples=this.ripples.filter(r=>r.r<r.maxR);
+                for(const rp of this.ripples){ctx.save();ctx.globalAlpha=(1-rp.r/rp.maxR)*.5;ctx.strokeStyle=rp.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(rp.x,rp.y,rp.r,0,Math.PI*2);ctx.stroke();ctx.restore();rp.r+=2.5;}
                 for (const wh of this.wormholes) {
                     const cx = wh[0] * CELL + CELL / 2, cy = wh[1] * CELL + CELL / 2;
                     ctx.beginPath(); ctx.arc(cx, cy, CELL / 2 - 2, 0, Math.PI * 2); ctx.fillStyle = C.worm; ctx.fill();
@@ -1011,17 +889,13 @@
                         ctx.fillStyle = i === 0 ? s.headColor : s.color;
                         this._rr(ctx, x, y, sz, sz, 4); ctx.fill();
                     }
-                    // ── 蛇頭方向三角形 ──
                     if (s.coord.length >= 1) {
-                        const hd = s.coord[0];
-                        const hx = hd[0] * CELL + CELL/2, hy = hd[1] * CELL + CELL/2;
-                        const d = s.dir, sz = 4;
-                        ctx.fillStyle = "#FFFFFF";
-                        ctx.beginPath();
-                        if (d[0]===1)       { ctx.moveTo(hx+sz,hy); ctx.lineTo(hx-sz*.6,hy-sz*.7); ctx.lineTo(hx-sz*.6,hy+sz*.7); }
-                        else if (d[0]===-1) { ctx.moveTo(hx-sz,hy); ctx.lineTo(hx+sz*.6,hy-sz*.7); ctx.lineTo(hx+sz*.6,hy+sz*.7); }
-                        else if (d[1]===1)  { ctx.moveTo(hx,hy+sz); ctx.lineTo(hx-sz*.7,hy-sz*.6); ctx.lineTo(hx+sz*.7,hy-sz*.6); }
-                        else                { ctx.moveTo(hx,hy-sz); ctx.lineTo(hx-sz*.7,hy+sz*.6); ctx.lineTo(hx+sz*.7,hy+sz*.6); }
+                        const hd=s.coord[0], hx=hd[0]*CELL+CELL/2, hy=hd[1]*CELL+CELL/2, sz=4, d=s.dir;
+                        ctx.fillStyle="rgba(245,242,235,0.85)"; ctx.beginPath();
+                        if(d[0]===1){ctx.moveTo(hx+sz,hy);ctx.lineTo(hx-sz*.6,hy-sz*.7);ctx.lineTo(hx-sz*.6,hy+sz*.7);}
+                        else if(d[0]===-1){ctx.moveTo(hx-sz,hy);ctx.lineTo(hx+sz*.6,hy-sz*.7);ctx.lineTo(hx+sz*.6,hy+sz*.7);}
+                        else if(d[1]===1){ctx.moveTo(hx,hy+sz);ctx.lineTo(hx-sz*.7,hy-sz*.6);ctx.lineTo(hx+sz*.7,hy-sz*.6);}
+                        else{ctx.moveTo(hx,hy-sz);ctx.lineTo(hx-sz*.7,hy+sz*.6);ctx.lineTo(hx+sz*.7,hy+sz*.6);}
                         ctx.closePath(); ctx.fill();
                     }
                     if (s.boosted && s.coord.length >= 2) {
@@ -1085,38 +959,28 @@
         function startGame() {
             const p1 = document.getElementById("p1input").value.trim() || "P1";
             const p2 = document.getElementById("p2input").value.trim() || "P2";
-
-            // 顯示倒數蓋層
-            const overlay = document.getElementById("countdown-overlay");
-            const numEl   = document.getElementById("countdown-num");
-            const lblEl   = document.getElementById("countdown-label");
-            overlay.classList.add("show");
-
-            let count = 3;
-            numEl.textContent = count;
-            lblEl.textContent = "準備好了嗎";
-
+            const ov = document.getElementById("cd-overlay");
+            const numEl = document.getElementById("cd-num");
+            const lblEl = document.getElementById("cd-lbl");
+            ov.classList.add("show");
+            let c = 3; numEl.textContent = c; lblEl.textContent = "準備好了嗎";
             const tick = setInterval(() => {
-                count--;
-                if (count > 0) {
-                    numEl.textContent = count;
-                } else {
+                c--;
+                if (c > 0) { numEl.textContent = c; }
+                else {
                     clearInterval(tick);
-                    numEl.textContent = "GO";
-                    lblEl.textContent = "開始！";
+                    numEl.textContent = "GO"; lblEl.textContent = "開始！";
                     setTimeout(() => {
-                        overlay.classList.remove("show");
-                        // 隱藏開場頁
+                        ov.classList.remove("show");
                         document.getElementById("site-header").style.display = "none";
+                        document.getElementById("name-screen").style.display = "none";
                         document.getElementById("scorebar").style.display = "flex";
                         document.getElementById("canvas-outer").style.display = "block";
-                        // 鎖定頁面捲動（防方向鍵被瀏覽器攔截）
                         document.body.style.overflow = "hidden";
                         const canvas = document.getElementById("gameCanvas");
                         game = new Game(canvas, p1, p2);
                         if (animId) cancelAnimationFrame(animId);
                         loop();
-                        canvas.focus();
                     }, 700);
                 }
             }, 900);
@@ -1129,9 +993,9 @@
             badge.textContent = "NORMAL"; badge.className = "mode-badge";
             document.getElementById("scorebar").style.display = "none";
             document.getElementById("canvas-outer").style.display = "none";
-            // 解鎖捲動、回開場頁
             document.body.style.overflow = "";
             document.getElementById("site-header").style.display = "flex";
+            document.getElementById("name-screen").style.display = "flex";
             if (animId) { cancelAnimationFrame(animId); animId = null; }
             game = null;
         }
@@ -1143,17 +1007,10 @@
             animId = requestAnimationFrame(loop);
         }
 
-        // 導覽列時鐘
-        function updateNavClock() {
-            const n=new Date(), p=x=>String(x).padStart(2,'0');
-            const el = document.getElementById("nav-clock");
-            if (el) el.textContent = p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());
-        }
-        updateNavClock(); setInterval(updateNavClock, 1000);
+        (function t(){const n=new Date(),p=x=>String(x).padStart(2,"0"),el=document.getElementById("nav-clock");if(el)el.textContent=p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());setTimeout(t,1000);})();
 
         document.addEventListener("keydown", e => {
-            // 遊戲中鎖定捲動鍵
-            if (game && ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space","KeyW","KeyS"].includes(e.code)) e.preventDefault();
+            if(game&&["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space","KeyW","KeyS"].includes(e.code))e.preventDefault();
             if (!game) return;
             if (game.state === "gameover" && e.code === "Escape") { quitToMenu(); return; }
             game.handleKey(e.code);
