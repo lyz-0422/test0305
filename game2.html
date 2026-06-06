@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · Breakout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
+  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+  --red:#A94442;--gold:#C5A059;
+}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+/* ── Nav ── */
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-logo:hover{color:var(--ac);}
+.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+
+/* ── Page ── */
+.page{width:100%;max-width:660px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;}
+.page-title em{font-style:italic;color:var(--ac);}
+.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:28px;}
+
+/* ── HUD ── */
+.hud{display:flex;gap:12px;width:100%;margin-bottom:16px;}
+.hud-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;}
+.hud-box.accent{border-color:var(--ac);}
+.hud-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
+.hud-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);}
+.hud-box.accent .hud-val{color:var(--ac);}
+
+/* ── Btn row ── */
+.btn-row{display:flex;gap:10px;margin-bottom:16px;width:100%;}
+.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 24px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
+.btn:hover,.btn.primary{background:var(--text);color:var(--bg);}
+.btn.primary{border-color:var(--text);}
+.btn.primary:hover{background:var(--ac);border-color:var(--ac);}
+
+/* ── Canvas wrapper ── */
+.canvas-wrap{width:100%;position:relative;border:1px solid var(--text);background:#fff;overflow:hidden;}
+canvas{display:block;width:100%;height:auto;}
+
+/* ── Overlay ── */
+.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.88);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;}
+.overlay.show{display:flex;}
+.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
+.ov-title em{font-style:italic;color:var(--ac);}
+.ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;}
+
+/* ── Level badges ── */
+.level-row{display:flex;gap:8px;margin-top:16px;width:100%;}
+.level-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 0;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;flex:1;}
+.level-btn:hover,.level-btn.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+
+/* ── Hint ── */
+.hint-row{display:flex;gap:12px;margin-top:16px;width:100%;}
+.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;}
+.hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--dim);line-height:1.7;}
+
+@media(max-width:500px){
+  .site-nav{padding:0 16px;}
+  .nav-links{gap:10px;}
+  .page{padding:68px 12px 40px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">LYZ.dev</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="game.html">Game</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercise.html">Exercises</a></li>
+    <li><a href="decide.html">🎯 今日決策</a></li>
+    <li><a href="weekend.html">🗺 週末去哪</a></li>
+    <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <div class="eyebrow">Action Game · 動作</div>
+  <h1 class="page-title"><em>Breakout</em></h1>
+  <p class="page-sub">打磚塊 — 消滅所有磚塊即可過關</p>
+
+  <div class="hud">
+    <div class="hud-box accent">
+      <div class="hud-label">Score</div>
+      <div class="hud-val" id="hScore">0</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Best</div>
+      <div class="hud-val" id="hBest">0</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Lives</div>
+      <div class="hud-val" id="hLives">♥ ♥ ♥</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Level</div>
+      <div class="hud-val" id="hLevel">1</div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary" id="startBtn">▶ Start</button>
+    <button class="btn" id="pauseBtn">⏸ Pause</button>
+    <button class="btn" id="restartBtn">↺ Restart</button>
+  </div>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="cvs" width="600" height="480"></canvas>
+    <div class="overlay" id="overlay">
+      <div class="ov-title" id="ovTitle">Ready?</div>
+      <div class="ov-sub" id="ovSub">— 按 Start 或空白鍵開始 —</div>
+      <button class="btn primary" id="ovBtn" style="width:160px;margin-top:8px;">開始遊戲</button>
+    </div>
+  </div>
+
+  <div class="level-row">
+    <button class="level-btn on" data-lv="1" onclick="setLevel(1)">Lv.1 Easy</button>
+    <button class="level-btn" data-lv="2" onclick="setLevel(2)">Lv.2 Normal</button>
+    <button class="level-btn" data-lv="3" onclick="setLevel(3)">Lv.3 Hard</button>
+    <button class="level-btn" data-lv="4" onclick="setLevel(4)">Lv.4 Expert</button>
+  </div>
+
+  <div class="hint-row">
+    <div class="hint-card">
+      <div class="hint-title">操作</div>
+      <div class="hint-text">← → 方向鍵 / A D / 滑鼠移動<br>Space 暫停 / 繼續</div>
+    </div>
+    <div class="hint-card">
+      <div class="hint-title">規則</div>
+      <div class="hint-text">消滅全部磚塊過關<br>球掉落失去一條命，共 3 命</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cvs = document.getElementById('cvs');
+const ctx = cvs.getContext('2d');
+const W = 600, H = 480;
+
+// ── Palette ──
+const PAL = {
+  bg:     '#FFFFFF',
+  grid:   '#F5F2EB',
+  paddle: '#3A322D',
+  ball:   '#3A322D',
+  ballT:  'rgba(58,50,45,0.15)',
+  bricks: [
+    ['#EAE3D5','#3A322D'], // row 0 — lightest
+    ['#DFD5BF','#3A322D'],
+    ['#C5A059','#FFFFFF'],
+    ['#B8843A','#FFFFFF'],
+    ['#A94442','#FFFFFF'],
+    ['#6b4c32','#FFFFFF'],
+  ],
+  text: '#3A322D',
+  dim:  '#8A827B',
+  ac:   '#6b4c32',
+};
+
+// ── Config ──
+const COLS = 10, ROWS = 6;
+const BRICK_W = 52, BRICK_H = 18, BRICK_GAD = 5;
+const BRICK_OX = (W - (COLS * (BRICK_W + BRICK_GAD) - BRICK_GAD)) / 2;
+const BRICK_OY = 52;
+const PADDLE_H = 10, PADDLE_W_BASE = 90;
+const BALL_R = 7;
+
+const LEVELS = [
+  { speed: 3.8,  paddleW: 100, label:'Easy'   },
+  { speed: 5.0,  paddleW: 85,  label:'Normal' },
+  { speed: 6.5,  paddleW: 70,  label:'Hard'   },
+  { speed: 8.2,  paddleW: 55,  label:'Expert' },
+];
+
+let level = 0;
+let state  = 'idle'; // idle | playing | paused | dead | won
+let score, best, lives;
+let paddle, ball, bricks, raf;
+let keys = {};
+let trail = [];
+
+function setLevel(lv) {
+  level = lv - 1;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.lv) === lv));
+  if (state !== 'idle') restart();
+}
+
+function makeBricks() {
+  const arr = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      arr.push({
+        x: BRICK_OX + c * (BRICK_W + BRICK_GAD),
+        y: BRICK_OY + r * (BRICK_H + BRICK_GAD),
+        alive: true,
+        color: PAL.bricks[r][0],
+        textColor: PAL.bricks[r][1],
+        pts: (ROWS - r) * 10,
+      });
+    }
+  }
+  return arr;
+}
+
+function reset() {
+  const cfg = LEVELS[level];
+  paddle = { x: W/2 - cfg.paddleW/2, y: H - 36, w: cfg.paddleW, h: PADDLE_H };
+  const angle = -Math.PI/2 + (Math.random() - 0.5) * 0.6;
+  ball = {
+    x: W/2, y: H - 60,
+    vx: cfg.speed * Math.cos(angle),
+    vy: cfg.speed * Math.sin(angle),
+    launch: false,
+  };
+  bricks = makeBricks();
+  trail = [];
+}
+
+function init() {
+  score = 0; lives = 3;
+  best = parseInt(localStorage.getItem('bko-best') || '0');
+  reset();
+  updateHUD();
+}
+
+function updateHUD() {
+  document.getElementById('hScore').textContent = score;
+  document.getElementById('hBest').textContent  = best;
+  document.getElementById('hLevel').textContent  = level + 1;
+  const hearts = ['♥ ♥ ♥','♥ ♥','♥',''][Math.max(0, 3 - lives)];
+  document.getElementById('hLives').textContent = hearts || '💀';
+}
+
+// ── Drawing ──
+function drawBG() {
+  ctx.fillStyle = PAL.bg; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = PAL.grid; ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += 20) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += 20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+}
+
+function drawBricks() {
+  bricks.forEach(b => {
+    if (!b.alive) return;
+    ctx.fillStyle = b.color; ctx.fillRect(b.x, b.y, BRICK_W, BRICK_H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+    ctx.strokeRect(b.x+.5, b.y+.5, BRICK_W-1, BRICK_H-1);
+    ctx.fillStyle = b.textColor;
+    ctx.font = '500 9px "DM Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(b.pts, b.x + BRICK_W/2, b.y + BRICK_H/2);
+  });
+}
+
+function drawPaddle() {
+  ctx.fillStyle = PAL.paddle;
+  ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
+  // highlight
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  ctx.fillRect(paddle.x+2, paddle.y+2, paddle.w-4, 3);
+}
+
+function drawBall() {
+  // trail
+  trail.forEach((t, i) => {
+    const a = (i / trail.length) * 0.25;
+    ctx.beginPath(); ctx.arc(t.x, t.y, BALL_R * (i/trail.length), 0, Math.PI*2);
+    ctx.fillStyle = `rgba(58,50,45,${a})`; ctx.fill();
+  });
+  ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI*2);
+  ctx.fillStyle = PAL.ball; ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.beginPath(); ctx.arc(ball.x-2, ball.y-2, BALL_R*0.35, 0, Math.PI*2); ctx.fill();
+}
+
+function drawCountdown() {
+  if (!ball.launch) {
+    ctx.font = '300 11px "DM Mono", monospace';
+    ctx.fillStyle = PAL.dim; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('SPACE · CLICK to launch', W/2, H - 16);
+  }
+}
+
+// ── Physics ──
+function update() {
+  if (state !== 'playing') return;
+
+  // paddle move
+  const cfg = LEVELS[level];
+  if (keys['ArrowLeft'] || keys['KeyA'])  paddle.x = Math.max(0, paddle.x - 6);
+  if (keys['ArrowRight'] || keys['KeyD']) paddle.x = Math.min(W - paddle.w, paddle.x + 6);
+
+  if (!ball.launch) {
+    ball.x = paddle.x + paddle.w / 2;
+    return;
+  }
+
+  // trail
+  trail.push({x: ball.x, y: ball.y});
+  if (trail.length > 8) trail.shift();
+
+  ball.x += ball.vx; ball.y += ball.vy;
+
+  // walls
+  if (ball.x - BALL_R < 0)    { ball.x = BALL_R;   ball.vx *= -1; }
+  if (ball.x + BALL_R > W)    { ball.x = W-BALL_R; ball.vx *= -1; }
+  if (ball.y - BALL_R < 0)    { ball.y = BALL_R;   ball.vy *= -1; }
+
+  // fall
+  if (ball.y - BALL_R > H) {
+    lives--;
+    updateHUD();
+    if (lives <= 0) { endGame(false); return; }
+    ball.launch = false; trail = [];
+    ball.x = paddle.x + paddle.w/2; ball.y = paddle.y - BALL_R - 2;
+    const angle = -Math.PI/2 + (Math.random()-0.5)*0.6;
+    ball.vx = cfg.speed * Math.cos(angle);
+    ball.vy = cfg.speed * Math.sin(angle);
+    return;
+  }
+
+  // paddle
+  if (
+    ball.y + BALL_R >= paddle.y &&
+    ball.y - BALL_R <= paddle.y + paddle.h &&
+    ball.x >= paddle.x && ball.x <= paddle.x + paddle.w &&
+    ball.vy > 0
+  ) {
+    ball.vy *= -1;
+    const hit = (ball.x - (paddle.x + paddle.w/2)) / (paddle.w/2);
+    ball.vx = hit * cfg.speed * 1.1;
+    // clamp speed
+    const spd = Math.hypot(ball.vx, ball.vy);
+    const factor = cfg.speed / spd;
+    ball.vx *= factor; ball.vy *= factor;
+    ball.y = paddle.y - BALL_R - 1;
+  }
+
+  // bricks
+  let allGone = true;
+  for (const b of bricks) {
+    if (!b.alive) continue;
+    allGone = false;
+    const dx = Math.max(b.x - ball.x, 0, ball.x - (b.x + BRICK_W));
+    const dy = Math.max(b.y - ball.y, 0, ball.y - (b.y + BRICK_H));
+    if (dx * dx + dy * dy < BALL_R * BALL_R) {
+      b.alive = false;
+      score += b.pts;
+      if (score > best) { best = score; localStorage.setItem('bko-best', best); }
+      updateHUD();
+      // bounce direction
+      const fromLeft  = ball.x < b.x;
+      const fromRight = ball.x > b.x + BRICK_W;
+      if (fromLeft || fromRight) ball.vx *= -1;
+      else ball.vy *= -1;
+      break;
+    }
+  }
+  if (allGone) { endGame(true); return; }
+}
+
+function endGame(won) {
+  state = won ? 'won' : 'dead';
+  cancelAnimationFrame(raf);
+  const ovTitle = document.getElementById('ovTitle');
+  const ovSub   = document.getElementById('ovSub');
+  ovTitle.innerHTML = won ? 'Stage <em>Clear!</em>' : 'Game <em>Over</em>';
+  ovSub.textContent = won
+    ? `— 得分 ${score} · 恭喜過關 🏆 —`
+    : `— 得分 ${score} · 再試一次！—`;
+  document.getElementById('overlay').classList.add('show');
+}
+
+function loop() {
+  drawBG(); drawBricks(); drawPaddle(); drawBall(); drawCountdown();
+  update();
+  raf = requestAnimationFrame(loop);
+}
+
+function startGame() {
+  if (state === 'playing') return;
+  if (state === 'paused') { state = 'playing'; loop(); return; }
+  init(); state = 'playing';
+  document.getElementById('overlay').classList.remove('show');
+  loop();
+}
+
+function restart() {
+  cancelAnimationFrame(raf);
+  state = 'idle';
+  init(); state = 'playing';
+  document.getElementById('overlay').classList.remove('show');
+  loop();
+}
+
+function pause() {
+  if (state === 'playing') {
+    state = 'paused';
+    cancelAnimationFrame(raf);
+    document.getElementById('ovTitle').innerHTML = 'Paused';
+    document.getElementById('ovSub').textContent = '— 按 Space 或 Resume 繼續 —';
+    document.getElementById('overlay').classList.add('show');
+  } else if (state === 'paused') {
+    state = 'playing';
+    document.getElementById('overlay').classList.remove('show');
+    loop();
+  }
+}
+
+// mouse
+document.getElementById('cvs').addEventListener('mousemove', e => {
+  if (state !== 'playing') return;
+  const rect = cvs.getBoundingClientRect();
+  const scale = W / rect.width;
+  const mx = (e.clientX - rect.left) * scale;
+  paddle.x = Math.max(0, Math.min(W - paddle.w, mx - paddle.w/2));
+});
+
+// touch
+document.getElementById('cvs').addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (state !== 'playing') return;
+  const rect = cvs.getBoundingClientRect();
+  const scale = W / rect.width;
+  const tx = (e.touches[0].clientX - rect.left) * scale;
+  paddle.x = Math.max(0, Math.min(W - paddle.w, tx - paddle.w/2));
+}, {passive:false});
+
+// click to launch
+document.getElementById('cvs').addEventListener('click', () => {
+  if (state === 'playing' && !ball.launch) ball.launch = true;
+});
+
+// keys
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (state === 'playing' && !ball.launch) { ball.launch = true; return; }
+    pause();
+  }
+});
+document.addEventListener('keyup', e => { keys[e.code] = false; });
+
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('pauseBtn').addEventListener('click', pause);
+document.getElementById('restartBtn').addEventListener('click', restart);
+document.getElementById('ovBtn').addEventListener('click', () => {
+  if (state === 'idle' || state === 'dead' || state === 'won') startGame();
+  else if (state === 'paused') pause();
+});
+
+// draw static board on load
+init();
+drawBG(); drawBricks(); drawPaddle(); drawBall();
+</script>
+</body>
+</html>
