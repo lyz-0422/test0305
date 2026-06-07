@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · Typing Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
+  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+  --as:rgba(107,76,50,.09);--gold:#C5A059;--red:#A94442;
+  --green:#4a7c59;
+}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+/* ── Nav ── */
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-logo:hover{color:var(--ac);}
+.nav-links{display:flex;gap:22px;list-style:none;flex-wrap:wrap;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+
+/* ── Page ── */
+.page{width:100%;max-width:760px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2rem,5vw,3rem);line-height:1;margin-bottom:8px;}
+.page-title em{font-style:italic;color:var(--ac);}
+.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:28px;}
+
+/* ── Mode / Time selector ── */
+.mode-row{display:flex;gap:8px;margin-bottom:20px;width:100%;align-items:center;flex-wrap:wrap;}
+.mode-label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.1em;margin-right:4px;}
+.mode-btn{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;}
+.mode-btn:hover,.mode-btn.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.sep{width:1px;height:24px;background:var(--bd);margin:0 4px;}
+
+/* ── Timer ring ── */
+.timer-wrap{position:relative;width:100px;height:100px;margin-bottom:20px;flex-shrink:0;}
+.timer-svg{transform:rotate(-90deg);}
+.timer-track{fill:none;stroke:var(--bd);stroke-width:4;}
+.timer-fill{fill:none;stroke:var(--ac);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .9s linear,stroke .3s;}
+.timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:400;color:var(--text);}
+
+/* ── Stats row ── */
+.stats{display:flex;gap:12px;width:100%;margin-bottom:20px;}
+.stat-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 14px;display:flex;flex-direction:column;gap:4px;transition:border-color .3s;}
+.stat-box.accent{border-color:var(--ac);}
+.stat-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;color:var(--text);}
+.stat-box.accent .stat-val{color:var(--ac);}
+
+/* ── Text display ── */
+.text-display{width:100%;background:var(--panel);border:1px solid var(--bd);padding:20px 24px;font-family:'DM Mono',monospace;font-size:1.05rem;line-height:2;letter-spacing:.02em;margin-bottom:16px;min-height:110px;position:relative;user-select:none;}
+.text-display .char{position:relative;transition:color .08s;}
+.char.correct{color:var(--ac);}
+.char.wrong{color:var(--red);background:rgba(169,68,66,.1);}
+.char.cursor{border-left:2px solid var(--text);animation:blink .9s step-end infinite;}
+.char.cursor.wrong{border-left-color:var(--red);}
+@keyframes blink{50%{border-left-color:transparent;}}
+.display-hint{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.1em;position:absolute;bottom:8px;right:12px;}
+
+/* ── Input ── */
+.input-wrap{width:100%;position:relative;margin-bottom:16px;}
+.typing-input{width:100%;background:var(--bg);border:1px solid var(--bd);border-top:2px solid var(--ac);color:var(--text);padding:14px 16px;font-family:'DM Mono',monospace;font-size:.95rem;letter-spacing:.04em;outline:none;transition:border-color .2s;}
+.typing-input:focus{border-color:var(--ac);border-top-color:var(--ac);}
+.typing-input::placeholder{color:var(--bd2);}
+.typing-input:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:10px;width:100%;margin-bottom:24px;}
+.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 20px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
+.btn:hover{background:var(--text);color:var(--bg);}
+.btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
+.btn.primary:hover{background:var(--ac);border-color:var(--ac);}
+
+/* ── Result panel ── */
+.result{display:none;width:100%;background:var(--panel);border:1px solid var(--bd);padding:28px 28px 24px;}
+.result.show{display:block;}
+.result-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:4px;}
+.result-title em{font-style:italic;color:var(--ac);}
+.result-sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.1em;margin-bottom:20px;}
+.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.res-card{border:1px solid var(--bd);padding:12px 14px;}
+.res-card.highlight{border-color:var(--ac);background:var(--as);}
+.res-label{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px;}
+.res-val{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--text);}
+.res-card.highlight .res-val{color:var(--ac);}
+.res-unit{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);}
+
+/* ── Best records ── */
+.records{width:100%;margin-top:8px;}
+.records-title{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--ac);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:.6rem;}
+.records-title::before{content:'';width:20px;height:1px;background:var(--ac);opacity:.7;}
+.record-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid var(--bd);font-family:'DM Mono',monospace;font-size:.62rem;}
+.record-row:last-child{border-bottom:none;}
+.record-mode{color:var(--dim);letter-spacing:.06em;}
+.record-wpm{color:var(--ac);font-weight:500;}
+.record-acc{color:var(--dim);}
+
+@media(max-width:560px){
+  .site-nav{padding:0 14px;}
+  .nav-links{gap:10px;}
+  .page{padding:68px 12px 40px;}
+  .result-grid{grid-template-columns:repeat(2,1fr);}
+  .stats{flex-wrap:wrap;}
+  .stat-box{min-width:calc(50% - 6px);}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">LYZ.dev</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="game.html">Game</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercise.html">Exercises</a></li>
+    <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
+    <li><a href="game2.html">🧱 磚塊爆破樂</a></li>
+    <li><a href="game3.html">🎮 2048</a></li>
+    <li><a href="game4.html">🃏 記憶卡片</a></li>
+    <li><a href="game5.html">⌨ 打字測試</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <div class="eyebrow">Typing Test · 打字測試</div>
+  <h1 class="page-title">Typing <em>Speed</em></h1>
+  <p class="page-sub">測試你的打字速度與準確率</p>
+
+  <div class="mode-row">
+    <span class="mode-label">Time :</span>
+    <button class="mode-btn on" data-t="15"  onclick="setTime(15,this)">15s</button>
+    <button class="mode-btn"    data-t="30"  onclick="setTime(30,this)">30s</button>
+    <button class="mode-btn"    data-t="60"  onclick="setTime(60,this)">60s</button>
+    <button class="mode-btn"    data-t="120" onclick="setTime(120,this)">120s</button>
+    <div class="sep"></div>
+    <span class="mode-label">Lang :</span>
+    <button class="mode-btn on" data-lang="en" onclick="setLang('en',this)">EN</button>
+    <button class="mode-btn"    data-lang="zh" onclick="setLang('zh',this)">中文</button>
+  </div>
+
+  <div style="display:flex;gap:24px;align-items:center;width:100%;margin-bottom:20px;">
+    <div class="timer-wrap">
+      <svg class="timer-svg" width="100" height="100" viewBox="0 0 100 100">
+        <circle class="timer-track" cx="50" cy="50" r="44"/>
+        <circle class="timer-fill" id="timerRing" cx="50" cy="50" r="44"
+          stroke-dasharray="276.5" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-num" id="timerNum">—</div>
+    </div>
+    <div class="stats" style="flex:1;margin-bottom:0;">
+      <div class="stat-box accent">
+        <div class="stat-label">WPM</div>
+        <div class="stat-val" id="sWpm">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Accuracy</div>
+        <div class="stat-val" id="sAcc">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Chars</div>
+        <div class="stat-val" id="sChars">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Errors</div>
+        <div class="stat-val" id="sErr">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-display" id="textDisplay">
+    <span class="display-hint">點擊下方輸入框開始</span>
+  </div>
+
+  <div class="input-wrap">
+    <input class="typing-input" id="typingInput" placeholder="點擊這裡開始打字…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn primary" id="restartBtn">↺ Restart</button>
+    <button class="btn" id="newTextBtn">New Text</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-title">Result <em>Summary</em></div>
+    <div class="result-sub" id="resultSub">— 30s · English —</div>
+    <div class="result-grid">
+      <div class="res-card highlight">
+        <div class="res-label">WPM</div>
+        <div class="res-val" id="rWpm">0</div>
+        <div class="res-unit">words / min</div>
+      </div>
+      <div class="res-card">
+        <div class="res-label">Accuracy</div>
+        <div class="res-val" id="rAcc">0%</div>
+      </div>
+      <div class="res-card">
+        <div class="res-label">Correct</div>
+        <div class="res-val" id="rCorrect">0</div>
+        <div class="res-unit">chars</div>
+      </div>
+      <div class="res-card">
+        <div class="res-label">Errors</div>
+        <div class="res-val" id="rErr">0</div>
+        <div class="res-unit">chars</div>
+      </div>
+    </div>
+    <button class="btn primary" onclick="restart()" style="width:100%;">再測一次</button>
+  </div>
+
+  <div class="records" id="records" style="display:none;">
+    <div class="records-title">Personal Best</div>
+    <div id="recordList"></div>
+  </div>
+</div>
+
+<script>
+// ── Word banks ──
+const WORDS_EN = `the quick brown fox jumps over the lazy dog
+pack my box with five dozen liquor jugs
+how vexingly quick daft zebras jump
+the five boxing wizards jump quickly
+sphinx of black quartz judge my vow
+two driven jocks help fax my big quiz
+the jay pig fox zebra and my wolves quack
+just keep examining every low bid quoted
+how quickly daft jumping zebras vex
+a wizard job quickly fixing the tax machine
+public junk dwarves hug my fox quiz
+we promptly judged antique ivory buckles
+crazy fredrick bought many very exquisite opal jewels
+javascript programming web development frontend backend
+react vue angular typescript python machine learning
+algorithm data structure recursion function async await
+design pattern interface component lifecycle state render
+cloud computing deployment container kubernetes docker
+responsive layout flexbox grid animation transition
+`.split('\n').map(s=>s.trim()).filter(Boolean);
+
+const WORDS_ZH = [
+  '技術進步讓生活更加便利與豐富',
+  '深度學習改變了人工智慧的發展方向',
+  '前端開發需要掌握多種程式語言與框架',
+  '資料結構是程式設計的基礎核心概念',
+  '雲端運算提供了彈性可擴展的服務架構',
+  '使用者體驗設計影響產品的成敗關鍵',
+  '開源社群推動了軟體工程的快速演進',
+  '機器學習模型需要大量資料進行訓練',
+  '響應式設計讓網頁適應各種裝置螢幕',
+  '版本控制系統幫助團隊協作開發專案',
+  '演算法優化能大幅提升程式執行效率',
+  '網路安全是現代資訊系統的重要課題',
+  '物件導向程式設計提高了程式碼的可維護性',
+  '容器化技術簡化了應用程式的部署流程',
+  '敏捷開發方法讓專案管理更加靈活高效',
+];
+
+let timeLimit = 15, lang = 'en';
+let state = 'idle'; // idle | running | done
+let timer, elapsed2, totalCorrect, totalWrong, totalTyped;
+let currentText = '';
+let typedHistory = '';
+
+function setTime(t, btn) {
+  timeLimit = t;
+  document.querySelectorAll('[data-t]').forEach(b => b.classList.toggle('on', b === btn));
+  if (state !== 'idle') restart();
+  else resetDisplay();
+}
+
+function setLang(l, btn) {
+  lang = l;
+  document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b === btn));
+  if (state !== 'idle') restart();
+  else { buildText(); renderDisplay(); }
+}
+
+function buildText() {
+  if (lang === 'en') {
+    const pool = [...WORDS_EN].sort(() => Math.random() - 0.5);
+    let words = [];
+    while (words.join(' ').length < 500) words.push(...pool);
+    currentText = words.join(' ').slice(0, 600);
+  } else {
+    const pool = [...WORDS_ZH].sort(() => Math.random() - 0.5);
+    currentText = pool.join('　').repeat(3).slice(0, 300);
+  }
+}
+
+function renderDisplay(typed = '') {
+  const display = document.getElementById('textDisplay');
+  let html = '';
+  for (let i = 0; i < currentText.length; i++) {
+    const ch = currentText[i] === ' ' ? '&nbsp;' : currentText[i];
+    if (i < typed.length) {
+      const correct = typed[i] === currentText[i];
+      html += `<span class="char ${correct ? 'correct' : 'wrong'}">${ch}</span>`;
+    } else if (i === typed.length) {
+      html += `<span class="char cursor ${typed.length > 0 && typed[typed.length-1] !== currentText[typed.length-1] ? 'wrong' : ''}">${ch}</span>`;
+    } else {
+      html += `<span class="char">${ch}</span>`;
+    }
+  }
+  display.innerHTML = html;
+
+  // scroll cursor into view
+  const cursor = display.querySelector('.cursor');
+  if (cursor) cursor.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+function resetDisplay() {
+  document.getElementById('timerNum').textContent = timeLimit;
+  document.getElementById('timerRing').style.strokeDashoffset = '0';
+  document.getElementById('sWpm').textContent = '—';
+  document.getElementById('sAcc').textContent = '—';
+  document.getElementById('sChars').textContent = '—';
+  document.getElementById('sErr').textContent = '—';
+  document.getElementById('result').classList.remove('show');
+  buildText();
+  renderDisplay();
+  document.getElementById('typingInput').value = '';
+  document.getElementById('typingInput').disabled = false;
+}
+
+function restart() {
+  clearInterval(timer);
+  state = 'idle'; elapsed2 = 0;
+  totalCorrect = 0; totalWrong = 0; totalTyped = 0;
+  typedHistory = '';
+  resetDisplay();
+  document.getElementById('typingInput').focus();
+}
+
+function startTimer() {
+  state = 'running';
+  elapsed2 = 0;
+  const circ = 2 * Math.PI * 44; // ≈276.5
+  timer = setInterval(() => {
+    elapsed2++;
+    const remaining = timeLimit - elapsed2;
+    document.getElementById('timerNum').textContent = remaining;
+    const offset = circ * (elapsed2 / timeLimit);
+    document.getElementById('timerRing').style.strokeDashoffset = offset;
+    // colour warning
+    if (remaining <= 5) document.getElementById('timerRing').style.stroke = '#A94442';
+    else if (remaining <= 10) document.getElementById('timerRing').style.stroke = '#C5A059';
+
+    updateLiveStats();
+    if (elapsed2 >= timeLimit) finish();
+  }, 1000);
+}
+
+function updateLiveStats() {
+  const minutes = elapsed2 / 60;
+  const wpm = minutes > 0 ? Math.round(totalCorrect / 5 / minutes) : 0;
+  const acc = totalTyped > 0 ? Math.round((totalCorrect / totalTyped) * 100) : 100;
+  document.getElementById('sWpm').textContent   = wpm;
+  document.getElementById('sAcc').textContent   = acc + '%';
+  document.getElementById('sChars').textContent = totalCorrect;
+  document.getElementById('sErr').textContent   = totalWrong;
+}
+
+function finish() {
+  clearInterval(timer);
+  state = 'done';
+  document.getElementById('typingInput').disabled = true;
+  document.getElementById('timerRing').style.stroke = 'var(--ac)';
+
+  const minutes = timeLimit / 60;
+  const wpm = Math.round(totalCorrect / 5 / minutes);
+  const acc = totalTyped > 0 ? Math.round((totalCorrect / totalTyped) * 100) : 100;
+
+  document.getElementById('rWpm').textContent     = wpm;
+  document.getElementById('rAcc').textContent     = acc + '%';
+  document.getElementById('rCorrect').textContent = totalCorrect;
+  document.getElementById('rErr').textContent     = totalWrong;
+  document.getElementById('resultSub').textContent = `— ${timeLimit}s · ${lang === 'en' ? 'English' : '中文'} —`;
+  document.getElementById('result').classList.add('show');
+
+  // save best
+  const key = `typing-best-${timeLimit}-${lang}`;
+  const prev = JSON.parse(localStorage.getItem(key) || 'null');
+  if (!prev || wpm > prev.wpm) {
+    localStorage.setItem(key, JSON.stringify({ wpm, acc, date: new Date().toLocaleDateString() }));
+  }
+  renderRecords();
+}
+
+function renderRecords() {
+  const times = [15, 30, 60, 120];
+  const langs = ['en', 'zh'];
+  let rows = '';
+  times.forEach(t => {
+    langs.forEach(l => {
+      const key = `typing-best-${t}-${l}`;
+      const d = JSON.parse(localStorage.getItem(key) || 'null');
+      if (d) {
+        rows += `<div class="record-row">
+          <span class="record-mode">${t}s · ${l === 'en' ? 'English' : '中文'}</span>
+          <span class="record-wpm">${d.wpm} WPM</span>
+          <span class="record-acc">${d.acc}%</span>
+        </div>`;
+      }
+    });
+  });
+  if (rows) {
+    document.getElementById('records').style.display = '';
+    document.getElementById('recordList').innerHTML = rows;
+  }
+}
+
+// ── Input handler ──
+document.getElementById('typingInput').addEventListener('input', e => {
+  if (state === 'done') return;
+  if (state === 'idle') startTimer();
+
+  const typed = e.target.value;
+  typedHistory = typed;
+  totalTyped   = typed.length;
+  totalCorrect = 0; totalWrong = 0;
+  for (let i = 0; i < typed.length; i++) {
+    if (typed[i] === currentText[i]) totalCorrect++;
+    else totalWrong++;
+  }
+  renderDisplay(typed);
+  updateLiveStats();
+});
+
+document.getElementById('restartBtn').addEventListener('click', restart);
+document.getElementById('newTextBtn').addEventListener('click', () => { buildText(); renderDisplay(); if (state !== 'idle') restart(); });
+
+// init
+totalCorrect = 0; totalWrong = 0; totalTyped = 0;
+buildText();
+renderDisplay();
+renderRecords();
+document.getElementById('timerNum').textContent = timeLimit;
+</script>
+</body>
+</html>
