@@ -240,7 +240,7 @@ function startGame() {
   clearInterval(timer);
   
   matched = 0; moves = 0; score = 0; combo = 0; first = null; second = null;
-  maxTime = size === 4 ? 45 : 100;
+  maxTime = size === 4 ? 45 : 45 * 2;
   timeLeft = maxTime;
   locked = true;
 
