@@ -301,13 +301,17 @@ setInterval(updateClock, 1000);
 let onlineSeconds = 0;
 setInterval(() => {
   onlineSeconds++;
-  if (onlineSeconds === 30) {
+  if (onlineSeconds === 12) { // 💡 縮短至 12 秒，讓使用者更快速看到彩蛋
     const bar = document.getElementById('countdown-bar');
-    bar.textContent = '🍜 肚子餓了嗎？點擊「今天吃什麼？」讓轉盤幫你決定！';
+    bar.textContent = '🕹️ 網頁經典街機大廳已全新落成！點擊此處立刻刷榜挑戰 ⚡';
     bar.style.display = 'block';
     bar.style.cursor = 'pointer';
-    bar.onclick = () => { window.location.href = 'food.html'; };
-    setTimeout(() => { bar.style.display = 'none'; }, 5000);
+    
+    // 💡 點擊後完美導入你新修好的遊戲大廳
+    bar.onclick = () => { window.location.href = 'gamehub.html'; }; 
+    
+    // 提示維持 6.5 秒後優雅隱藏
+    setTimeout(() => { bar.style.display = 'none'; }, 6500);
   }
 }, 1000);
 
