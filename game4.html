@@ -6,7 +6,7 @@
 <title>LYZ · Memory Card</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -79,11 +79,11 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .card.matched .card-front{background:var(--as);border-color:var(--ac);}
 .card:not(.flipped):not(.matched):hover .card-back{background:var(--bg);border-color:var(--ac);}
 
-/* ── Overlay ── */
-.overlay-wrap{position:relative;width:100%;}
-.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.94);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;padding:24px;text-align:center;}
+/* ── Overlay Wrapper & Overlay Fixed ── */
+.overlay-wrap{position:relative;width:100%;min-height:420px;display:flex;flex-direction:column;}
+.overlay{display:none;position:absolute;inset:0;width:100%;height:100%;background:#F5F2EB;backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:100;padding:30px;text-align:center;}
 .overlay.show{display:flex;}
-.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;}
+.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
 .ov-title em{font-style:italic;color:var(--ac);}
 .ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;text-align:center;line-height:1.6;}
 
@@ -239,11 +239,10 @@ function startGame() {
   Sound.init();
   clearInterval(timer);
   
-  // 基礎初始化
   matched = 0; moves = 0; score = 0; combo = 0; first = null; second = null;
-  maxTime = size === 4 ? 45 : 100; // 4x4給45秒，6x6給100秒
+  maxTime = size === 4 ? 45 : 100;
   timeLeft = maxTime;
-  locked = true; // 洗牌預覽時先鎖定不可點擊
+  locked = true;
 
   const comboDisp = document.getElementById('comboDisplay');
   comboDisp.className = 'combo-display';
@@ -259,7 +258,7 @@ function startGame() {
 
   cards.forEach((emoji, i) => {
     const card = document.createElement('div');
-    card.className = 'card flipped'; // 開局預設翻開(顯示花色)
+    card.className = 'card flipped';
     card.dataset.val = emoji;
     card.dataset.idx = i;
     card.innerHTML = `
@@ -271,17 +270,19 @@ function startGame() {
     grid.appendChild(card);
   });
 
+  // 渲染時將標題跟提示文字復位
+  document.getElementById('ovTitle').innerHTML = `Memory <em>Card</em>`;
+  document.getElementById('ovSub').textContent = `— 限時挑戰！翻開相同卡片進行配對 —`;
+
   document.getElementById('overlay').classList.remove('show');
   updateHUD();
 
-  // 🛠️ 2秒洗牌全卡片曝光記憶期
   const pBar = document.getElementById('progressBar');
   pBar.style.width = '100%';
   pBar.classList.remove('warning');
   document.getElementById('hTime').textContent = `Preview...`;
 
   setTimeout(() => {
-    // 兩秒過後蓋回所有卡片，並正式解鎖與開啟倒數
     const allCards = document.querySelectorAll('.card');
     allCards.forEach(c => c.classList.remove('flipped'));
     locked = false;
@@ -320,15 +321,14 @@ function flip(card) {
   locked = true;
 
   if (first.dataset.val === second.dataset.val) {
-    // 配對成功
     first.classList.add('matched');
     second.classList.add('matched');
     
     combo++;
-    score += 100 + (combo * 50); // 隨Combo疊加額外獎勵分
+    score += 100 + (combo * 50);
     
     triggerComboAnim();
-    Sound.playMakeMatch = Sound.playMatch();
+    Sound.playMatch();
     
     first = null; second = null; locked = false;
     matched++;
@@ -336,8 +336,7 @@ function flip(card) {
     
     if (matched === totalPairs) win();
   } else {
-    // 配對失敗
-    combo = 0; // 中斷連擊
+    combo = 0;
     document.getElementById('comboDisplay').classList.remove('active');
     Sound.playFail();
 
@@ -371,8 +370,8 @@ function gameOver() {
   locked = true;
   Sound.playFail();
   document.getElementById('ovTitle').innerHTML = `挑戰 <em>Failed</em>`;
+  document.getElementById('ovSub').textContent = `— 時間到！未能在限時內配對完成 —`;
   document.getElementById('overlayActionArea').innerHTML = `
-    <div class="ov-sub">— 時間到！未能在限時內配對完成 —</div>
     <button class="btn primary" onclick="startGame()" style="width:160px;margin-top:12px;">重新挑戰</button>`;
   document.getElementById('overlay').classList.add('show');
 }
@@ -381,13 +380,11 @@ function win() {
   clearInterval(timer);
   locked = true;
   
-  // 計算最終得分 (計入剩餘時間加成)
   const timeBonus = timeLeft * 25;
   const finalScore = score + timeBonus;
 
   document.getElementById('ovTitle').innerHTML = `Stage <em style="color:var(--gold);">Clear!</em>`;
   
-  // 排行榜載入判斷是否擠進前 5 名
   const records = JSON.parse(localStorage.getItem(`mem-records-${size}`) || '[]');
   const isLeader = records.length < 5 || finalScore > records[records.length - 1].score;
 
@@ -395,22 +392,21 @@ function win() {
   if (isLeader) {
     actionHtml = `
       <div class="leaderboard-input-wrap">
-        <div class="ov-sub" style="color:var(--gold)">🏆 恭喜榮登排行榜！請輸入你的大名：</div>
+        <div class="ov-sub" style="color:var(--gold); margin-bottom: 4px;">🏆 恭喜榮登排行榜！請輸入你的大名：</div>
         <input type="text" id="playerName" class="leaderboard-input" maxlength="10" value="Anonymous" />
-        <button class="btn primary" onclick="submitScore(${finalScore})" style="margin-top:8px;">送出紀錄並重開</button>
+        <button class="btn primary" onclick="submitScore(${finalScore})" style="margin-top:12px; width:160px;">送出紀錄並重開</button>
       </div>`;
   } else {
     actionHtml = `<button class="btn primary" onclick="startGame()" style="width:160px;margin-top:12px;">再玩一次</button>`;
   }
 
-  document.getElementById('overlayActionArea').innerHTML = `
-    <div class="ov-sub">
-      模式: ${size}×${size} · 總步數: ${moves} 步<br>
-      剩餘時間加成: +${timeBonus} 分<br>
-      <b>最終總得分: ${finalScore} 分</b>
-    </div>
-    ${actionHtml}`;
+  document.getElementById('ovSub').innerHTML = `
+    模式: ${size}×${size} · 總步數: ${moves} 步<br>
+    剩餘時間加成: +${timeBonus} 分<br>
+    <b>最終總得分: ${finalScore} 分</b>
+  `;
     
+  document.getElementById('overlayActionArea').innerHTML = actionHtml;
   document.getElementById('overlay').classList.add('show');
 }
 
@@ -421,7 +417,6 @@ function submitScore(finalScore) {
   let records = JSON.parse(localStorage.getItem(`mem-records-${size}`) || '[]');
   records.push({ name: name || 'Anonymous', score: finalScore, moves, timeLeft });
   
-  // 依分數高至低排序，保留前五名
   records.sort((a, b) => b.score - a.score);
   records = records.slice(0, 5);
   
@@ -457,7 +452,6 @@ if(document.getElementById('ovBtn')) {
   document.getElementById('ovBtn').addEventListener('click', startGame);
 }
 
-// 首次靜態初始化載入
 updateBestDisplay();
 </script>
 </body>
