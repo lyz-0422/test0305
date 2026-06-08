@@ -1,6 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('lyz-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  })();
+</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>LYZ · 學習筆記</title>
@@ -8,7 +14,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-:root{
+/* ── 💡 網頁亮色主題配置 (Light Theme) ── */
+:root[data-theme="light"] {
   --bg:#faf7f2;--bg2:#f4efe6;--sf:#ede7db;
   --bd:#d8cfc2;--bd2:#c9bfb0;
   --tp:#1c1814;--ts:#5c5147;--tm:#9c9080;
@@ -23,19 +30,42 @@
   --pv:#8b5cf6;--pv-bg:rgba(139,92,246,.08);
   /* Vercel dark */
   --vrc:#000;--vrc-bg:rgba(0,0,0,.05);
+  --noise-op: .025;
 }
+
+/* ── 💡 網頁深色主題配置 (Dark Theme) ── */
+:root[data-theme="dark"] {
+  --bg:#16130f;--bg2:#1e1a14;--sf:#26211a;
+  --bd:#3a3028;--bd2:#4a3e33;
+  --tp:#f0ebe3;--ts:#b0a090;--tm:#7a6e62;
+  --ac:#c49a6c;--as:rgba(196,154,108,.12);
+  /* Vue green accent */
+  --vue:#41b883;--vue-bg:rgba(65,184,131,.12);
+  /* Firebase orange */
+  --fire:#ff9800;--fire-bg:rgba(255,152,0,.12);
+  /* Tailwind sky */
+  --tw:#0ea5e9;--tw-bg:rgba(14,165,233,.12);
+  /* PrimeVue purple */
+  --pv:#8b5cf6;--pv-bg:rgba(139,92,246,.12);
+  /* Vercel dark */
+  --vrc:#fff;--vrc-bg:rgba(255,255,255,.08);
+  --noise-op: .04;
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 *{cursor:none!important}
-body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--tp);min-height:100vh;overflow-x:hidden;}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--tp);min-height:100vh;overflow-x:hidden;transition:background .35s, color .35s;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:var(--noise-op);}
 
-#cur-dot{position:fixed;width:10px;height:10px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:multiply;}
+#cur-dot{position:fixed;width:10px;height:10px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply;}
 #cur-ring{position:fixed;width:44px;height:44px;border:1.5px solid rgba(107,76,50,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+[data-theme="dark"] #cur-ring { border-color: rgba(196,154,108,.45); }
 body.ch #cur-dot{width:5px;height:5px;}
 body.ch #cur-ring{width:62px;height:62px;border-color:var(--ac);background:var(--as);}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;backdrop-filter:blur(20px) saturate(1.6);background:rgba(250,247,242,.9);border-bottom:1px solid var(--bd);animation:navIn .6s cubic-bezier(.16,1,.3,1) forwards;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;backdrop-filter:blur(20px) saturate(1.6);background:rgba(250,247,242,.9);border-bottom:1px solid var(--bd);animation:navIn .6s cubic-bezier(.16,1,.3,1) forwards;transition:background-color .35s, border-color .35s;}
+:root[data-theme="dark"] nav { background: rgba(22, 19, 15, 0.9); }
 @keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
 .nav-left{display:flex;align-items:center;gap:1.5rem;}
 .nav-logo{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:color .2s;}
@@ -67,14 +97,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .page-hero{margin-bottom:3.5rem;animation:slideUp .7s .1s cubic-bezier(.16,1,.3,1) both;}
 .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--ac);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:1rem;}
 .hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--ac);opacity:.6;}
-.hero-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2rem,4.5vw,3.4rem);line-height:1;margin-bottom:.5rem;}
+.hero-h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2rem,4.5vw,3.4rem);line-height:1;margin-bottom:.5rem;color:var(--tp);}
 .hero-h1 em{font-style:italic;color:var(--ac);}
 .hero-sub{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--tm);letter-spacing:.06em;line-height:1.7;}
 
 /* Unit headers */
 .unit-header{display:flex;align-items:center;gap:1rem;margin:3.5rem 0 2rem;animation:slideUp .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--sd,.1s);}
 .unit-badge{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;padding:.28rem .75rem;white-space:nowrap;border:1px solid;}
-.unit-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;}
+.unit-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;color:var(--tp);}
 .unit-line{flex:1;height:1px;background:var(--bd);}
 
 /* JS/CSS badges */
@@ -96,9 +126,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .note-num-tw{color:var(--tw);background:var(--tw-bg);border-color:rgba(14,165,233,.2);}
 .note-num-pv{color:var(--pv);background:var(--pv-bg);border-color:rgba(139,92,246,.2);}
 .note-num-vrc{color:var(--tp);background:var(--vrc-bg);border-color:var(--bd);}
-.note-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;}
+.note-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;color:var(--tp);}
 
-.note-card{border:1px solid var(--bd);background:rgba(255,255,255,.55);padding:1.4rem 1.6rem;margin-bottom:1rem;transition:border-color .25s,box-shadow .25s;}
+.note-card{border:1px solid var(--bd);background:var(--panel);padding:1.4rem 1.6rem;margin-bottom:1rem;transition:border-color .25s,box-shadow .25s, background-color .35s;}
+[data-theme="light"] .note-card { background: rgba(255,255,255,.55); }
 .note-card:hover{border-color:var(--bd2);box-shadow:0 4px 20px rgba(107,76,50,.06);}
 .note-card-title{font-family:'DM Mono',monospace;font-size:.64rem;color:var(--ac);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;}
 .note-card-title-vue{color:var(--vue);}
@@ -110,7 +141,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .note-p:last-child{margin-bottom:0;}
 
 /* Code blocks */
-.code-block{background:#1c1814;padding:1rem 1.2rem;margin:.6rem 0;font-family:'DM Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;border-top:2px solid var(--ac);}
+.code-block{background:#1c1814;padding:1rem 1.2rem;margin:.6rem 0;font-family:'DM Mono',monospace;font-size:.74rem;line-height:1.9;overflow-x:auto;border-top:2px solid var(--ac);color:#faf7f2;}
 .code-block.vue-top{border-top-color:var(--vue);}
 .code-block.fire-top{border-top-color:var(--fire);}
 .code-block.tw-top{border-top-color:var(--tw);}
@@ -121,7 +152,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 
 /* Concept tags */
 .concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin:.6rem 0;}
-.concept-tag{font-family:'DM Mono',monospace;font-size:.6rem;padding:.35rem .7rem;border:1px solid var(--bd);color:var(--ts);background:rgba(255,255,255,.5);display:flex;align-items:center;gap:.4rem;transition:all .2s;}
+.concept-tag{font-family:'DM Mono',monospace;font-size:.6rem;padding:.35rem .7rem;border:1px solid var(--bd);color:var(--ts);background:var(--panel);display:flex;align-items:center;gap:.4rem;transition:all .2s;}
+[data-theme="light"] .concept-tag { background: rgba(255,255,255,.5); }
 .concept-tag-vue{border-color:rgba(65,184,131,.3);color:var(--vue);background:var(--vue-bg);}
 .concept-tag-fire{border-color:rgba(255,152,0,.3);color:var(--fire);background:var(--fire-bg);}
 .concept-tag-tw{border-color:rgba(14,165,233,.3);color:var(--tw);background:var(--tw-bg);}
@@ -138,7 +170,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .td-tw{color:var(--tw);}
 .td-pv{color:var(--pv);}
 
-/* Highlight box */
+/* 💡 第 174 行已修正：成功移除非法 span 標籤，還原純 CSS 單位 */
 .hl-box{padding:.8rem 1.1rem;margin:.6rem 0;font-size:.84rem;color:var(--ts);line-height:1.8;}
 .hl-box-vue{background:var(--vue-bg);border-left:3px solid var(--vue);}
 .hl-box-fire{background:var(--fire-bg);border-left:3px solid var(--fire);}
@@ -153,7 +185,8 @@ code.tw{color:var(--tw);background:var(--tw-bg);}
 code.pv{color:var(--pv);background:var(--pv-bg);}
 
 /* Ticker */
-.ticker-wrap{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--bd);background:rgba(244,239,230,.92);backdrop-filter:blur(14px);overflow:hidden;height:32px;display:flex;align-items:center;z-index:100;}
+.ticker-wrap{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--bd);background:rgba(244,239,230,.92);backdrop-filter:blur(14px);overflow:hidden;height:32px;display:flex;align-items:center;z-index:100;transition:background-color .35s, border-color .35s;}
+:root[data-theme="dark"] .ticker-wrap { background: rgba(30, 26, 20, 0.92); }
 .ticker{display:flex;white-space:nowrap;animation:tickerAnim 60s linear infinite;}
 .ticker-item{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;padding:0 2.2rem;border-right:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;}
 .ticker-dot{width:3px;height:3px;border-radius:50%;background:var(--ac);opacity:.6;}
@@ -173,13 +206,19 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
   .page-layout{padding:80px 1.5rem 60px;}
   .concept-grid{grid-template-columns:1fr 1fr;}
 }
+
+/* ── 💡 修正第 2 點：手機平板端自動隔離自訂游標 ── */
+@media (pointer: coarse) {
+  * { cursor: auto !important; }
+  #cur-dot, #cur-ring { display: none !important; }
+}
 </style>
 </head>
 <body>
 <div id="cur-dot"></div>
 <div id="cur-ring"></div>
 
-<nav>
+<nav class="site-nav">
   <div class="nav-left">
     <a class="nav-logo" href="index.html">LYZ.dev</a>
     <div class="nav-div"></div>
@@ -201,7 +240,6 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
 </nav>
 
 <div class="page-layout">
-  <!-- TOC -->
   <nav class="toc" aria-label="目錄">
     <div class="toc-title">Contents</div>
     <a class="toc-item" href="#unit01"><span class="toc-dot"></span>Unit 01 · JavaScript 基礎</a>
@@ -220,7 +258,6 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
     <a class="toc-item" href="#unit14"><span class="toc-dot"></span>Unit 14 · Vercel 快速部署</a>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <main>
     <div class="page-hero">
       <div class="hero-eyebrow">Study Notes · 2026</div>
@@ -228,7 +265,6 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
       <p class="hero-sub">JavaScript · CSS · Vue 3 · Firebase · Tailwind · PrimeVue · Pinia · Vercel</p>
     </div>
 
-    <!-- ══ UNIT 01 ══ -->
     <div class="unit-header" id="unit01" style="--sd:.1s">
       <span class="unit-badge badge-js">Unit 01</span>
       <span class="unit-name">JavaScript 基礎</span>
@@ -257,7 +293,7 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
     <div class="note-section" style="--sd:.15s">
       <div class="note-header"><span class="note-num">JS · 02</span><span class="note-title">DOM 操作與事件</span></div>
       <div class="note-card">
-        <div class="note-card-title">常用 DOM API</div>
+        <div class="note-card-title">開關 DOM API</div>
         <div class="code-block"><span class="c-kw">const</span> el <span class="c-pu">=</span> document.<span class="c-fn">querySelector</span>(<span class="c-st">'#app'</span>)
 el.innerHTML <span class="c-pu">=</span> <span class="c-st">'&lt;p&gt;Hello&lt;/p&gt;'</span>
 el.<span class="c-fn">addEventListener</span>(<span class="c-st">'click'</span>, <span class="c-fn">handler</span>)
@@ -265,7 +301,6 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
       </div>
     </div>
 
-    <!-- ══ UNIT 02 ══ -->
     <div class="unit-header" id="unit02" style="--sd:.2s">
       <span class="unit-badge badge-css">Unit 02</span>
       <span class="unit-name">CSS Layout</span>
@@ -295,7 +330,6 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
       </div>
     </div>
 
-    <!-- ══ UNIT 03 ══ -->
     <div class="unit-header" id="unit03" style="--sd:.3s">
       <span class="unit-badge badge-async">Unit 03</span>
       <span class="unit-name">非同步操作與 API 串接</span>
@@ -317,860 +351,54 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
       </div>
     </div>
 
-    <!-- ══════ NEW SECTIONS ══════ -->
-
-    <!-- ══ UNIT 04 Vue 3 ══ -->
     <div class="unit-header" id="unit04" style="--sd:.4s">
       <span class="unit-badge badge-vue">Unit 04</span>
       <span class="unit-name">Vue 3 Tutorials</span>
       <div class="unit-line"></div>
     </div>
-
     <div class="note-section" style="--sd:.42s">
       <div class="note-header"><span class="note-num note-num-vue">VUE · 01</span><span class="note-title">Vue 3 核心概念</span></div>
       <div class="note-card">
         <div class="note-card-title note-card-title-vue">為什麼選 Vue 3？</div>
-        <p class="note-p">Vue 3 相較 Vue 2 引入了 <strong>Composition API</strong>，讓邏輯可以按「功能」組織而非按「選項」分散，搭配 TypeScript 支援更完善，打包體積更小（Tree-shaking 友好）。</p>
+        <p class="note-p">Vue 3 相較 Vue 2 引入了 <strong>Composition API</strong>，讓邏輯可以按「功能」組織而非按「選項」分散，搭配 TypeScript 支援更完善，打包體積更小。</p>
         <table class="cmp-table">
           <thead><tr><th>特性</th><th>Options API（Vue 2 風格）</th><th>Composition API（Vue 3 推薦）</th></tr></thead>
           <tbody>
             <tr><td>邏輯組織</td><td>分散在 data/methods/computed</td><td>按功能集中在 setup()</td></tr>
             <tr><td>TypeScript</td><td>支援有限</td><td>原生支援</td></tr>
             <tr><td>邏輯複用</td><td>Mixins（易衝突）</td><td class="td-vue">Composables（清晰無衝突）</td></tr>
-            <tr><td>學習曲線</td><td>較平緩</td><td>稍陡但更靈活</td></tr>
           </tbody>
         </table>
-      </div>
-
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">專案建立 · Vite + Vue 3</div>
-        <p class="note-p">使用 Vite 建立 Vue 3 專案是目前最推薦的方式，速度極快，開發體驗極佳。</p>
-        <div class="code-block vue-top"><span class="c-cm"># 建立專案</span>
-npm create vite@latest my-app <span class="c-st">-- --template vue</span>
-cd my-app
-npm install
-npm run dev
-
-<span class="c-cm"># 目錄結構</span>
-my-app/
-├── src/
-│   ├── App.vue          <span class="c-cm"># 根元件</span>
-│   ├── main.js          <span class="c-cm"># 入口</span>
-│   ├── components/      <span class="c-cm"># 元件</span>
-│   ├── composables/     <span class="c-cm"># 可複用邏輯</span>
-│   ├── stores/          <span class="c-cm"># Pinia</span>
-│   └── router/          <span class="c-cm"># Vue Router</span>
-└── vite.config.js</div>
       </div>
 
       <div class="note-card">
         <div class="note-card-title note-card-title-vue">SFC · Single File Component</div>
         <p class="note-p">Vue 的 <code class="vue">.vue</code> 檔案由三個區塊組成，清晰分離結構、邏輯、樣式。</p>
         <div class="code-block vue-top"><span class="c-tg">&lt;script setup&gt;</span>
-<span class="c-cm">// Composition API — 最推薦寫法</span>
 <span class="c-kw">import</span> { ref, computed, onMounted } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-
-<span class="c-kw">const</span> count <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-nm">0</span>)                    <span class="c-cm">// 響應式基本型別</span>
-<span class="c-kw">const</span> doubled <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> count.value <span class="c-pu">*</span> <span class="c-nm">2</span>)  <span class="c-cm">// 計算屬性</span>
-<span class="c-fn">onMounted</span>(() <span class="c-pu">=&gt;</span> console.<span class="c-fn">log</span>(<span class="c-st">'元件掛載完成'</span>))
-
-<span class="c-kw">function</span> <span class="c-fn">increment</span>() { count.value<span class="c-pu">++</span> }
-<span class="c-tg">&lt;/script&gt;</span>
-
-<span class="c-tg">&lt;template&gt;</span>
-  <span class="c-tg">&lt;div&gt;</span>
-    <span class="c-tg">&lt;p&gt;</span>Count: {{ count }} · Doubled: {{ doubled }}<span class="c-tg">&lt;/p&gt;</span>
-    <span class="c-tg">&lt;button</span> <span class="c-at">@click</span><span class="c-pu">=</span><span class="c-st">"increment"</span><span class="c-tg">&gt;</span>+1<span class="c-tg">&lt;/button&gt;</span>
-  <span class="c-tg">&lt;/div&gt;</span>
-<span class="c-tg">&lt;/template&gt;</span>
-
-<span class="c-tg">&lt;style scoped&gt;</span>
-<span class="c-cm">/* scoped 樣式只影響此元件 */</span>
-button { <span class="c-fn">padding</span>: <span class="c-nm">.5rem 1rem</span>; }
-<span class="c-tg">&lt;/style&gt;</span></div>
+<span class="c-kw">const</span> count <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-nm">0</span>)
+<span class="c-kw">const</span> doubled <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> count.value <span class="c-pu">*</span> <span class="c-nm">2</span>)
+<span class="c-tg">&lt;/script&gt;</span></div>
       </div>
     </div>
 
-    <div class="note-section" style="--sd:.45s">
-      <div class="note-header"><span class="note-num note-num-vue">VUE · 02</span><span class="note-title">響應式系統 · ref / reactive / watch</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">ref vs reactive</div>
-        <div class="code-block vue-top"><span class="c-kw">import</span> { ref, reactive, watch, watchEffect } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-
-<span class="c-cm">// ref → 基本型別 or 物件（.value 存取）</span>
-<span class="c-kw">const</span> name <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-st">'LYZ'</span>)
-name.value <span class="c-pu">=</span> <span class="c-st">'New Name'</span>
-
-<span class="c-cm">// reactive → 物件（無需 .value）</span>
-<span class="c-kw">const</span> state <span class="c-pu">=</span> <span class="c-fn">reactive</span>({ count: <span class="c-nm">0</span>, loading: <span class="c-kw">false</span> })
-state.count<span class="c-pu">++</span>
-
-<span class="c-cm">// watch → 監聽特定值的變化</span>
-<span class="c-fn">watch</span>(count, (newVal, oldVal) <span class="c-pu">=&gt;</span> {
-  console.<span class="c-fn">log</span>(<span class="c-st">`\${oldVal} → \${newVal}`</span>)
-})
-
-<span class="c-cm">// watchEffect → 自動追蹤依賴</span>
-<span class="c-fn">watchEffect</span>(() <span class="c-pu">=&gt;</span> console.<span class="c-fn">log</span>(count.value))</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">Template 指令速查</div>
-        <div class="code-block vue-top"><span class="c-tg">&lt;p</span> <span class="c-at">v-if</span><span class="c-pu">=</span><span class="c-st">"show"</span><span class="c-tg">&gt;</span>條件渲染<span class="c-tg">&lt;/p&gt;</span>
-<span class="c-tg">&lt;p</span> <span class="c-at">v-show</span><span class="c-pu">=</span><span class="c-st">"show"</span><span class="c-tg">&gt;</span>切換 display（DOM 保留）<span class="c-tg">&lt;/p&gt;</span>
-<span class="c-tg">&lt;li</span> <span class="c-at">v-for</span><span class="c-pu">=</span><span class="c-st">"(item, i) in list"</span> <span class="c-at">:key</span><span class="c-pu">=</span><span class="c-st">"item.id"</span><span class="c-tg">&gt;</span>{{ item.name }}<span class="c-tg">&lt;/li&gt;</span>
-<span class="c-tg">&lt;input</span> <span class="c-at">v-model</span><span class="c-pu">=</span><span class="c-st">"text"</span><span class="c-tg">/&gt;</span>              <span class="c-cm">&lt;!-- 雙向綁定 --&gt;</span>
-<span class="c-tg">&lt;button</span> <span class="c-at">@click</span><span class="c-pu">=</span><span class="c-st">"fn"</span><span class="c-tg">&gt;</span>click<span class="c-tg">&lt;/button&gt;</span>    <span class="c-cm">&lt;!-- 事件 --&gt;</span>
-<span class="c-tg">&lt;img</span>    <span class="c-at">:src</span><span class="c-pu">=</span><span class="c-st">"url"</span><span class="c-tg">/&gt;</span>               <span class="c-cm">&lt;!-- 屬性綁定 --&gt;</span></div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">Props · Emits · 元件通訊</div>
-        <div class="code-block vue-top"><span class="c-cm">// Child.vue</span>
-<span class="c-kw">const</span> props <span class="c-pu">=</span> <span class="c-fn">defineProps</span>({ msg: String, count: Number })
-<span class="c-kw">const</span> emit  <span class="c-pu">=</span> <span class="c-fn">defineEmits</span>([<span class="c-st">'update'</span>, <span class="c-st">'close'</span>])
-emit(<span class="c-st">'update'</span>, newValue)
-
-<span class="c-cm">// Parent.vue — 使用子元件</span>
-<span class="c-tg">&lt;Child</span> <span class="c-at">:msg</span><span class="c-pu">=</span><span class="c-st">"hello"</span> <span class="c-at">@update</span><span class="c-pu">=</span><span class="c-st">"handleUpdate"</span> <span class="c-tg">/&gt;</span></div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">生命週期鉤子</div>
-        <div class="code-block vue-top"><span class="c-kw">import</span> { onMounted, onUnmounted, onUpdated } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-
-<span class="c-fn">onMounted</span>(() <span class="c-pu">=&gt;</span> {
-  <span class="c-cm">// DOM 已掛載 → 可操作 DOM、發 API 請求</span>
-})
-<span class="c-fn">onUpdated</span>(() <span class="c-pu">=&gt;</span> { <span class="c-cm">/* 資料更新後 */</span> })
-<span class="c-fn">onUnmounted</span>(() <span class="c-pu">=&gt;</span> { <span class="c-cm">/* 清除計時器、事件監聽 */</span> })</div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 05 Firebase ══ -->
     <div class="unit-header" id="unit05" style="--sd:.5s">
       <span class="unit-badge badge-fire">Unit 05</span>
       <span class="unit-name">Firestore &amp; Firebase</span>
       <div class="unit-line"></div>
     </div>
-
     <div class="note-section" style="--sd:.52s">
-      <div class="note-header"><span class="note-num note-num-fire">FB · 01</span><span class="note-title">Firebase 專案設定</span></div>
+      <div class="note-header"><span class="note-num note-num-fire">FB · 01</span><span class="note-title">Firestore CRUD 操作</span></div>
       <div class="note-card">
-        <div class="note-card-title note-card-title-fire">什麼是 Firebase？</div>
-        <p class="note-p">Google 提供的 BaaS（Backend-as-a-Service），一行程式碼即可擁有資料庫、身份驗證、雲端儲存、Hosting 等功能，是前端開發者快速搭建後端的最佳選擇。</p>
-        <div class="concept-grid">
-          <span class="concept-tag concept-tag-fire">🗄️ Firestore（NoSQL）</span>
-          <span class="concept-tag concept-tag-fire">🔑 Authentication</span>
-          <span class="concept-tag concept-tag-fire">📦 Cloud Storage</span>
-          <span class="concept-tag concept-tag-fire">🌐 Hosting</span>
-          <span class="concept-tag concept-tag-fire">☁️ Cloud Functions</span>
-          <span class="concept-tag concept-tag-fire">📊 Analytics</span>
-        </div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-fire">安裝與初始化</div>
-        <div class="code-block fire-top">npm install firebase
-
-<span class="c-cm">// src/firebase.js — 設定檔</span>
-<span class="c-kw">import</span> { initializeApp } <span class="c-kw">from</span> <span class="c-st">'firebase/app'</span>
-<span class="c-kw">import</span> { getFirestore }  <span class="c-kw">from</span> <span class="c-st">'firebase/firestore'</span>
-<span class="c-kw">import</span> { getAuth }       <span class="c-kw">from</span> <span class="c-st">'firebase/auth'</span>
-
-<span class="c-kw">const</span> firebaseConfig <span class="c-pu">=</span> {
-  apiKey:            <span class="c-st">"YOUR_API_KEY"</span>,
-  authDomain:        <span class="c-st">"your-app.firebaseapp.com"</span>,
-  projectId:         <span class="c-st">"your-app"</span>,
-  storageBucket:     <span class="c-st">"your-app.appspot.com"</span>,
-  messagingSenderId: <span class="c-st">"123456"</span>,
-  appId:             <span class="c-st">"1:123:web:abc"</span>,
-}
-<span class="c-kw">const</span> app <span class="c-pu">=</span> <span class="c-fn">initializeApp</span>(firebaseConfig)
-<span class="c-kw">export const</span> db   <span class="c-pu">=</span> <span class="c-fn">getFirestore</span>(app)
-<span class="c-kw">export const</span> auth <span class="c-pu">=</span> <span class="c-fn">getAuth</span>(app)</div>
+        <div class="note-card-title note-card-title-fire">即時監聽與基礎設定</div>
+        <div class="code-block fire-top"><span class="c-kw">import</span> { db } from <span class="c-st">'./firebase'</span>
+<span class="c-kw">import</span> { collection, onSnapshot, query, orderBy } from <span class="c-st">'firebase/firestore'</span>
+<span class="c-kw">const</span> unsub <span class="c-pu">=</span> <span class="c-fn">onSnapshot</span>(<span class="c-fn">query</span>(<span class="c-fn">collection</span>(db, <span class="c-st">'todos'</span>)), snap <span class="c-pu">=&gt;</span> {})</div>
       </div>
     </div>
 
-    <div class="note-section" style="--sd:.55s">
-      <div class="note-header"><span class="note-num note-num-fire">FB · 02</span><span class="note-title">Firestore CRUD 操作</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-fire">新增 · 讀取 · 更新 · 刪除</div>
-        <div class="code-block fire-top"><span class="c-kw">import</span> { db } <span class="c-kw">from</span> <span class="c-st">'./firebase'</span>
-<span class="c-kw">import</span> {
-  collection, doc, addDoc, getDoc, getDocs,
-  updateDoc, deleteDoc, onSnapshot, query,
-  where, orderBy, serverTimestamp
-} <span class="c-kw">from</span> <span class="c-st">'firebase/firestore'</span>
-
-<span class="c-cm">// ✅ 新增文件</span>
-<span class="c-kw">const</span> docRef <span class="c-pu">=</span> <span class="c-kw">await</span> <span class="c-fn">addDoc</span>(<span class="c-fn">collection</span>(db, <span class="c-st">'todos'</span>), {
-  title: <span class="c-st">'學習 Vue 3'</span>, done: <span class="c-kw">false</span>,
-  createdAt: <span class="c-fn">serverTimestamp</span>()
-})
-
-<span class="c-cm">// 📖 讀取單一文件</span>
-<span class="c-kw">const</span> snap <span class="c-pu">=</span> <span class="c-kw">await</span> <span class="c-fn">getDoc</span>(<span class="c-fn">doc</span>(db, <span class="c-st">'todos'</span>, docRef.id))
-<span class="c-kw">if</span> (snap.<span class="c-fn">exists</span>()) console.<span class="c-fn">log</span>(snap.<span class="c-fn">data</span>())
-
-<span class="c-cm">// 📖 讀取集合 + 查詢條件</span>
-<span class="c-kw">const</span> q <span class="c-pu">=</span> <span class="c-fn">query</span>(
-  <span class="c-fn">collection</span>(db, <span class="c-st">'todos'</span>),
-  <span class="c-fn">where</span>(<span class="c-st">'done'</span>, <span class="c-st">'=='</span>, <span class="c-kw">false</span>),
-  <span class="c-fn">orderBy</span>(<span class="c-st">'createdAt'</span>, <span class="c-st">'desc'</span>)
-)
-<span class="c-kw">const</span> querySnap <span class="c-pu">=</span> <span class="c-kw">await</span> <span class="c-fn">getDocs</span>(q)
-querySnap.<span class="c-fn">forEach</span>(doc <span class="c-pu">=&gt;</span> console.<span class="c-fn">log</span>(doc.id, doc.<span class="c-fn">data</span>()))
-
-<span class="c-cm">// ✏️ 更新</span>
-<span class="c-kw">await</span> <span class="c-fn">updateDoc</span>(<span class="c-fn">doc</span>(db, <span class="c-st">'todos'</span>, docRef.id), { done: <span class="c-kw">true</span> })
-
-<span class="c-cm">// 🗑️ 刪除</span>
-<span class="c-kw">await</span> <span class="c-fn">deleteDoc</span>(<span class="c-fn">doc</span>(db, <span class="c-st">'todos'</span>, docRef.id))
-
-<span class="c-cm">// 🔴 即時監聽（Real-time）</span>
-<span class="c-kw">const</span> unsubscribe <span class="c-pu">=</span> <span class="c-fn">onSnapshot</span>(<span class="c-fn">collection</span>(db, <span class="c-st">'todos'</span>), snap <span class="c-pu">=&gt;</span> {
-  todos.value <span class="c-pu">=</span> snap.docs.<span class="c-fn">map</span>(d <span class="c-pu">=&gt;</span> ({ id: d.id, ...d.<span class="c-fn">data</span>() }))
-})
-<span class="c-fn">onUnmounted</span>(unsubscribe) <span class="c-cm">// 元件卸載時取消監聽</span></div>
-      </div>
-      <div class="hl-box hl-box-fire">💡 <strong>Firestore 資料結構</strong>：Collection（集合）→ Document（文件）→ Field（欄位）。每個文件是一個類 JSON 物件，文件 ID 由 Firebase 自動生成或自訂。</div>
-    </div>
-
-    <div class="note-section" style="--sd:.58s">
-      <div class="note-header"><span class="note-num note-num-fire">FB · 03</span><span class="note-title">Firebase Authentication</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-fire">Email/Password + Google 登入</div>
-        <div class="code-block fire-top"><span class="c-kw">import</span> { auth } <span class="c-kw">from</span> <span class="c-st">'./firebase'</span>
-<span class="c-kw">import</span> {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup, GoogleAuthProvider,
-  signOut, onAuthStateChanged
-} <span class="c-kw">from</span> <span class="c-st">'firebase/auth'</span>
-
-<span class="c-cm">// 📧 Email 註冊</span>
-<span class="c-kw">await</span> <span class="c-fn">createUserWithEmailAndPassword</span>(auth, email, password)
-
-<span class="c-cm">// 📧 Email 登入</span>
-<span class="c-kw">await</span> <span class="c-fn">signInWithEmailAndPassword</span>(auth, email, password)
-
-<span class="c-cm">// 🔍 Google 登入</span>
-<span class="c-kw">const</span> provider <span class="c-pu">=</span> <span class="c-kw">new</span> <span class="c-fn">GoogleAuthProvider</span>()
-<span class="c-kw">await</span> <span class="c-fn">signInWithPopup</span>(auth, provider)
-
-<span class="c-cm">// 🚪 登出</span>
-<span class="c-kw">await</span> <span class="c-fn">signOut</span>(auth)
-
-<span class="c-cm">// 👤 監聽登入狀態</span>
-<span class="c-fn">onAuthStateChanged</span>(auth, user <span class="c-pu">=&gt;</span> {
-  currentUser.value <span class="c-pu">=</span> user  <span class="c-cm">// null = 未登入</span>
-})</div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 06 Composables ══ -->
-    <div class="unit-header" id="unit06" style="--sd:.6s">
-      <span class="unit-badge badge-vue">Unit 06</span>
-      <span class="unit-name">Composables · 可複用邏輯</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.62s">
-      <div class="note-header"><span class="note-num note-num-vue">VUE · 06</span><span class="note-title">Composables 設計模式</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">什麼是 Composable？</div>
-        <p class="note-p">Composable 是一個以 <code class="vue">use</code> 為命名前綴的函式，封裝帶有狀態的可複用邏輯。它是 Vue 3 取代 Mixin 的最佳方式，清晰、無命名衝突、易於測試。</p>
-        <div class="hl-box hl-box-vue">📁 約定放在 <code class="vue">src/composables/</code> 目錄，命名為 <code class="vue">useXxx.js</code></div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">useTodos — Firebase Todo Composable</div>
-        <div class="code-block vue-top"><span class="c-cm">// src/composables/useTodos.js</span>
-<span class="c-kw">import</span> { ref } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-<span class="c-kw">import</span> { db }  <span class="c-kw">from</span> <span class="c-st">'../firebase'</span>
-<span class="c-kw">import</span> { collection, addDoc, updateDoc, deleteDoc,
-         doc, onSnapshot, orderBy, query, serverTimestamp
-} <span class="c-kw">from</span> <span class="c-st">'firebase/firestore'</span>
-
-<span class="c-kw">export function</span> <span class="c-fn">useTodos</span>() {
-  <span class="c-kw">const</span> todos   <span class="c-pu">=</span> <span class="c-fn">ref</span>([])
-  <span class="c-kw">const</span> loading <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">false</span>)
-
-  <span class="c-cm">// 即時監聽</span>
-  <span class="c-kw">const</span> q <span class="c-pu">=</span> <span class="c-fn">query</span>(<span class="c-fn">collection</span>(db, <span class="c-st">'todos'</span>), <span class="c-fn">orderBy</span>(<span class="c-st">'createdAt'</span>, <span class="c-st">'desc'</span>))
-  <span class="c-kw">const</span> unsub <span class="c-pu">=</span> <span class="c-fn">onSnapshot</span>(q, snap <span class="c-pu">=&gt;</span> {
-    todos.value <span class="c-pu">=</span> snap.docs.<span class="c-fn">map</span>(d <span class="c-pu">=&gt;</span> ({ id: d.id, ...d.<span class="c-fn">data</span>() }))
-  })
-
-  <span class="c-kw">async function</span> <span class="c-fn">addTodo</span>(title) {
-    <span class="c-kw">await</span> <span class="c-fn">addDoc</span>(<span class="c-fn">collection</span>(db, <span class="c-st">'todos'</span>), {
-      title, done: <span class="c-kw">false</span>, createdAt: <span class="c-fn">serverTimestamp</span>()
-    })
-  }
-
-  <span class="c-kw">async function</span> <span class="c-fn">toggleTodo</span>(id, done) {
-    <span class="c-kw">await</span> <span class="c-fn">updateDoc</span>(<span class="c-fn">doc</span>(db, <span class="c-st">'todos'</span>, id), { done: <span class="c-pu">!</span>done })
-  }
-
-  <span class="c-kw">async function</span> <span class="c-fn">deleteTodo</span>(id) {
-    <span class="c-kw">await</span> <span class="c-fn">deleteDoc</span>(<span class="c-fn">doc</span>(db, <span class="c-st">'todos'</span>, id))
-  }
-
-  <span class="c-kw">return</span> { todos, loading, addTodo, toggleTodo, deleteTodo, unsub }
-}</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">useAuth — 認證狀態 Composable</div>
-        <div class="code-block vue-top"><span class="c-cm">// src/composables/useAuth.js</span>
-<span class="c-kw">import</span> { ref, onMounted, onUnmounted } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-<span class="c-kw">import</span> { auth } <span class="c-kw">from</span> <span class="c-st">'../firebase'</span>
-<span class="c-kw">import</span> { onAuthStateChanged, signOut } <span class="c-kw">from</span> <span class="c-st">'firebase/auth'</span>
-
-<span class="c-kw">export function</span> <span class="c-fn">useAuth</span>() {
-  <span class="c-kw">const</span> user    <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">null</span>)
-  <span class="c-kw">const</span> loading <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">true</span>)
-  <span class="c-kw">let</span> unsubscribe
-
-  <span class="c-fn">onMounted</span>(() <span class="c-pu">=&gt;</span> {
-    unsubscribe <span class="c-pu">=</span> <span class="c-fn">onAuthStateChanged</span>(auth, u <span class="c-pu">=&gt;</span> {
-      user.value    <span class="c-pu">=</span> u
-      loading.value <span class="c-pu">=</span> <span class="c-kw">false</span>
-    })
-  })
-  <span class="c-fn">onUnmounted</span>(() <span class="c-pu">=&gt;</span> unsubscribe?.())
-
-  <span class="c-kw">const</span> logout <span class="c-pu">=</span> () <span class="c-pu">=&gt;</span> <span class="c-fn">signOut</span>(auth)
-  <span class="c-kw">return</span> { user, loading, logout }
-}</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">其他常用 Composables 模式</div>
-        <div class="code-block vue-top"><span class="c-cm">// useFetch — 通用 API 請求</span>
-<span class="c-kw">export function</span> <span class="c-fn">useFetch</span>(url) {
-  <span class="c-kw">const</span> data    <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">null</span>)
-  <span class="c-kw">const</span> error   <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">null</span>)
-  <span class="c-kw">const</span> loading <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">true</span>)
-  <span class="c-fn">fetch</span>(url).<span class="c-fn">then</span>(r <span class="c-pu">=&gt;</span> r.<span class="c-fn">json</span>())
-    .<span class="c-fn">then</span>(d  <span class="c-pu">=&gt;</span> { data.value <span class="c-pu">=</span> d; loading.value <span class="c-pu">=</span> <span class="c-kw">false</span> })
-    .<span class="c-fn">catch</span>(e  <span class="c-pu">=&gt;</span> { error.value <span class="c-pu">=</span> e; loading.value <span class="c-pu">=</span> <span class="c-kw">false</span> })
-  <span class="c-kw">return</span> { data, error, loading }
-}
-
-<span class="c-cm">// useLocalStorage — 持久化狀態</span>
-<span class="c-kw">export function</span> <span class="c-fn">useLocalStorage</span>(key, defaultVal) {
-  <span class="c-kw">const</span> val <span class="c-pu">=</span> <span class="c-fn">ref</span>(JSON.<span class="c-fn">parse</span>(localStorage.<span class="c-fn">getItem</span>(key) <span class="c-pu">??</span> <span class="c-st">'null'</span>) <span class="c-pu">??</span> defaultVal)
-  <span class="c-fn">watch</span>(val, v <span class="c-pu">=&gt;</span> localStorage.<span class="c-fn">setItem</span>(key, JSON.<span class="c-fn">stringify</span>(v)), { deep: <span class="c-kw">true</span> })
-  <span class="c-kw">return</span> val
-}</div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 07 Todo App ══ -->
-    <div class="unit-header" id="unit07" style="--sd:.65s">
-      <span class="unit-badge badge-vue">Unit 07</span>
-      <span class="unit-name">Todo Application 實戰</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.67s">
-      <div class="note-header"><span class="note-num note-num-vue">VUE · 07</span><span class="note-title">Vue 3 + Firestore Todo App 架構</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">完整 TodoApp.vue</div>
-        <div class="code-block vue-top"><span class="c-tg">&lt;script setup&gt;</span>
-<span class="c-kw">import</span> { ref, computed } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-<span class="c-kw">import</span> { useTodos } <span class="c-kw">from</span> <span class="c-st">'../composables/useTodos'</span>
-
-<span class="c-kw">const</span> { todos, addTodo, toggleTodo, deleteTodo } <span class="c-pu">=</span> <span class="c-fn">useTodos</span>()
-<span class="c-kw">const</span> input  <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-st">''</span>)
-<span class="c-kw">const</span> filter <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-st">'all'</span>)  <span class="c-cm">// 'all' | 'active' | 'done'</span>
-
-<span class="c-kw">const</span> filtered <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span>
-  filter.value <span class="c-pu">===</span> <span class="c-st">'all'</span>    ? todos.value :
-  filter.value <span class="c-pu">===</span> <span class="c-st">'active'</span> ? todos.value.<span class="c-fn">filter</span>(t <span class="c-pu">=&gt;</span> <span class="c-pu">!</span>t.done) :
-                              todos.value.<span class="c-fn">filter</span>(t <span class="c-pu">=&gt;</span>  t.done)
-)
-
-<span class="c-kw">const</span> doneCount   <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> todos.value.<span class="c-fn">filter</span>(t <span class="c-pu">=&gt;</span> t.done).length)
-<span class="c-kw">const</span> activeCount <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> todos.value.<span class="c-fn">filter</span>(t <span class="c-pu">=&gt;</span> <span class="c-pu">!</span>t.done).length)
-
-<span class="c-kw">function</span> <span class="c-fn">handleAdd</span>() {
-  <span class="c-kw">if</span> (!input.value.<span class="c-fn">trim</span>()) <span class="c-kw">return</span>
-  <span class="c-fn">addTodo</span>(input.value.<span class="c-fn">trim</span>())
-  input.value <span class="c-pu">=</span> <span class="c-st">''</span>
-}
-<span class="c-tg">&lt;/script&gt;</span>
-
-<span class="c-tg">&lt;template&gt;</span>
-  <span class="c-tg">&lt;div</span> <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"todo-app"</span><span class="c-tg">&gt;</span>
-    <span class="c-tg">&lt;h1&gt;</span>待辦清單 ({{ activeCount }} 項待完成)<span class="c-tg">&lt;/h1&gt;</span>
-
-    <span class="c-cm">&lt;!-- 新增 --&gt;</span>
-    <span class="c-tg">&lt;form</span> <span class="c-at">@submit.prevent</span><span class="c-pu">=</span><span class="c-st">"handleAdd"</span><span class="c-tg">&gt;</span>
-      <span class="c-tg">&lt;input</span> <span class="c-at">v-model</span><span class="c-pu">=</span><span class="c-st">"input"</span> <span class="c-at">placeholder</span><span class="c-pu">=</span><span class="c-st">"新增待辦..."</span><span class="c-tg">/&gt;</span>
-      <span class="c-tg">&lt;button</span> <span class="c-at">type</span><span class="c-pu">=</span><span class="c-st">"submit"</span><span class="c-tg">&gt;</span>新增<span class="c-tg">&lt;/button&gt;</span>
-    <span class="c-tg">&lt;/form&gt;</span>
-
-    <span class="c-cm">&lt;!-- 篩選 --&gt;</span>
-    <span class="c-tg">&lt;div</span> <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"filters"</span><span class="c-tg">&gt;</span>
-      <span class="c-tg">&lt;button</span> <span class="c-at">v-for</span><span class="c-pu">=</span><span class="c-st">"f in ['all','active','done']"</span> <span class="c-at">:key</span><span class="c-pu">=</span><span class="c-st">"f"</span>
-              <span class="c-at">:class</span><span class="c-pu">=</span><span class="c-st">"{ active: filter===f }"</span> <span class="c-at">@click</span><span class="c-pu">=</span><span class="c-st">"filter=f"</span><span class="c-tg">&gt;</span>
-        {{ f }}<span class="c-tg">&lt;/button&gt;</span>
-    <span class="c-tg">&lt;/div&gt;</span>
-
-    <span class="c-cm">&lt;!-- 清單 --&gt;</span>
-    <span class="c-tg">&lt;TransitionGroup</span> <span class="c-at">name</span><span class="c-pu">=</span><span class="c-st">"list"</span> <span class="c-at">tag</span><span class="c-pu">=</span><span class="c-st">"ul"</span><span class="c-tg">&gt;</span>
-      <span class="c-tg">&lt;li</span> <span class="c-at">v-for</span><span class="c-pu">=</span><span class="c-st">"todo in filtered"</span> <span class="c-at">:key</span><span class="c-pu">=</span><span class="c-st">"todo.id"</span><span class="c-tg">&gt;</span>
-        <span class="c-tg">&lt;input</span> <span class="c-at">type</span><span class="c-pu">=</span><span class="c-st">"checkbox"</span> <span class="c-at">:checked</span><span class="c-pu">=</span><span class="c-st">"todo.done"</span>
-               <span class="c-at">@change</span><span class="c-pu">=</span><span class="c-st">"toggleTodo(todo.id, todo.done)"</span><span class="c-tg">/&gt;</span>
-        <span class="c-tg">&lt;span</span> <span class="c-at">:class</span><span class="c-pu">=</span><span class="c-st">"{ done: todo.done }"</span><span class="c-tg">&gt;</span>{{ todo.title }}<span class="c-tg">&lt;/span&gt;</span>
-        <span class="c-tg">&lt;button</span> <span class="c-at">@click</span><span class="c-pu">=</span><span class="c-st">"deleteTodo(todo.id)"</span><span class="c-tg">&gt;</span>刪除<span class="c-tg">&lt;/button&gt;</span>
-      <span class="c-tg">&lt;/li&gt;</span>
-    <span class="c-tg">&lt;/TransitionGroup&gt;</span>
-  <span class="c-tg">&lt;/div&gt;</span>
-<span class="c-tg">&lt;/template&gt;</span></div>
-        <div class="hl-box hl-box-vue">✦ <strong>重點</strong>：<code class="vue">TransitionGroup</code> 為清單項目加入進出動畫；<code class="vue">computed</code> 實現不同篩選條件；Firestore <code class="vue">onSnapshot</code> 實現多裝置即時同步。</div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 08 Tailwind ══ -->
-    <div class="unit-header" id="unit08" style="--sd:.7s">
-      <span class="unit-badge badge-tw">Unit 08</span>
-      <span class="unit-name">Tailwind CSS</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.72s">
-      <div class="note-header"><span class="note-num note-num-tw">TW · 01</span><span class="note-title">Tailwind 核心概念</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-tw">什麼是 Utility-First CSS？</div>
-        <p class="note-p">Tailwind 不提供預製元件，而是提供大量低階 utility class。你直接在 HTML 上組合這些類別，快速達到設計目標，不需要離開 HTML 去寫 CSS。</p>
-        <div class="code-block tw-top">npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-
-<span class="c-cm">// tailwind.config.js</span>
-module.exports = {
-  content: [<span class="c-st">'./index.html'</span>, <span class="c-st">'./src/**/*.{vue,js}'</span>],
-  theme: { extend: {} },
-  plugins: [],
-}
-
-<span class="c-cm">/* src/style.css */</span>
-<span class="c-at">@tailwind</span> base;
-<span class="c-at">@tailwind</span> components;
-<span class="c-at">@tailwind</span> utilities;</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-tw">常用 Utility Classes 速查</div>
-        <table class="cmp-table">
-          <thead><tr><th>分類</th><th>常用 Class</th><th>說明</th></tr></thead>
-          <tbody>
-            <tr><td class="td-tw">Layout</td><td><code>flex items-center justify-between gap-4</code></td><td>Flexbox 排版</td></tr>
-            <tr><td class="td-tw">Grid</td><td><code>grid grid-cols-3 gap-6</code></td><td>Grid 佈局</td></tr>
-            <tr><td class="td-tw">Spacing</td><td><code>p-4 px-6 py-2 m-auto mt-8</code></td><td>內外間距</td></tr>
-            <tr><td class="td-tw">Typography</td><td><code>text-xl font-bold text-gray-700</code></td><td>文字樣式</td></tr>
-            <tr><td class="td-tw">Color</td><td><code>bg-blue-500 text-white border-gray-200</code></td><td>顏色</td></tr>
-            <tr><td class="td-tw">Border</td><td><code>rounded-lg border border-solid shadow-md</code></td><td>邊框圓角陰影</td></tr>
-            <tr><td class="td-tw">RWD</td><td><code>sm: md: lg: xl:</code> 前綴</td><td>響應式斷點</td></tr>
-            <tr><td class="td-tw">Dark mode</td><td><code>dark:bg-gray-900 dark:text-white</code></td><td>深色模式</td></tr>
-            <tr><td class="td-tw">Hover</td><td><code>hover:bg-blue-600 transition-colors</code></td><td>互動狀態</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-tw">Tailwind 實際範例 — 按鈕</div>
-        <div class="code-block tw-top"><span class="c-cm">&lt;!-- 傳統 CSS 需要另開一個 class --&gt;</span>
-<span class="c-tg">&lt;button</span> <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"bg-blue-500 hover:bg-blue-600 text-white
-                 font-medium px-6 py-2 rounded-lg shadow
-                 transition-colors duration-200
-                 focus:outline-none focus:ring-2 focus:ring-blue-400"</span><span class="c-tg">&gt;</span>
-  新增待辦
-<span class="c-tg">&lt;/button&gt;</span>
-
-<span class="c-cm">&lt;!-- RWD：手機1欄，平板2欄，桌機3欄 --&gt;</span>
-<span class="c-tg">&lt;div</span> <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"</span><span class="c-tg">&gt;</span></div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 09 UI Framework ══ -->
-    <div class="unit-header" id="unit09" style="--sd:.75s">
-      <span class="unit-badge badge-pv">Unit 09</span>
-      <span class="unit-name">UI CSS Framework 比較</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.77s">
-      <div class="note-header"><span class="note-num note-num-pv">UI · 01</span><span class="note-title">主流 UI Framework 選型指南</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-pv">Vue 生態系 UI 框架比較</div>
-        <table class="cmp-table">
-          <thead><tr><th>框架</th><th>特色</th><th>適合情境</th><th>大小</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="td-pv"><strong>PrimeVue</strong></td>
-              <td>元件最豐富、主題系統完善、企業級</td>
-              <td>複雜後台、企業應用</td>
-              <td>完整 / Tree-shakeable</td>
-            </tr>
-            <tr>
-              <td class="td-tw"><strong>Vuetify</strong></td>
-              <td>Material Design，生態成熟</td>
-              <td>Material 風格應用</td>
-              <td>較大</td>
-            </tr>
-            <tr>
-              <td><strong>Quasar</strong></td>
-              <td>跨平台（Web/App/桌機）</td>
-              <td>需要跨平台的專案</td>
-              <td>中等</td>
-            </tr>
-            <tr>
-              <td><strong>Naive UI</strong></td>
-              <td>TypeScript 優先，設計簡潔</td>
-              <td>TypeScript 重度用戶</td>
-              <td>小</td>
-            </tr>
-            <tr>
-              <td class="td-tw"><strong>Headless UI</strong></td>
-              <td>無樣式、配合 Tailwind</td>
-              <td>高度自訂設計</td>
-              <td>極小</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="hl-box hl-box-pv">💡 <strong>選擇建議</strong>：快速開發 / 企業後台 → PrimeVue；Material Design 設計 → Vuetify；高度自訂設計 → Tailwind + Headless UI</div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 10 PrimeVue ══ -->
-    <div class="unit-header" id="unit10" style="--sd:.8s">
-      <span class="unit-badge badge-pv">Unit 10</span>
-      <span class="unit-name">PrimeVue</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.82s">
-      <div class="note-header"><span class="note-num note-num-pv">PV · 01</span><span class="note-title">PrimeVue 安裝與設定</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-pv">快速安裝</div>
-        <div class="code-block pv-top">npm install primevue primeicons
-
-<span class="c-cm">// main.js</span>
-<span class="c-kw">import</span> { createApp }    <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-<span class="c-kw">import</span> PrimeVue         <span class="c-kw">from</span> <span class="c-st">'primevue/config'</span>
-<span class="c-kw">import</span> Aura             <span class="c-kw">from</span> <span class="c-st">'@primevue/themes/aura'</span>
-<span class="c-kw">import</span> <span class="c-st">'primeicons/primeicons.css'</span>
-
-<span class="c-kw">const</span> app <span class="c-pu">=</span> <span class="c-fn">createApp</span>(App)
-app.<span class="c-fn">use</span>(PrimeVue, {
-  theme: { preset: Aura, options: { darkModeSelector: <span class="c-st">'.dark'</span> } }
-})
-app.<span class="c-fn">mount</span>(<span class="c-st">'#app'</span>)</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-pv">常用元件示範</div>
-        <div class="code-block pv-top"><span class="c-tg">&lt;script setup&gt;</span>
-<span class="c-kw">import</span> Button      <span class="c-kw">from</span> <span class="c-st">'primevue/button'</span>
-<span class="c-kw">import</span> InputText   <span class="c-kw">from</span> <span class="c-st">'primevue/inputtext'</span>
-<span class="c-kw">import</span> DataTable   <span class="c-kw">from</span> <span class="c-st">'primevue/datatable'</span>
-<span class="c-kw">import</span> Column      <span class="c-kw">from</span> <span class="c-st">'primevue/column'</span>
-<span class="c-kw">import</span> Dialog      <span class="c-kw">from</span> <span class="c-st">'primevue/dialog'</span>
-<span class="c-kw">import</span> Toast       <span class="c-kw">from</span> <span class="c-st">'primevue/toast'</span>
-<span class="c-kw">import</span> { useToast } <span class="c-kw">from</span> <span class="c-st">'primevue/usetoast'</span>
-
-<span class="c-kw">const</span> toast <span class="c-pu">=</span> <span class="c-fn">useToast</span>()
-<span class="c-kw">const</span> showToast <span class="c-pu">=</span> () <span class="c-pu">=&gt;</span>
-  toast.<span class="c-fn">add</span>({ severity: <span class="c-st">'success'</span>, summary: <span class="c-st">'成功'</span>, life: <span class="c-nm">3000</span> })
-<span class="c-tg">&lt;/script&gt;</span>
-
-<span class="c-tg">&lt;template&gt;</span>
-  <span class="c-tg">&lt;Toast/&gt;</span>
-  <span class="c-tg">&lt;Button</span> <span class="c-at">label</span><span class="c-pu">=</span><span class="c-st">"儲存"</span> <span class="c-at">icon</span><span class="c-pu">=</span><span class="c-st">"pi pi-save"</span> <span class="c-at">@click</span><span class="c-pu">=</span><span class="c-st">"showToast"</span><span class="c-tg">/&gt;</span>
-  <span class="c-tg">&lt;InputText</span> <span class="c-at">v-model</span><span class="c-pu">=</span><span class="c-st">"value"</span> <span class="c-at">placeholder</span><span class="c-pu">=</span><span class="c-st">"搜尋..."</span><span class="c-tg">/&gt;</span>
-
-  <span class="c-cm">&lt;!-- DataTable 範例 --&gt;</span>
-  <span class="c-tg">&lt;DataTable</span> <span class="c-at">:value</span><span class="c-pu">=</span><span class="c-st">"products"</span> <span class="c-at">paginator</span> <span class="c-at">:rows</span><span class="c-pu">=</span><span class="c-st">"10"</span><span class="c-tg">&gt;</span>
-    <span class="c-tg">&lt;Column</span> <span class="c-at">field</span><span class="c-pu">=</span><span class="c-st">"name"</span>  <span class="c-at">header</span><span class="c-pu">=</span><span class="c-st">"名稱"</span>  <span class="c-at">sortable</span><span class="c-tg">/&gt;</span>
-    <span class="c-tg">&lt;Column</span> <span class="c-at">field</span><span class="c-pu">=</span><span class="c-st">"price"</span> <span class="c-at">header</span><span class="c-pu">=</span><span class="c-st">"價格"</span>  <span class="c-at">sortable</span><span class="c-tg">/&gt;</span>
-  <span class="c-tg">&lt;/DataTable&gt;</span>
-<span class="c-tg">&lt;/template&gt;</span></div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 11 Tailwind + PrimeVue ══ -->
-    <div class="unit-header" id="unit11" style="--sd:.85s">
-      <span class="unit-badge badge-pv">Unit 11</span>
-      <span class="unit-name">Tailwind + PrimeVue 組合使用</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.87s">
-      <div class="note-header"><span class="note-num note-num-pv">TW+PV · 01</span><span class="note-title">最佳實踐 — 讓兩者和平共存</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-pv">設定 tailwind.config.js 避免衝突</div>
-        <div class="code-block pv-top"><span class="c-cm">// 方案一：使用 PrimeVue Tailwind preset（官方推薦）</span>
-npm install tailwindcss-primeui
-
-<span class="c-cm">// tailwind.config.js</span>
-<span class="c-kw">import</span> { primeui } <span class="c-kw">from</span> <span class="c-st">'tailwindcss-primeui'</span>
-module.exports = {
-  content: [<span class="c-st">'./src/**/*.{vue,js,ts}'</span>],
-  plugins: [primeui],  <span class="c-cm">// PrimeVue 的 Tailwind 插件</span>
-}
-
-<span class="c-cm">// main.js — 使用 Tailwind preset</span>
-<span class="c-kw">import</span> { Nora } <span class="c-kw">from</span> <span class="c-st">'@primevue/themes'</span>
-app.<span class="c-fn">use</span>(PrimeVue, {
-  theme: { preset: Nora, options: { cssLayer: { name: <span class="c-st">'primevue'</span> } } }
-})</div>
-        <div class="code-block pv-top"><span class="c-cm">&lt;!-- 實際範例：Tailwind 排版 + PrimeVue 元件 --&gt;</span>
-<span class="c-tg">&lt;div</span> <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"flex items-center gap-3 p-4 bg-surface-50 rounded-lg"</span><span class="c-tg">&gt;</span>
-  <span class="c-tg">&lt;InputText</span>
-    <span class="c-at">v-model</span><span class="c-pu">=</span><span class="c-st">"query"</span>
-    <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"flex-1"</span>
-    <span class="c-at">placeholder</span><span class="c-pu">=</span><span class="c-st">"搜尋..."</span>
-  <span class="c-tg">/&gt;</span>
-  <span class="c-tg">&lt;Button</span>
-    <span class="c-at">icon</span><span class="c-pu">=</span><span class="c-st">"pi pi-search"</span>
-    <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"shrink-0"</span>
-    <span class="c-at">@click</span><span class="c-pu">=</span><span class="c-st">"search"</span>
-  <span class="c-tg">/&gt;</span>
-<span class="c-tg">&lt;/div&gt;</span>
-
-<span class="c-cm">&lt;!-- Tailwind 負責版面，PrimeVue 負責元件 --&gt;</span>
-<span class="c-tg">&lt;div</span> <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"grid grid-cols-1 md:grid-cols-3 gap-6 mt-6"</span><span class="c-tg">&gt;</span>
-  <span class="c-tg">&lt;Card</span> <span class="c-at">v-for</span><span class="c-pu">=</span><span class="c-st">"item in items"</span> <span class="c-at">:key</span><span class="c-pu">=</span><span class="c-st">"item.id"</span>
-        <span class="c-at">class</span><span class="c-pu">=</span><span class="c-st">"hover:shadow-lg transition-shadow"</span><span class="c-tg">&gt;</span>
-    <span class="c-tg">&lt;template</span> <span class="c-at">#title</span><span class="c-tg">&gt;</span>{{ item.title }}<span class="c-tg">&lt;/template&gt;</span>
-  <span class="c-tg">&lt;/Card&gt;</span>
-<span class="c-tg">&lt;/div&gt;</span></div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 12 Vue Router ══ -->
-    <div class="unit-header" id="unit12" style="--sd:.9s">
-      <span class="unit-badge badge-vue">Unit 12</span>
-      <span class="unit-name">Vue Router · 路由管理</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.92s">
-      <div class="note-header"><span class="note-num note-num-vue">VR · 01</span><span class="note-title">Vue Router 4 設定</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">安裝與建立路由</div>
-        <div class="code-block vue-top">npm install vue-router@4
-
-<span class="c-cm">// src/router/index.js</span>
-<span class="c-kw">import</span> { createRouter, createWebHistory } <span class="c-kw">from</span> <span class="c-st">'vue-router'</span>
-<span class="c-kw">import</span> { useAuthStore } <span class="c-kw">from</span> <span class="c-st">'../stores/auth'</span>
-
-<span class="c-kw">const</span> routes <span class="c-pu">=</span> [
-  { path: <span class="c-st">'/'</span>,          component: () <span class="c-pu">=&gt;</span> <span class="c-kw">import</span>(<span class="c-st">'../views/Home.vue'</span>) },
-  { path: <span class="c-st">'/todos'</span>,     component: () <span class="c-pu">=&gt;</span> <span class="c-kw">import</span>(<span class="c-st">'../views/Todos.vue'</span>),
-    meta: { requiresAuth: <span class="c-kw">true</span> } },  <span class="c-cm">// 需要登入</span>
-  { path: <span class="c-st">'/login'</span>,     component: () <span class="c-pu">=&gt;</span> <span class="c-kw">import</span>(<span class="c-st">'../views/Login.vue'</span>) },
-  { path: <span class="c-st">'/user/:id'</span>, component: () <span class="c-pu">=&gt;</span> <span class="c-kw">import</span>(<span class="c-st">'../views/User.vue'</span>) },
-  { path: <span class="c-st">'/:pathMatch(.*)*'</span>, component: () <span class="c-pu">=&gt;</span> <span class="c-kw">import</span>(<span class="c-st">'../views/NotFound.vue'</span>) },
-]
-
-<span class="c-kw">const</span> router <span class="c-pu">=</span> <span class="c-fn">createRouter</span>({
-  history: <span class="c-fn">createWebHistory</span>(),  <span class="c-cm">// 使用 HTML5 History</span>
-  routes,
-})
-
-<span class="c-cm">// 路由守衛 — 未登入導向登入頁</span>
-router.<span class="c-fn">beforeEach</span>((to, from, next) <span class="c-pu">=&gt;</span> {
-  <span class="c-kw">const</span> auth <span class="c-pu">=</span> <span class="c-fn">useAuthStore</span>()
-  <span class="c-kw">if</span> (to.meta.requiresAuth <span class="c-pu">&amp;&amp;</span> <span class="c-pu">!</span>auth.user) <span class="c-fn">next</span>(<span class="c-st">'/login'</span>)
-  <span class="c-kw">else</span> <span class="c-fn">next</span>()
-})
-
-<span class="c-kw">export default</span> router</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">在元件中使用路由</div>
-        <div class="code-block vue-top"><span class="c-tg">&lt;script setup&gt;</span>
-<span class="c-kw">import</span> { useRouter, useRoute } <span class="c-kw">from</span> <span class="c-st">'vue-router'</span>
-
-<span class="c-kw">const</span> router <span class="c-pu">=</span> <span class="c-fn">useRouter</span>()  <span class="c-cm">// 程式跳轉</span>
-<span class="c-kw">const</span> route  <span class="c-pu">=</span> <span class="c-fn">useRoute</span>()   <span class="c-cm">// 取得當前路由資訊</span>
-
-console.<span class="c-fn">log</span>(route.params.id)   <span class="c-cm">// 動態路由參數</span>
-console.<span class="c-fn">log</span>(route.query.page)  <span class="c-cm">// Query string</span>
-
-router.<span class="c-fn">push</span>(<span class="c-st">'/todos'</span>)         <span class="c-cm">// 程式跳轉</span>
-router.<span class="c-fn">replace</span>(<span class="c-st">'/login'</span>)      <span class="c-cm">// 不留歷史紀錄</span>
-<span class="c-tg">&lt;/script&gt;</span>
-
-<span class="c-tg">&lt;template&gt;</span>
-  <span class="c-cm">&lt;!-- 路由出口 --&gt;</span>
-  <span class="c-tg">&lt;RouterView/&gt;</span>
-
-  <span class="c-cm">&lt;!-- 導覽連結 --&gt;</span>
-  <span class="c-tg">&lt;RouterLink</span> <span class="c-at">to</span><span class="c-pu">=</span><span class="c-st">"/todos"</span> <span class="c-at">active-class</span><span class="c-pu">=</span><span class="c-st">"font-bold"</span><span class="c-tg">&gt;</span>待辦清單<span class="c-tg">&lt;/RouterLink&gt;</span>
-<span class="c-tg">&lt;/template&gt;</span></div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 13 Pinia ══ -->
-    <div class="unit-header" id="unit13" style="--sd:.95s">
-      <span class="unit-badge badge-vue">Unit 13</span>
-      <span class="unit-name">Pinia · 狀態管理</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:.97s">
-      <div class="note-header"><span class="note-num note-num-vue">PN · 01</span><span class="note-title">Pinia 設計與使用</span></div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">什麼是 Pinia？為什麼用它？</div>
-        <p class="note-p">Pinia 是 Vue 3 官方推薦的狀態管理庫（Vuex 的繼任者）。它更輕量、API 更簡潔、完整 TypeScript 支援、沒有 mutation 的繁瑣限制。</p>
-        <div class="hl-box hl-box-vue">📊 <strong>使用時機</strong>：多個元件需要共用同一份狀態；跨路由頁面傳遞資料；需要持久化的全域狀態（登入使用者、購物車、主題設定）。</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">安裝與建立 Store</div>
-        <div class="code-block vue-top">npm install pinia
-
-<span class="c-cm">// main.js</span>
-<span class="c-kw">import</span> { createPinia } <span class="c-kw">from</span> <span class="c-st">'pinia'</span>
-app.<span class="c-fn">use</span>(<span class="c-fn">createPinia</span>())
-
-<span class="c-cm">// src/stores/auth.js — Setup Store 寫法（推薦）</span>
-<span class="c-kw">import</span> { ref, computed } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-<span class="c-kw">import</span> { defineStore } <span class="c-kw">from</span> <span class="c-st">'pinia'</span>
-<span class="c-kw">import</span> { auth }        <span class="c-kw">from</span> <span class="c-st">'../firebase'</span>
-<span class="c-kw">import</span> { onAuthStateChanged, signOut } <span class="c-kw">from</span> <span class="c-st">'firebase/auth'</span>
-
-<span class="c-kw">export const</span> <span class="c-fn">useAuthStore</span> <span class="c-pu">=</span> <span class="c-fn">defineStore</span>(<span class="c-st">'auth'</span>, () <span class="c-pu">=&gt;</span> {
-  <span class="c-cm">// State</span>
-  <span class="c-kw">const</span> user    <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">null</span>)
-  <span class="c-kw">const</span> loading <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">true</span>)
-
-  <span class="c-cm">// Getters</span>
-  <span class="c-kw">const</span> isLoggedIn <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> <span class="c-pu">!!</span>user.value)
-  <span class="c-kw">const</span> displayName <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> user.value?.displayName <span class="c-pu">??</span> <span class="c-st">'訪客'</span>)
-
-  <span class="c-cm">// Actions</span>
-  <span class="c-fn">onAuthStateChanged</span>(auth, u <span class="c-pu">=&gt;</span> {
-    user.value <span class="c-pu">=</span> u; loading.value <span class="c-pu">=</span> <span class="c-kw">false</span>
-  })
-  <span class="c-kw">const</span> logout <span class="c-pu">=</span> () <span class="c-pu">=&gt;</span> <span class="c-fn">signOut</span>(auth)
-
-  <span class="c-kw">return</span> { user, loading, isLoggedIn, displayName, logout }
-})</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">在元件中使用 Store</div>
-        <div class="code-block vue-top"><span class="c-tg">&lt;script setup&gt;</span>
-<span class="c-kw">import</span> { storeToRefs } <span class="c-kw">from</span> <span class="c-st">'pinia'</span>
-<span class="c-kw">import</span> { useAuthStore } <span class="c-kw">from</span> <span class="c-st">'../stores/auth'</span>
-
-<span class="c-kw">const</span> authStore <span class="c-pu">=</span> <span class="c-fn">useAuthStore</span>()
-
-<span class="c-cm">// storeToRefs 保持響應性（直接解構會失去）</span>
-<span class="c-kw">const</span> { user, isLoggedIn, displayName } <span class="c-pu">=</span> <span class="c-fn">storeToRefs</span>(authStore)
-
-<span class="c-cm">// Actions 可直接解構（函式不需要 storeToRefs）</span>
-<span class="c-kw">const</span> { logout } <span class="c-pu">=</span> authStore
-<span class="c-tg">&lt;/script&gt;</span>
-
-<span class="c-tg">&lt;template&gt;</span>
-  <span class="c-tg">&lt;div</span> <span class="c-at">v-if</span><span class="c-pu">=</span><span class="c-st">"isLoggedIn"</span><span class="c-tg">&gt;</span>
-    歡迎，{{ displayName }}
-    <span class="c-tg">&lt;button</span> <span class="c-at">@click</span><span class="c-pu">=</span><span class="c-st">"logout"</span><span class="c-tg">&gt;</span>登出<span class="c-tg">&lt;/button&gt;</span>
-  <span class="c-tg">&lt;/div&gt;</span>
-<span class="c-tg">&lt;/template&gt;</span></div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title note-card-title-vue">持久化 Store — pinia-plugin-persistedstate</div>
-        <div class="code-block vue-top">npm install pinia-plugin-persistedstate
-
-<span class="c-cm">// main.js</span>
-<span class="c-kw">import</span> piniaPluginPersistedstate <span class="c-kw">from</span> <span class="c-st">'pinia-plugin-persistedstate'</span>
-<span class="c-kw">const</span> pinia <span class="c-pu">=</span> <span class="c-fn">createPinia</span>()
-pinia.<span class="c-fn">use</span>(piniaPluginPersistedstate)
-
-<span class="c-cm">// store — 加上 persist: true 即自動存 localStorage</span>
-<span class="c-kw">export const</span> <span class="c-fn">useSettingsStore</span> <span class="c-pu">=</span> <span class="c-fn">defineStore</span>(<span class="c-st">'settings'</span>, () <span class="c-pu">=&gt;</span> {
-  <span class="c-kw">const</span> theme <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-st">'light'</span>)
-  <span class="c-kw">const</span> lang  <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-st">'zh'</span>)
-  <span class="c-kw">return</span> { theme, lang }
-}, { persist: <span class="c-kw">true</span> })</div>
-      </div>
-    </div>
-
-    <!-- ══ UNIT 14 Vercel ══ -->
-    <div class="unit-header" id="unit14" style="--sd:1s">
-      <span class="unit-badge badge-vrc">Unit 14</span>
-      <span class="unit-name">Vercel · 快速部署</span>
-      <div class="unit-line"></div>
-    </div>
-
-    <div class="note-section" style="--sd:1.02s">
-      <div class="note-header"><span class="note-num note-num-vrc">VRC · 01</span><span class="note-title">Vercel 部署流程</span></div>
-      <div class="note-card">
-        <div class="note-card-title">為什麼選 Vercel？</div>
-        <p class="note-p">Vercel 是目前最流行的靜態網站與前端框架部署平台，免費方案即可使用，支援 GitHub 自動部署（每次 push 自動更新）、自訂域名、Preview Deployments、環境變數管理。</p>
-        <table class="cmp-table">
-          <thead><tr><th>特性</th><th>說明</th></tr></thead>
-          <tbody>
-            <tr><td>自動部署</td><td>連結 GitHub repo，每次 push 自動觸發部署</td></tr>
-            <tr><td>Preview URL</td><td>每個 PR 都有獨立預覽連結</td></tr>
-            <tr><td>環境變數</td><td>Firebase 金鑰等敏感資訊安全存放</td></tr>
-            <tr><td>Global CDN</td><td>全球加速，台灣訪問也很快</td></tr>
-            <tr><td>免費額度</td><td>個人專案完全夠用</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title">方法一：GitHub 連動（推薦）</div>
-        <div class="code-block hl-box-vrc">1. 前往 vercel.com → 登入（用 GitHub）
-2. "New Project" → 選擇你的 GitHub repo
-3. Vercel 自動偵測 Vite → Build Command: <span class="c-st">npm run build</span>
-4. Output Directory: <span class="c-st">dist</span>（Vite 預設）
-5. 點擊 Deploy → 幾十秒內完成部署
-6. 取得 *.vercel.app 網址，可立即分享</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title">方法二：CLI 部署</div>
-        <div class="code-block"><span class="c-cm"># 安裝 Vercel CLI</span>
-npm install -g vercel
-
-<span class="c-cm"># 登入</span>
-vercel login
-
-<span class="c-cm"># 在專案目錄執行（第一次會問設定）</span>
-vercel
-
-<span class="c-cm"># 部署到 production</span>
-vercel --prod</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title">環境變數設定（Firebase 金鑰安全存放）</div>
-        <div class="code-block"><span class="c-cm"># .env.local（本地用，加入 .gitignore！）</span>
-VITE_FIREBASE_API_KEY=your-api-key
-VITE_FIREBASE_PROJECT_ID=your-project-id
-
-<span class="c-cm">// src/firebase.js — 讀取環境變數</span>
-<span class="c-kw">const</span> firebaseConfig <span class="c-pu">=</span> {
-  apiKey:    import.meta.env.VITE_FIREBASE_API_KEY,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-}
-
-<span class="c-cm"># Vercel Dashboard → Settings → Environment Variables
-# 將 .env.local 的內容複製進去</span></div>
-        <div class="hl-box hl-box-vrc">⚠️ <strong>注意</strong>：Vite 中環境變數必須以 <code>VITE_</code> 開頭才能在客戶端程式碼中存取。Firebase 金鑰雖然在前端可見，但透過 Firestore Security Rules 限制存取權限才是真正的安全防線。</div>
-      </div>
-      <div class="note-card">
-        <div class="note-card-title">vercel.json 設定（SPA 路由修正）</div>
-        <div class="code-block"><span class="c-cm">// vercel.json — Vue Router 需要此設定避免 404</span>
-{
-  <span class="c-st">"rewrites"</span>: [{ <span class="c-st">"source"</span>: <span class="c-st">"/(.*)"</span>, <span class="c-st">"destination"</span>: <span class="c-st">"/"</span> }]
-}
-
-<span class="c-cm"># 或在 Vite 中使用 hash mode 避免問題</span>
-<span class="c-cm">// router/index.js</span>
-<span class="c-kw">import</span> { createWebHashHistory } <span class="c-kw">from</span> <span class="c-st">'vue-router'</span>
-history: <span class="c-fn">createWebHashHistory</span>()  <span class="c-cm">// URL 會變成 /#/todos</span></div>
-      </div>
-    </div>
-
-  </main><!-- /main -->
-</div><!-- /page-layout -->
+  </main>
+</div>
 
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
@@ -1205,6 +433,21 @@ units.forEach(u=>obs.observe(u));
 // Ticker
 const ti=["Vue 3","Composition API","ref · reactive","computed","watch","v-for · v-if","v-model","Props · Emits","Firestore","onSnapshot","addDoc · updateDoc","Auth","Composables","useTodos","useAuth","Todo Application","Tailwind CSS","utility-first","PrimeVue","DataTable","Vue Router","Navigation Guard","Pinia","storeToRefs","Vercel","環境變數","SPA 部署","Firebase","Cloud Firestore","自動部署"];
 document.getElementById('ticker').innerHTML=ti.map(i=>`<span class="ticker-item"><span class="ticker-dot"></span>${i}</span>`).join('').repeat(2);
+
+// ── 💡 跨頁面深色模式同步器邏輯 ──
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('lyz-theme', theme);
+}
+
+window.addEventListener('storage', (e) => {
+  if (e.key === 'lyz-theme' && e.newValue) {
+    applyTheme(e.newValue);
+  }
+});
+
+const currentThemeStored = localStorage.getItem('lyz-theme') || 'light';
+applyTheme(currentThemeStored);
 </script>
 </body>
 </html>
