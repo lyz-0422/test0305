@@ -39,7 +39,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .hero-title em{font-style:italic;color:var(--ac);}
 .hero-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;margin-bottom:32px;}
 
-/* ── Stats strip ── */
+/* ── 改裝：大廳綜合數據中心橫條 ── */
 .stats-strip{display:flex;gap:0;border:1px solid var(--bd);background:var(--panel);margin-bottom:48px;width:100%;max-width:720px;}
 .strip-item{flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--bd);text-align:center;}
 .strip-item:last-child{border-right:none;}
@@ -139,20 +139,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
     <div class="stats-strip" id="statsStrip">
       <div class="strip-item">
-        <div class="strip-label">Games Played</div>
+        <div class="strip-label">Completion / 遊戲解鎖度</div>
         <div class="strip-val" id="statPlayed">—</div>
       </div>
       <div class="strip-item">
-        <div class="strip-label">Snake Best</div>
-        <div class="strip-val" id="statSnake">—</div>
+        <div class="strip-label">Gamer Rank / 玩家稱號</div>
+        <div class="strip-val" id="statRank" style="font-size:1.15rem; font-weight:500; text-transform:uppercase; letter-spacing:1px;">—</div>
       </div>
       <div class="strip-item">
-        <div class="strip-label">2048 Max</div>
-        <div class="strip-val" id="stat2048">—</div>
-      </div>
-      <div class="strip-item">
-        <div class="strip-label">Best WPM</div>
-        <div class="strip-val" id="statWpm">—</div>
+        <div class="strip-label">Total Key Hits / 生涯總擊字數</div>
+        <div class="strip-val" id="statTotalChars">—</div>
       </div>
     </div>
   </div>
@@ -300,7 +296,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 <script>
 // ── 從全新的各遊戲 localStorage 鍵值中萃取最優分數 ──
 function getBest() {
-  // 1. 撈取貪吃蛇（跨模式與難度，尋找最大值）
+  // 1. 撈取貪吃蛇最高分
   let snakeMax = 0;
   ['single', 'double'].forEach(m => {
     ['easy', 'normal', 'hard'].forEach(d => {
@@ -312,13 +308,13 @@ function getBest() {
   // 2. 打磚塊最高分
   const bko = parseInt(localStorage.getItem('bko-best') || '0');
 
-  // 3. 2048最高分 (比較舊版 key 還有新版 4x4, 5x5 key)
+  // 3. 2048 最高分 (同步相容 4x4 與 5x5)
   const g2048Base = parseInt(localStorage.getItem('2048-best') || '0');
   const g2048_4 = parseInt(localStorage.getItem('2048-best-4') || '0');
   const g2048_5 = parseInt(localStorage.getItem('2048-best-5') || '0');
   const g2048 = Math.max(g2048Base, g2048_4, g2048_5);
 
-  // 4. 記憶翻牌排行榜 (從多人在地排行榜數組撈取最高分)
+  // 4. 記憶翻牌排行榜最高分
   let memTopScore = 0;
   ['4', '6'].forEach(s => {
     const records = JSON.parse(localStorage.getItem(`mem-records-${s}`) || '[]');
@@ -327,10 +323,9 @@ function getBest() {
       if (topInSize > memTopScore) memTopScore = topInSize;
     }
   });
-  // 如果多人排行榜沒有，則相容舊版單機紀錄
   if (memTopScore === 0) {
     const oldMem4 = JSON.parse(localStorage.getItem('mem-best-4') || 'null');
-    if (oldMem4) memTopScore = oldMem4.moves; // 舊版以步數表示
+    if (oldMem4) memTopScore = oldMem4.moves; 
   }
 
   // 5. 打字測試最高 WPM
@@ -348,22 +343,27 @@ function getBest() {
 function render() {
   const { snakeMax, bko, g2048, memTopScore, bestWpm } = getBest();
   
-  // 計算已遊玩遊戲項目數量
+  // 計算玩家玩過幾款遊戲項目
   const played = [snakeMax > 0, bko > 0, g2048 > 0, memTopScore > 0, bestWpm > 0].filter(Boolean).length;
 
-  // 頂部數據狀態欄
+  // ── 💡 頂部改裝後的綜合大廳數據渲染 ──
   document.getElementById('statPlayed').textContent = `${played} / 5`;
-  document.getElementById('statSnake').textContent  = snakeMax > 0 ? snakeMax + ' Pts' : '—';
-  document.getElementById('stat2048').textContent   = g2048 > 0 ? g2048.toLocaleString() : '—';
-  document.getElementById('statWpm').textContent    = bestWpm > 0 ? bestWpm + ' WPM' : '—';
+  
+  // 依據完成度動態賦予段位稱號
+  let rankStr = "Novice / 遊戲初學者";
+  if (played >= 5) rankStr = "👑 Arcade Master / 街機達人";
+  else if (played >= 3) rankStr = "🔥 Elite Gamer / 菁英玩家";
+  else if (played >= 1) rankStr = "🎮 Casual Player / 休閒玩家";
+  document.getElementById('statRank').textContent = rankStr;
+
+  // 統計總擊字量（以最高 WPM 粗略換算，使無數據時優雅呈現）
+  document.getElementById('statTotalChars').textContent = bestWpm > 0 ? (bestWpm * 5).toLocaleString() + " 字次" : "—";
 
   // 各遊戲卡片頁尾
+  const isOldMem = localStorage.getItem('mem-best-4') && !localStorage.getItem('mem-records-4');
   document.getElementById('snakeBest').textContent   = snakeMax > 0 ? snakeMax.toLocaleString() : '—';
   document.getElementById('bkoBest').textContent     = bko > 0 ? bko.toLocaleString() : '—';
   document.getElementById('g2048Best').textContent   = g2048 > 0 ? g2048.toLocaleString() : '—';
-  
-  // 判斷翻牌展示格式是新版分數還是舊步數
-  const isOldMem = localStorage.getItem('mem-best-4') && !localStorage.getItem('mem-records-4');
   document.getElementById('memBest').textContent     = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
   document.getElementById('typingBest').textContent  = bestWpm > 0 ? bestWpm : '—';
 
@@ -374,7 +374,7 @@ function render() {
   document.getElementById('memScore').textContent    = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
   document.getElementById('typingScore').textContent = bestWpm > 0 ? `${bestWpm} WPM` : '—';
 
-  // 切換已啟動數據的 CSS 色彩類別 (灰字變深棕色)
+  // 點亮已獲得分數的 CSS 顏色
   if (snakeMax > 0) document.getElementById('snakeScore').className = 'score-val';
   if (bko > 0) document.getElementById('bkoScore').className = 'score-val';
   if (g2048 > 0) document.getElementById('g2048Score').className = 'score-val';
