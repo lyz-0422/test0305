@@ -40,8 +40,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .hero-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;margin-bottom:32px;}
 
 /* ── Stats strip ── */
-.stats-strip{display:flex;gap:0;border:1px solid var(--bd);background:var(--panel);margin-bottom:48px;width:100%;max-width:600px;}
-.strip-item{flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--bd);}
+.stats-strip{display:flex;gap:0;border:1px solid var(--bd);background:var(--panel);margin-bottom:48px;width:100%;max-width:720px;}
+.strip-item{flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--bd);text-align:center;}
 .strip-item:last-child{border-right:none;}
 .strip-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;}
 .strip-val{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--ac);}
@@ -109,7 +109,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 }
 @media(max-width:500px){
   .site-nav{padding:0 16px;}
-  .nav-links{gap:12px;}
+  .nav-links{display:none;}
   .page{padding:68px 16px 40px;}
   .game-grid{grid-template-columns:1fr;}
   .scores-grid{grid-template-columns:repeat(2,1fr);}
@@ -132,11 +132,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 <div class="page">
 
-  <!-- Hero -->
   <div class="hero">
     <div class="eyebrow">Game Hub · 遊戲大廳</div>
     <h1 class="hero-title">Play &amp; <em>Challenge</em></h1>
-    <p class="hero-sub">五款遊戲 · 所有紀錄自動儲存 · 挑戰你的最高分</p>
+    <p class="hero-sub">五款網頁核心遊戲 · 內建音效與統計圖表 · 全紀錄本機自動儲存</p>
 
     <div class="stats-strip" id="statsStrip">
       <div class="strip-item">
@@ -144,50 +143,47 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         <div class="strip-val" id="statPlayed">—</div>
       </div>
       <div class="strip-item">
-        <div class="strip-label">Best WPM</div>
-        <div class="strip-val" id="statWpm">—</div>
+        <div class="strip-label">Snake Best</div>
+        <div class="strip-val" id="statSnake">—</div>
       </div>
       <div class="strip-item">
-        <div class="strip-label">2048 Best</div>
+        <div class="strip-label">2048 Max</div>
         <div class="strip-val" id="stat2048">—</div>
       </div>
       <div class="strip-item">
-        <div class="strip-label">Breakout Best</div>
-        <div class="strip-val" id="statBko">—</div>
+        <div class="strip-label">Best WPM</div>
+        <div class="strip-val" id="statWpm">—</div>
       </div>
     </div>
   </div>
 
-  <!-- Games -->
   <div class="section-label">
-    <div class="section-text">All Games</div>
+    <div class="section-text">All Upgraded Games</div>
     <div class="section-line"></div>
   </div>
 
   <div class="game-grid">
 
-    <!-- Snake -->
     <a class="game-card" href="game.html" style="--d:.05s">
       <div class="card-emoji">🐍</div>
-      <span class="card-badge versus">Versus · 雙人</span>
+      <span class="card-badge versus">Versus · 經典</span>
       <div class="card-title">誰是 <em>DAVID</em> 蛇</div>
-      <div class="card-desc">雙人貪食蛇對戰。收集星星、穿越蟲洞，吃完全部星星解鎖極限模式。</div>
+      <div class="card-desc">支援單人突破與雙人對戰！內建 Easy/Normal/Hard 速度模式、行動搖桿方向鍵、網頁原生 8-bit 電子音效與極限狂飆狂暴化模式。</div>
       <div class="diff-row">
         <div class="diff-dot on"></div><div class="diff-dot on"></div><div class="diff-dot on"></div><div class="diff-dot"></div>
-        <span class="diff-label">Hard</span>
+        <span class="diff-label">Variable</span>
       </div>
       <div class="card-footer">
-        <div class="card-best">雙人對戰</div>
+        <div class="card-best">Best Score: <span id="snakeBest">—</span></div>
         <div class="card-arrow">Play →</div>
       </div>
     </a>
 
-    <!-- Breakout -->
     <a class="game-card" href="game2.html" style="--d:.1s">
       <div class="card-emoji">🧱</div>
       <span class="card-badge action">Action · 動作</span>
       <div class="card-title"><em>Breakout</em></div>
-      <div class="card-desc">打磚塊經典。4 種難度，滑鼠 / 鍵盤 / 觸控操作，消滅全部磚塊過關。</div>
+      <div class="card-desc">全新隨機落物機制！打碎磚塊隨機掉落板子擴展 [W] 與多球分身 [M] 道具。4 種難度對應不同關卡主題陣型，並對手機觸控雙側大按鍵全優化。</div>
       <div class="diff-row">
         <div class="diff-dot on"></div><div class="diff-dot on"></div><div class="diff-dot"></div><div class="diff-dot"></div>
         <span class="diff-label">Normal</span>
@@ -198,44 +194,41 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       </div>
     </a>
 
-    <!-- 2048 -->
     <a class="game-card" href="game3.html" style="--d:.15s">
       <div class="card-emoji">🔢</div>
       <span class="card-badge puzzle">Puzzle · 益智</span>
       <div class="card-title"><em>2048</em></div>
-      <div class="card-desc">合併相同數字，拼出 2048。支援鍵盤、WASD 與手機滑動，附 Undo 功能。</div>
+      <div class="card-desc">新增 5×5 大尺寸模式！內建 CSS Translate 平滑滑動與合併運動軌跡動畫。下方更提供最近 10 局歷史得分趨勢統計圖與一鍵分享戰績按鈕。</div>
       <div class="diff-row">
         <div class="diff-dot on"></div><div class="diff-dot on"></div><div class="diff-dot"></div><div class="diff-dot"></div>
         <span class="diff-label">Normal</span>
       </div>
       <div class="card-footer">
-        <div class="card-best">Best: <span id="g2048Best">—</span></div>
+        <div class="card-best">Max Best: <span id="g2048Best">—</span></div>
         <div class="card-arrow">Play →</div>
       </div>
     </a>
 
-    <!-- Memory -->
     <a class="game-card" href="game4.html" style="--d:.2s">
       <div class="card-emoji">🃏</div>
       <span class="card-badge memory">Memory · 記憶</span>
       <div class="card-title">Memory <em>Card</em></div>
-      <div class="card-desc">翻牌配對記憶遊戲。4×4 / 6×6 兩種尺寸，CSS 3D 翻牌動畫，最少步數獲勝。</div>
+      <div class="card-desc">緊張感飆升！開局 2 秒全卡牌洗牌曝光預覽。4×6 限時挑戰倒數，內建連續正確 Combo 配對得分翻倍加成系統與多人名次歷史排行榜。</div>
       <div class="diff-row">
         <div class="diff-dot on"></div><div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
         <span class="diff-label">Easy</span>
       </div>
       <div class="card-footer">
-        <div class="card-best">4×4 Best: <span id="memBest">—</span></div>
+        <div class="card-best">Top Score: <span id="memBest">—</span></div>
         <div class="card-arrow">Play →</div>
       </div>
     </a>
 
-    <!-- Typing -->
     <a class="game-card" href="game5.html" style="--d:.25s">
       <div class="card-emoji">⌨️</div>
       <span class="card-badge typing">Typing · 打字</span>
       <div class="card-title">Typing <em>Speed</em></div>
-      <div class="card-desc">打字速度測試。15 / 30 / 60 / 120 秒模式，英文 / 中文切換，WPM 折線圖分析。</div>
+      <div class="card-desc">即時擬真多人競速賽道！結束後呈現每秒 WPM 速度變化曲線圖，內建自訂文章導入練字夾、字母手殘打錯紅色熱圖鍵盤與原生打錯音效回饋。</div>
       <div class="diff-row">
         <div class="diff-dot on"></div><div class="diff-dot on"></div><div class="diff-dot"></div><div class="diff-dot"></div>
         <span class="diff-label">Normal</span>
@@ -246,12 +239,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       </div>
     </a>
 
-    <!-- Placeholder -->
     <div class="game-card" style="--d:.3s;opacity:.45;pointer-events:none;border-style:dashed;">
       <div class="card-emoji" style="opacity:.4;">🎮</div>
       <span class="card-badge" style="border-style:dashed;">Coming Soon</span>
       <div class="card-title" style="color:var(--dim);">More <em>Games</em></div>
-      <div class="card-desc">更多遊戲持續開發中，敬請期待。</div>
+      <div class="card-desc">更多網頁遊戲、數據分析看板持續規劃中。</div>
       <div class="diff-row"><div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div><span class="diff-label">—</span></div>
       <div class="card-footer">
         <div class="card-best">—</div>
@@ -261,17 +253,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
   </div>
 
-  <!-- Personal Best Section -->
   <div class="section-label">
-    <div class="section-text">Personal Best</div>
+    <div class="section-text">Personal Best Overview</div>
     <div class="section-line"></div>
   </div>
 
   <div class="scores-grid">
     <div class="score-card">
       <div class="score-game">🐍</div>
-      <div class="score-label">Snake</div>
-      <div class="score-none" id="snakeScore">雙人對戰模式</div>
+      <div class="score-label">Snake Max</div>
+      <div class="score-val" id="snakeScore">—</div>
     </div>
     <div class="score-card">
       <div class="score-game">🧱</div>
@@ -280,22 +271,21 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     </div>
     <div class="score-card">
       <div class="score-game">🔢</div>
-      <div class="score-label">2048</div>
+      <div class="score-label">2048 Max</div>
       <div class="score-val" id="g2048Score">—</div>
     </div>
     <div class="score-card">
       <div class="score-game">🃏</div>
-      <div class="score-label">Memory 4×4</div>
+      <div class="score-label">Memory Top</div>
       <div class="score-val" id="memScore">—</div>
     </div>
     <div class="score-card">
       <div class="score-game">⌨️</div>
-      <div class="score-label">Typing (EN)</div>
+      <div class="score-label">Typing Max</div>
       <div class="score-val" id="typingScore">—</div>
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="hub-footer">
     <div class="footer-text">所有紀錄儲存於本機 localStorage · 清除瀏覽器快取會重置</div>
     <div class="footer-links">
@@ -308,13 +298,42 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 </div>
 
 <script>
-// ── Read all localStorage scores ──
+// ── 從全新的各遊戲 localStorage 鍵值中萃取最優分數 ──
 function getBest() {
-  const bko    = parseInt(localStorage.getItem('bko-best') || '0');
-  const g2048  = parseInt(localStorage.getItem('2048-best') || '0');
-  const mem4   = JSON.parse(localStorage.getItem('mem-best-4') || 'null');
+  // 1. 撈取貪吃蛇（跨模式與難度，尋找最大值）
+  let snakeMax = 0;
+  ['single', 'double'].forEach(m => {
+    ['easy', 'normal', 'hard'].forEach(d => {
+      const val = parseInt(localStorage.getItem(`david-snake-best-${m}-${d}`) || '0');
+      if (val > snakeMax) snakeMax = val;
+    });
+  });
 
-  // Find best WPM across all typing modes
+  // 2. 打磚塊最高分
+  const bko = parseInt(localStorage.getItem('bko-best') || '0');
+
+  // 3. 2048最高分 (比較舊版 key 還有新版 4x4, 5x5 key)
+  const g2048Base = parseInt(localStorage.getItem('2048-best') || '0');
+  const g2048_4 = parseInt(localStorage.getItem('2048-best-4') || '0');
+  const g2048_5 = parseInt(localStorage.getItem('2048-best-5') || '0');
+  const g2048 = Math.max(g2048Base, g2048_4, g2048_5);
+
+  // 4. 記憶翻牌排行榜 (從多人在地排行榜數組撈取最高分)
+  let memTopScore = 0;
+  ['4', '6'].forEach(s => {
+    const records = JSON.parse(localStorage.getItem(`mem-records-${s}`) || '[]');
+    if (records.length > 0) {
+      const topInSize = Math.max(...records.map(r => r.score || 0));
+      if (topInSize > memTopScore) memTopScore = topInSize;
+    }
+  });
+  // 如果多人排行榜沒有，則相容舊版單機紀錄
+  if (memTopScore === 0) {
+    const oldMem4 = JSON.parse(localStorage.getItem('mem-best-4') || 'null');
+    if (oldMem4) memTopScore = oldMem4.moves; // 舊版以步數表示
+  }
+
+  // 5. 打字測試最高 WPM
   let bestWpm = 0;
   ['15','30','60','120'].forEach(t => {
     ['en','zh'].forEach(l => {
@@ -323,35 +342,43 @@ function getBest() {
     });
   });
 
-  return { bko, g2048, mem4, bestWpm };
+  return { snakeMax, bko, g2048, memTopScore, bestWpm };
 }
 
 function render() {
-  const { bko, g2048, mem4, bestWpm } = getBest();
-  const played = [bko > 0, g2048 > 0, !!mem4, bestWpm > 0].filter(Boolean).length;
+  const { snakeMax, bko, g2048, memTopScore, bestWpm } = getBest();
+  
+  // 計算已遊玩遊戲項目數量
+  const played = [snakeMax > 0, bko > 0, g2048 > 0, memTopScore > 0, bestWpm > 0].filter(Boolean).length;
 
-  // Strip
-  document.getElementById('statPlayed').textContent = played > 0 ? `${played} / 4` : '—';
-  document.getElementById('statWpm').textContent    = bestWpm > 0 ? bestWpm + ' wpm' : '—';
+  // 頂部數據狀態欄
+  document.getElementById('statPlayed').textContent = `${played} / 5`;
+  document.getElementById('statSnake').textContent  = snakeMax > 0 ? snakeMax + ' Pts' : '—';
   document.getElementById('stat2048').textContent   = g2048 > 0 ? g2048.toLocaleString() : '—';
-  document.getElementById('statBko').textContent    = bko > 0 ? bko.toLocaleString() : '—';
+  document.getElementById('statWpm').textContent    = bestWpm > 0 ? bestWpm + ' WPM' : '—';
 
-  // Card footers
-  document.getElementById('bkoBest').textContent    = bko > 0 ? bko.toLocaleString() : '—';
-  document.getElementById('g2048Best').textContent  = g2048 > 0 ? g2048.toLocaleString() : '—';
-  document.getElementById('memBest').textContent    = mem4 ? `${mem4.moves} 步` : '—';
-  document.getElementById('typingBest').textContent = bestWpm > 0 ? bestWpm : '—';
+  // 各遊戲卡片頁尾
+  document.getElementById('snakeBest').textContent   = snakeMax > 0 ? snakeMax.toLocaleString() : '—';
+  document.getElementById('bkoBest').textContent     = bko > 0 ? bko.toLocaleString() : '—';
+  document.getElementById('g2048Best').textContent   = g2048 > 0 ? g2048.toLocaleString() : '—';
+  
+  // 判斷翻牌展示格式是新版分數還是舊步數
+  const isOldMem = localStorage.getItem('mem-best-4') && !localStorage.getItem('mem-records-4');
+  document.getElementById('memBest').textContent     = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
+  document.getElementById('typingBest').textContent  = bestWpm > 0 ? bestWpm : '—';
 
-  // Score cards
-  document.getElementById('bkoScore').textContent   = bko > 0 ? bko.toLocaleString() : '—';
-  document.getElementById('g2048Score').textContent = g2048 > 0 ? g2048.toLocaleString() : '—';
-  document.getElementById('memScore').textContent   = mem4 ? `${mem4.moves} 步 · ${mem4.time}s` : '—';
+  // 下方成就看板
+  document.getElementById('snakeScore').textContent  = snakeMax > 0 ? `${snakeMax} Pts` : '—';
+  document.getElementById('bkoScore').textContent    = bko > 0 ? bko.toLocaleString() : '—';
+  document.getElementById('g2048Score').textContent  = g2048 > 0 ? g2048.toLocaleString() : '—';
+  document.getElementById('memScore').textContent    = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
   document.getElementById('typingScore').textContent = bestWpm > 0 ? `${bestWpm} WPM` : '—';
 
-  // Change score-none to score-val if we have data
+  // 切換已啟動數據的 CSS 色彩類別 (灰字變深棕色)
+  if (snakeMax > 0) document.getElementById('snakeScore').className = 'score-val';
   if (bko > 0) document.getElementById('bkoScore').className = 'score-val';
   if (g2048 > 0) document.getElementById('g2048Score').className = 'score-val';
-  if (mem4) document.getElementById('memScore').className = 'score-val';
+  if (memTopScore > 0) document.getElementById('memScore').className = 'score-val';
   if (bestWpm > 0) document.getElementById('typingScore').className = 'score-val';
 }
 
