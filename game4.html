@@ -6,7 +6,7 @@
 <title>LYZ · Memory Card</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -35,12 +35,22 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:28px;}
 
 /* ── HUD ── */
-.hud{display:flex;gap:12px;width:100%;margin-bottom:16px;}
+.hud{display:flex;gap:12px;width:100%;margin-bottom:12px;}
 .hud-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;}
 .hud-box.accent{border-color:var(--ac);}
 .hud-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
 .hud-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);}
 .hud-box.accent .hud-val{color:var(--ac);}
+
+/* ── Progress Bar ── */
+.progress-container {width:100%;height:6px;background:#EAE3D5;margin-bottom:16px;position:relative;overflow:hidden;}
+.progress-bar {width:100%;height:100%;background:var(--ac);transition:width 1s linear, background-color 0.3s;}
+.progress-bar.warning {background:var(--red);}
+
+/* ── Combo Badge ── */
+.combo-display {font-family:'DM Mono',monospace;font-size:.75rem;font-weight:bold;color:var(--gold);min-height:18px;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;opacity:0;transition:opacity 0.2s;}
+.combo-display.active {opacity:1;animation:comboPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+@keyframes comboPop {0%{transform:scale(0.7)}100%{transform:scale(1)}}
 
 /* ── Controls ── */
 .ctrl-row{display:flex;gap:10px;margin-bottom:20px;width:100%;align-items:center;flex-wrap:wrap;}
@@ -71,22 +81,28 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 
 /* ── Overlay ── */
 .overlay-wrap{position:relative;width:100%;}
-.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.92);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;min-height:300px;}
+.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.94);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;padding:24px;text-align:center;}
 .overlay.show{display:flex;}
 .ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;}
 .ov-title em{font-style:italic;color:var(--ac);}
-.ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;text-align:center;}
+.ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;text-align:center;line-height:1.6;}
 
-/* ── Best table ── */
-.best-table{width:100%;border:1px solid var(--bd);background:var(--panel);margin-top:8px;}
+/* ── Input styling ── */
+.leaderboard-input-wrap {display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px;}
+.leaderboard-input {background:transparent;border:1px solid var(--bd);color:var(--text);padding:8px 12px;font-family:'Noto Sans TC',sans-serif;font-size:13px;text-align:center;outline:none;transition:border-color .2s;}
+.leaderboard-input:focus {border-color:var(--ac);}
+
+/* ── Rankings table ── */
+.best-table{width:100%;border:1px solid var(--bd);background:var(--panel);margin-top:16px;border-collapse:collapse;}
 .best-table th{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);text-align:left;padding:.5rem .9rem;border-bottom:1px solid var(--bd);}
 .best-table td{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);padding:.45rem .9rem;border-bottom:1px solid var(--bd);}
 .best-table tr:last-child td{border-bottom:none;}
 .best-table td:first-child{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);}
+.best-table tr.highlight td {background:var(--as);color:var(--text);font-weight:500;}
 
 @media(max-width:500px){
   .site-nav{padding:0 14px;}
-  .nav-links{gap:10px;}
+  .nav-links{display:none;}
   .page{padding:68px 12px 40px;}
   .hud{flex-wrap:wrap;}
   .hud-box{min-width:calc(50% - 6px);}
@@ -115,26 +131,32 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 <div class="page">
   <div class="eyebrow">Memory Game · 益智</div>
   <h1 class="page-title">Memory <em>Card</em></h1>
-  <p class="page-sub">翻開兩張相同的牌來配對，記住位置才是關鍵</p>
+  <p class="page-sub">翻開兩張相同的牌來配對，在限時內頂住壓力完成挑戰</p>
 
   <div class="hud">
     <div class="hud-box accent">
-      <div class="hud-label">Pairs</div>
+      <div class="hud-label">Pairs / 配對</div>
       <div class="hud-val" id="hPairs">0 / 0</div>
     </div>
     <div class="hud-box">
-      <div class="hud-label">Moves</div>
+      <div class="hud-label">Moves / 步數</div>
       <div class="hud-val" id="hMoves">0</div>
     </div>
     <div class="hud-box">
-      <div class="hud-label">Time</div>
-      <div class="hud-val" id="hTime">0s</div>
+      <div class="hud-label">Time Remaining / 剩餘時間</div>
+      <div class="hud-val" id="hTime">--s</div>
     </div>
     <div class="hud-box">
-      <div class="hud-label">Best</div>
-      <div class="hud-val" id="hBest">—</div>
+      <div class="hud-label">Score / 本局得分</div>
+      <div class="hud-val" id="hScore">0</div>
     </div>
   </div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="combo-display" id="comboDisplay"></div>
 
   <div class="ctrl-row">
     <button class="btn primary" id="newBtn">New Game</button>
@@ -146,14 +168,16 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
   <div class="overlay-wrap">
     <div class="grid g4" id="grid"></div>
     <div class="overlay show" id="overlay">
-      <div class="ov-title">Memory <em>Card</em></div>
-      <div class="ov-sub">— 按 New Game 開始 —</div>
-      <button class="btn primary" id="ovBtn" style="width:160px;margin-top:4px;">開始遊戲</button>
+      <div class="ov-title" id="ovTitle">Memory <em>Card</em></div>
+      <div class="ov-sub" id="ovSub">— 按 New Game 或下方按鈕開始 —</div>
+      <div id="overlayActionArea">
+        <button class="btn primary" id="ovBtn" style="width:160px;margin-top:4px;">開始遊戲</button>
+      </div>
     </div>
   </div>
 
-  <table class="best-table" id="bestTable" style="display:none;">
-    <thead><tr><th>模式</th><th>最佳步數</th><th>最佳時間</th></tr></thead>
+  <table class="best-table" id="bestTable">
+    <thead><tr><th>模式</th><th>名次 & 玩家</th><th>得分</th><th>步數</th><th>剩餘時間</th></tr></thead>
     <tbody id="bestBody"></tbody>
   </table>
 </div>
@@ -165,7 +189,34 @@ const EMOJIS = [
   '🦊','🐧','🌺','🍁','🎯','🎪','🧩','🎨',
 ];
 
-let size = 4, totalPairs, matched, moves, timer, elapsed, locked;
+// ── Web Audio API 復古音效合成器 ──
+const Sound = {
+  ctx: null,
+  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+  playFlip() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+    g.gain.setValueAtTime(0.08, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.05);
+  },
+  playMatch() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
+    osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.08); // E5
+    osc.frequency.setValueAtTime(783.99, this.ctx.currentTime + 0.16); // G5
+    g.gain.setValueAtTime(0.12, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.3);
+  },
+  playFail() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(70, this.ctx.currentTime + 0.25);
+    g.gain.setValueAtTime(0.15, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.28);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.28);
+  }
+};
+
+let size = 4, totalPairs, matched, moves, timer, timeLeft, maxTime, locked, score, combo;
 let first = null, second = null;
 
 function setSize(s, btn) {
@@ -173,6 +224,7 @@ function setSize(s, btn) {
   document.querySelectorAll('.size-btn').forEach(b => b.classList.toggle('on', b === btn));
   const grid = document.getElementById('grid');
   grid.className = `grid g${size}`;
+  updateBestDisplay();
 }
 
 function shuffle(arr) {
@@ -184,10 +236,20 @@ function shuffle(arr) {
 }
 
 function startGame() {
+  Sound.init();
   clearInterval(timer);
-  elapsed = 0; moves = 0; matched = 0; locked = false; first = null; second = null;
-  totalPairs = (size * size) / 2;
+  
+  // 基礎初始化
+  matched = 0; moves = 0; score = 0; combo = 0; first = null; second = null;
+  maxTime = size === 4 ? 45 : 100; // 4x4給45秒，6x6給100秒
+  timeLeft = maxTime;
+  locked = true; // 洗牌預覽時先鎖定不可點擊
 
+  const comboDisp = document.getElementById('comboDisplay');
+  comboDisp.className = 'combo-display';
+  comboDisp.textContent = '';
+
+  totalPairs = (size * size) / 2;
   const pool = shuffle([...EMOJIS]).slice(0, totalPairs);
   const cards = shuffle([...pool, ...pool]);
 
@@ -197,7 +259,7 @@ function startGame() {
 
   cards.forEach((emoji, i) => {
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'card flipped'; // 開局預設翻開(顯示花色)
     card.dataset.val = emoji;
     card.dataset.idx = i;
     card.innerHTML = `
@@ -212,10 +274,35 @@ function startGame() {
   document.getElementById('overlay').classList.remove('show');
   updateHUD();
 
-  timer = setInterval(() => {
-    elapsed++;
-    document.getElementById('hTime').textContent = elapsed + 's';
-  }, 1000);
+  // 🛠️ 2秒洗牌全卡片曝光記憶期
+  const pBar = document.getElementById('progressBar');
+  pBar.style.width = '100%';
+  pBar.classList.remove('warning');
+  document.getElementById('hTime').textContent = `Preview...`;
+
+  setTimeout(() => {
+    // 兩秒過後蓋回所有卡片，並正式解鎖與開啟倒數
+    const allCards = document.querySelectorAll('.card');
+    allCards.forEach(c => c.classList.remove('flipped'));
+    locked = false;
+    
+    timer = setInterval(() => {
+      timeLeft--;
+      document.getElementById('hTime').textContent = timeLeft + 's';
+      
+      const pct = (timeLeft / maxTime) * 100;
+      pBar.style.width = pct + '%';
+      
+      if (pct <= 20) pBar.classList.add('warning');
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        gameOver();
+      }
+    }, 1000);
+    
+    document.getElementById('hTime').textContent = timeLeft + 's';
+  }, 2000);
 }
 
 function flip(card) {
@@ -223,76 +310,154 @@ function flip(card) {
   if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
   if (card === first) return;
 
+  Sound.playFlip();
   card.classList.add('flipped');
 
   if (!first) { first = card; return; }
 
   second = card;
   moves++;
-  document.getElementById('hMoves').textContent = moves;
   locked = true;
 
   if (first.dataset.val === second.dataset.val) {
+    // 配對成功
     first.classList.add('matched');
     second.classList.add('matched');
+    
+    combo++;
+    score += 100 + (combo * 50); // 隨Combo疊加額外獎勵分
+    
+    triggerComboAnim();
+    Sound.playMakeMatch = Sound.playMatch();
+    
     first = null; second = null; locked = false;
     matched++;
     updateHUD();
+    
     if (matched === totalPairs) win();
   } else {
+    // 配對失敗
+    combo = 0; // 中斷連擊
+    document.getElementById('comboDisplay').classList.remove('active');
+    Sound.playFail();
+
     const a = first, b = second;
     setTimeout(() => {
       a.classList.remove('flipped');
       b.classList.remove('flipped');
       first = null; second = null; locked = false;
-    }, 900);
+    }, 850);
+    updateHUD();
+  }
+}
+
+function triggerComboAnim() {
+  const cd = document.getElementById('comboDisplay');
+  if (combo >= 2) {
+    cd.textContent = `✦ Combo × ${combo} (+${combo * 50} 獎勵分) ✦`;
+    cd.classList.add('active');
+  } else {
+    cd.classList.remove('active');
   }
 }
 
 function updateHUD() {
   document.getElementById('hPairs').textContent = `${matched} / ${totalPairs}`;
   document.getElementById('hMoves').textContent = moves;
-  updateBestDisplay();
+  document.getElementById('hScore').textContent = score;
+}
+
+function gameOver() {
+  locked = true;
+  Sound.playFail();
+  document.getElementById('ovTitle').innerHTML = `挑戰 <em>Failed</em>`;
+  document.getElementById('overlayActionArea').innerHTML = `
+    <div class="ov-sub">— 時間到！未能在限時內配對完成 —</div>
+    <button class="btn primary" onclick="startGame()" style="width:160px;margin-top:12px;">重新挑戰</button>`;
+  document.getElementById('overlay').classList.add('show');
 }
 
 function win() {
   clearInterval(timer);
-  const key4 = 'mem-best-4', key6 = 'mem-best-6';
-  const key = size === 4 ? key4 : key6;
-  const prev = JSON.parse(localStorage.getItem(key) || 'null');
-  if (!prev || moves < prev.moves || (moves === prev.moves && elapsed < prev.time)) {
-    localStorage.setItem(key, JSON.stringify({ moves, time: elapsed }));
+  locked = true;
+  
+  // 計算最終得分 (計入剩餘時間加成)
+  const timeBonus = timeLeft * 25;
+  const finalScore = score + timeBonus;
+
+  document.getElementById('ovTitle').innerHTML = `Stage <em style="color:var(--gold);">Clear!</em>`;
+  
+  // 排行榜載入判斷是否擠進前 5 名
+  const records = JSON.parse(localStorage.getItem(`mem-records-${size}`) || '[]');
+  const isLeader = records.length < 5 || finalScore > records[records.length - 1].score;
+
+  let actionHtml = '';
+  if (isLeader) {
+    actionHtml = `
+      <div class="leaderboard-input-wrap">
+        <div class="ov-sub" style="color:var(--gold)">🏆 恭喜榮登排行榜！請輸入你的大名：</div>
+        <input type="text" id="playerName" class="leaderboard-input" maxlength="10" value="Anonymous" />
+        <button class="btn primary" onclick="submitScore(${finalScore})" style="margin-top:8px;">送出紀錄並重開</button>
+      </div>`;
+  } else {
+    actionHtml = `<button class="btn primary" onclick="startGame()" style="width:160px;margin-top:12px;">再玩一次</button>`;
   }
 
-  setTimeout(() => {
-    document.getElementById('ovTitle') && (document.getElementById('ovTitle').innerHTML =
-      `Stage <em>Clear!</em>`);
-    document.getElementById('overlay').innerHTML = `
-      <div class="ov-title">Stage <em>Clear!</em></div>
-      <div class="ov-sub">— ${size}×${size} · ${moves} 步 · ${elapsed}s —</div>
-      <button class="btn primary" onclick="startGame()" style="width:160px;margin-top:4px;">再玩一次</button>`;
-    document.getElementById('overlay').classList.add('show');
-    updateBestDisplay();
-  }, 500);
+  document.getElementById('overlayActionArea').innerHTML = `
+    <div class="ov-sub">
+      模式: ${size}×${size} · 總步數: ${moves} 步<br>
+      剩餘時間加成: +${timeBonus} 分<br>
+      <b>最終總得分: ${finalScore} 分</b>
+    </div>
+    ${actionHtml}`;
+    
+  document.getElementById('overlay').classList.add('show');
+}
+
+function submitScore(finalScore) {
+  const nameInput = document.getElementById('playerName');
+  const name = nameInput ? nameInput.value.trim() : 'Anonymous';
+  
+  let records = JSON.parse(localStorage.getItem(`mem-records-${size}`) || '[]');
+  records.push({ name: name || 'Anonymous', score: finalScore, moves, timeLeft });
+  
+  // 依分數高至低排序，保留前五名
+  records.sort((a, b) => b.score - a.score);
+  records = records.slice(0, 5);
+  
+  localStorage.setItem(`mem-records-${size}`, JSON.stringify(records));
+  updateBestDisplay();
+  startGame();
 }
 
 function updateBestDisplay() {
-  const b4 = JSON.parse(localStorage.getItem('mem-best-4') || 'null');
-  const b6 = JSON.parse(localStorage.getItem('mem-best-6') || 'null');
-  const best = size === 4 ? b4 : b6;
-  document.getElementById('hBest').textContent = best ? `${best.moves}步` : '—';
-
-  if (b4 || b6) {
-    const tbl = document.getElementById('bestTable');
-    tbl.style.display = '';
-    document.getElementById('bestBody').innerHTML = `
-      ${b4 ? `<tr><td>4 × 4</td><td>${b4.moves} 步</td><td>${b4.time}s</td></tr>` : ''}
-      ${b6 ? `<tr><td>6 × 6</td><td>${b6.moves} 步</td><td>${b6.time}s</td></tr>` : ''}`;
+  const records = JSON.parse(localStorage.getItem(`mem-records-${size}`) || '[]');
+  const body = document.getElementById('bestBody');
+  body.innerHTML = '';
+  
+  if (records.length === 0) {
+    body.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--dim);">暫無排行紀錄，等你來霸榜！</td></tr>`;
+    return;
   }
+
+  records.forEach((r, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${size} × ${size}</td>
+      <td><b>#${idx + 1}</b> ${r.name}</td>
+      <td style="color:var(--ac); font-weight:bold;">${r.score}</td>
+      <td>${r.moves} 步</td>
+      <td>${r.timeLeft}s</td>`;
+    body.appendChild(tr);
+  });
 }
 
 document.getElementById('newBtn').addEventListener('click', startGame);
-document.getElementById('ovBtn') && document.getElementById('ovBtn').addEventListener('click', startGame);
+if(document.getElementById('ovBtn')) {
+  document.getElementById('ovBtn').addEventListener('click', startGame);
+}
+
+// 首次靜態初始化載入
 updateBestDisplay();
 </script>
 </body>
