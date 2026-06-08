@@ -42,6 +42,15 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .mode-btn:hover,.mode-btn.on{background:var(--text);color:var(--bg);border-color:var(--text);}
 .sep{width:1px;height:24px;background:var(--bd);margin:0 4px;}
 
+/* ── Multiplayer Tracks ── */
+.race-container {width:100%;background:var(--panel);border:1px solid var(--bd);padding:12px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px;}
+.race-title {font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;}
+.race-track {position:relative;height:24px;background:var(--bg);border-bottom:1px dashed var(--bd2);display:flex;align-items:center;padding:0 10px;}
+.race-track:last-child {border-bottom:none;}
+.racer-name {font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);width:90px;z-index:5;background:rgba(255,255,255,0.7);padding-right:4px;}
+.racer-lane {position:relative;flex:1;height:100%;}
+.racer-avatar {position:absolute;top:50%;transform:translateY(-50%) translateX(-50%);font-size:14px;transition:left 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);left:0%;}
+
 /* ── Timer ring ── */
 .timer-wrap{position:relative;width:100px;height:100px;margin-bottom:20px;flex-shrink:0;}
 .timer-svg{transform:rotate(-90deg);}
@@ -56,6 +65,11 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .stat-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
 .stat-val{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;color:var(--text);}
 .stat-box.accent .stat-val{color:var(--ac);}
+
+/* ── Custom Text Drawer ── */
+.custom-drawer {width:100%;background:var(--panel);border:1px dashed var(--ac);padding:16px;margin-bottom:16px;display:none;flex-direction:column;gap:10px;}
+.custom-drawer.show {display:flex;}
+.custom-textarea {width:100%;height:60px;background:var(--bg);border:1px solid var(--bd);padding:8px;font-family:inherit;font-size:13px;color:var(--text);outline:none;resize:none;}
 
 /* ── Text display ── */
 .text-display{width:100%;background:var(--panel);border:1px solid var(--bd);padding:20px 24px;font-family:'DM Mono',monospace;font-size:1.05rem;line-height:2;letter-spacing:.02em;margin-bottom:16px;min-height:110px;position:relative;user-select:none;}
@@ -82,18 +96,28 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .btn.primary:hover{background:var(--ac);border-color:var(--ac);}
 
 /* ── Result panel ── */
-.result{display:none;width:100%;background:var(--panel);border:1px solid var(--bd);padding:28px 28px 24px;}
+.result{display:none;width:100%;background:var(--panel);border:1px solid var(--bd);padding:28px 28px 24px;margin-bottom:20px;}
 .result.show{display:block;}
 .result-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:4px;}
 .result-title em{font-style:italic;color:var(--ac);}
 .result-sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.1em;margin-bottom:20px;}
-.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
 .res-card{border:1px solid var(--bd);padding:12px 14px;}
 .res-card.highlight{border-color:var(--ac);background:var(--as);}
 .res-label{font-family:'DM Mono',monospace;font-size:.54rem;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px;}
 .res-val{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--text);}
 .res-card.highlight .res-val{color:var(--ac);}
 .res-unit{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);}
+
+/* WPM Chart Container */
+.wpm-chart-wrap {width:100%;border:1px solid var(--bd);padding:16px;margin-bottom:24px;background:#fff;}
+canvas#wpmChart {width:100%;height:150px;display:block;}
+
+/* Heatmap Grid */
+.heatmap-container {width:100%;border:1px solid var(--bd);padding:16px;background:#fff;margin-bottom:24px;}
+.heatmap-keyboard {display:flex;flex-direction:column;gap:4px;align-items:center;margin-top:10px;}
+.heatmap-row {display:flex;gap:4px;}
+.heatmap-key {width:24px;height:24px;border:1px solid var(--bd2);font-family:'DM Mono',monospace;font-size:10px;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:background-color 0.2s;color:var(--text);}
 
 /* ── Best records ── */
 .records{width:100%;margin-top:8px;}
@@ -107,11 +131,12 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 
 @media(max-width:560px){
   .site-nav{padding:0 14px;}
-  .nav-links{gap:10px;}
+  .nav-links{display:none;}
   .page{padding:68px 12px 40px;}
   .result-grid{grid-template-columns:repeat(2,1fr);}
   .stats{flex-wrap:wrap;}
   .stat-box{min-width:calc(50% - 6px);}
+  .heatmap-key {width:18px;height:18px;font-size:8px;}
 }
 </style>
 </head>
@@ -149,6 +174,28 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
     <span class="mode-label">Lang :</span>
     <button class="mode-btn on" data-lang="en" onclick="setLang('en',this)">EN</button>
     <button class="mode-btn"    data-lang="zh" onclick="setLang('zh',this)">中文</button>
+    <button class="mode-btn"    id="customToggleBtn">Custom Text</button>
+  </div>
+
+  <div class="custom-drawer" id="customDrawer">
+    <div class="race-title">貼上自訂练习文章 / Paste Custom Text</div>
+    <textarea class="custom-textarea" id="customTextarea" placeholder="在此貼上您想練習的自訂內容，完成後點擊下方 New Text 載入..."></textarea>
+  </div>
+
+  <div class="race-container">
+    <div class="race-title">🏁 Multiplayer Live Tracks / 多人即時競速跑道</div>
+    <div class="race-track">
+      <div class="racer-name">👤 You (P1)</div>
+      <div class="racer-lane"><div class="racer-avatar" id="avatar-user">🐍</div></div>
+    </div>
+    <div class="race-track">
+      <div class="racer-name">🤖 Speedy_Fox</div>
+      <div class="racer-lane"><div class="racer-avatar" id="avatar-npc1">🦊</div></div>
+    </div>
+    <div class="race-track">
+      <div class="racer-name">🤖 Typist_David</div>
+      <div class="racer-lane"><div class="racer-avatar" id="avatar-npc2">🦁</div></div>
+    </div>
   </div>
 
   <div style="display:flex;gap:24px;align-items:center;width:100%;margin-bottom:20px;">
@@ -217,6 +264,17 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
         <div class="res-unit">chars</div>
       </div>
     </div>
+
+    <div class="wpm-chart-wrap">
+      <div class="race-title" style="margin-bottom:8px;">📈 Speed Curve (WPM Timeline) / 速度變化趨勢圖</div>
+      <canvas id="wpmChart" width="600" height="150"></canvas>
+    </div>
+
+    <div class="heatmap-container">
+      <div class="race-title">🎯 Error Heatmap / 字母手殘熱圖分布</div>
+      <div class="heatmap-keyboard" id="keyboardHeatmap"></div>
+    </div>
+
     <button class="btn primary" onclick="restart()" style="width:100%;">再測一次</button>
   </div>
 
@@ -227,67 +285,62 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 </div>
 
 <script>
-// ── Word banks ──
-const WORDS_EN = `the quick brown fox jumps over the lazy dog
-pack my box with five dozen liquor jugs
-how vexingly quick daft zebras jump
-the five boxing wizards jump quickly
-sphinx of black quartz judge my vow
-two driven jocks help fax my big quiz
-the jay pig fox zebra and my wolves quack
-just keep examining every low bid quoted
-how quickly daft jumping zebras vex
-a wizard job quickly fixing the tax machine
-public junk dwarves hug my fox quiz
-we promptly judged antique ivory buckles
-crazy fredrick bought many very exquisite opal jewels
-javascript programming web development frontend backend
-react vue angular typescript python machine learning
-algorithm data structure recursion function async await
-design pattern interface component lifecycle state render
-cloud computing deployment container kubernetes docker
-responsive layout flexbox grid animation transition
-`.split('\n').map(s=>s.trim()).filter(Boolean);
+// ── Web Audio API 原生電子音效發聲引擎 (免依賴外部音訊資產) ──
+const Sound = {
+  ctx: null,
+  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+  playError() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+    g.gain.setValueAtTime(0.12, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.12);
+  }
+};
 
-const WORDS_ZH = [
-  '技術進步讓生活更加便利與豐富',
-  '深度學習改變了人工智慧的發展方向',
-  '前端開發需要掌握多種程式語言與框架',
-  '資料結構是程式設計的基礎核心概念',
-  '雲端運算提供了彈性可擴展的服務架構',
-  '使用者體驗設計影響產品的成敗關鍵',
-  '開源社群推動了軟體工程的快速演進',
-  '機器學習模型需要大量資料進行訓練',
-  '響應式設計讓網頁適應各種裝置螢幕',
-  '版本控制系統幫助團隊協作開發專案',
-  '演算法優化能大幅提升程式執行效率',
-  '網路安全是現代資訊系統的重要課題',
-  '物件導向程式設計提高了程式碼的可維護性',
-  '容器化技術簡化了應用程式的部署流程',
-  '敏捷開發方法讓專案管理更加靈活高效',
-];
+// ── Word banks ──
+const WORDS_EN = `the quick brown fox jumps over the lazy dog pack my box with five dozen liquor jugs how vexingly quick daft zebras jump the five boxing wizards jump quickly sphinx of black quartz judge my vow two driven jocks help fax my big quiz the jay pig fox zebra and my wolves quack just keep examining every low bid quoted how quickly daft jumping zebras vex a wizard job quickly fixing the tax machine public junk dwarves hug my fox quiz we promptly judged antique ivory buckles crazy fredrick bought many very exquisite opal jewels javascript programming web development frontend backend react vue angular typescript python machine learning algorithm data structure recursion function async await design pattern interface component lifecycle state render cloud computing deployment container kubernetes docker responsive layout flexbox grid animation transition`.split(' ');
+const WORDS_ZH = ['技術進步讓生活更加便利與豐富','深度學習改變了人工智慧的發展方向','前端開發需要掌握多種程式語言與框架','資料結構是程式設計的基礎核心概念','雲端運算提供了彈性可擴展的服務架構','使用者體驗設計影響產品的成敗關鍵','開源社群推動了軟體工程的快速演進','機器學習模型需要大量資料進行訓練','響應式設計讓網頁適應各種裝置螢幕','版本控制系統幫助團隊協作開發專案','演算法優化能大幅提升程式執行效率','網路安全是現代資訊系統的重要課題','物件導向程式設計提高了程式碼的可維護性','容器化技術簡化了應用程式的部署流程','敏捷開發方法讓專案管理更加靈活高效'];
 
 let timeLimit = 15, lang = 'en';
-let state = 'idle'; // idle | running | done
+let state = 'idle'; 
 let timer, elapsed2, totalCorrect, totalWrong, totalTyped;
 let currentText = '';
 let typedHistory = '';
 
+// 特效追蹤矩陣
+let wpmTimelineData = []; // 紀錄每秒的實時 WPM
+let errorKeyMap = {};    // 紀錄各按鍵錯誤次數
+
+// NPC 真人模擬競速設定值
+let npc1_speed = 0, npc2_speed = 0;
+
+const KB_LAYOUT = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+
 function setTime(t, btn) {
   timeLimit = t;
   document.querySelectorAll('[data-t]').forEach(b => b.classList.toggle('on', b === btn));
-  if (state !== 'idle') restart();
-  else resetDisplay();
+  restart();
 }
 
 function setLang(l, btn) {
   lang = l;
   document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('on', b === btn));
-  if (state !== 'idle') restart();
-  else { buildText(); renderDisplay(); }
+  restart();
 }
 
+// 展開與關閉自訂文章抽屜
+document.getElementById('customToggleBtn').addEventListener('click', function() {
+  this.classList.toggle('on');
+  document.getElementById('customDrawer').classList.toggle('show');
+});
+
 function buildText() {
+  const customVal = document.getElementById('customTextarea').value.trim();
+  if (customVal) {
+    currentText = customVal.slice(0, 600);
+    return;
+  }
+
   if (lang === 'en') {
     const pool = [...WORDS_EN].sort(() => Math.random() - 0.5);
     let words = [];
@@ -295,7 +348,7 @@ function buildText() {
     currentText = words.join(' ').slice(0, 600);
   } else {
     const pool = [...WORDS_ZH].sort(() => Math.random() - 0.5);
-    currentText = pool.join('　').repeat(3).slice(0, 300);
+    currentText = pool.join(' ').repeat(3).slice(0, 300);
   }
 }
 
@@ -315,7 +368,6 @@ function renderDisplay(typed = '') {
   }
   display.innerHTML = html;
 
-  // scroll cursor into view
   const cursor = display.querySelector('.cursor');
   if (cursor) cursor.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
@@ -328,6 +380,12 @@ function resetDisplay() {
   document.getElementById('sChars').textContent = '—';
   document.getElementById('sErr').textContent = '—';
   document.getElementById('result').classList.remove('show');
+  
+  // 重置競速小車頭像
+  document.getElementById('avatar-user').style.left = '0%';
+  document.getElementById('avatar-npc1').style.left = '0%';
+  document.getElementById('avatar-npc2').style.left = '0%';
+
   buildText();
   renderDisplay();
   document.getElementById('typingInput').value = '';
@@ -339,23 +397,48 @@ function restart() {
   state = 'idle'; elapsed2 = 0;
   totalCorrect = 0; totalWrong = 0; totalTyped = 0;
   typedHistory = '';
+  wpmTimelineData = [];
+  errorKeyMap = {};
   resetDisplay();
   document.getElementById('typingInput').focus();
 }
 
 function startTimer() {
+  Sound.init(); // 用戶互動時激活音訊模組
   state = 'running';
   elapsed2 = 0;
-  const circ = 2 * Math.PI * 44; // ≈276.5
+  wpmTimelineData = [0];
+
+  // 隨機賦予 NPC 本局進展速度常數
+  npc1_speed = 35 + Math.random() * 25; // 速度落在 35~60 WPM
+  npc2_speed = 45 + Math.random() * 35; // 速度落在 45~80 WPM
+
+  const circ = 2 * Math.PI * 44; 
   timer = setInterval(() => {
     elapsed2++;
     const remaining = timeLimit - elapsed2;
     document.getElementById('timerNum').textContent = remaining;
     const offset = circ * (elapsed2 / timeLimit);
     document.getElementById('timerRing').style.strokeDashoffset = offset;
-    // colour warning
+    
     if (remaining <= 5) document.getElementById('timerRing').style.stroke = '#A94442';
     else if (remaining <= 10) document.getElementById('timerRing').style.stroke = '#C5A059';
+
+    // 真人與 NPC 競速進度條位置實時映射
+    const totalLen = currentText.length || 1;
+    const userPct = Math.min(100, (totalTyped / totalLen) * 100);
+    document.getElementById('avatar-user').style.left = userPct + '%';
+
+    // 依時間等比換算 NPC 進度
+    const npc1_chars = (npc1_speed * 5) * (elapsed2 / 60);
+    const npc2_chars = (npc2_speed * 5) * (elapsed2 / 60);
+    document.getElementById('avatar-npc1').style.left = Math.min(100, (npc1_chars / totalLen) * 100) + '%';
+    document.getElementById('avatar-npc2').style.left = Math.min(100, (npc2_chars / totalLen) * 100) + '%';
+
+    // 收集每秒 WPM 作為折線圖座標
+    const min = elapsed2 / 60;
+    const currentWpm = min > 0 ? Math.round(totalCorrect / 5 / min) : 0;
+    wpmTimelineData.push(currentWpm);
 
     updateLiveStats();
     if (elapsed2 >= timeLimit) finish();
@@ -387,7 +470,12 @@ function finish() {
   document.getElementById('rCorrect').textContent = totalCorrect;
   document.getElementById('rErr').textContent     = totalWrong;
   document.getElementById('resultSub').textContent = `— ${timeLimit}s · ${lang === 'en' ? 'English' : '中文'} —`;
+  
   document.getElementById('result').classList.add('show');
+
+  // 本局遊戲結束，繪製 WPM 趨勢圖與熱圖
+  drawWpmChart();
+  drawHeatmapKeyboard();
 
   // save best
   const key = `typing-best-${timeLimit}-${lang}`;
@@ -396,6 +484,74 @@ function finish() {
     localStorage.setItem(key, JSON.stringify({ wpm, acc, date: new Date().toLocaleDateString() }));
   }
   renderRecords();
+}
+
+// ── 繪製即時 WPM 趨勢折線圖 (Canvas) ──
+function drawWpmChart() {
+  const canvas = document.getElementById('wpmChart');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const paddingLeft = 40, paddingRight = 20, paddingTop = 20, paddingBottom = 20;
+  const graphW = canvas.width - paddingLeft - paddingRight;
+  const graphH = canvas.height - paddingTop - paddingBottom;
+
+  const maxWpm = Math.max(...wpmTimelineData, 60);
+
+  // 襯底水平輔助線
+  ctx.strokeStyle = '#F5F2EB'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(paddingLeft, paddingTop); ctx.lineTo(paddingLeft + graphW, paddingTop);
+  ctx.moveTo(paddingLeft, paddingTop + graphH/2); ctx.lineTo(paddingLeft + graphW, paddingTop + graphH/2);
+  ctx.moveTo(paddingLeft, paddingTop + graphH); ctx.lineTo(paddingLeft + graphW, paddingTop + graphH);
+  ctx.stroke();
+
+  // 速度折線主體軌跡
+  ctx.strokeStyle = '#6b4c32'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  const stepX = graphW / (wpmTimelineData.length - 1);
+  wpmTimelineData.forEach((val, idx) => {
+    const x = paddingLeft + idx * stepX;
+    const y = paddingTop + graphH - (val / maxWpm) * graphH;
+    if (idx === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // 渲染端點文字
+  ctx.fillStyle = '#8A827B'; ctx.font = '9px "DM Mono"'; ctx.textAlign = 'right';
+  ctx.fillText(maxWpm, paddingLeft - 6, paddingTop + 3);
+  ctx.fillText(Math.round(maxWpm/2), paddingLeft - 6, paddingTop + graphH/2 + 3);
+  ctx.fillText(0, paddingLeft - 6, paddingTop + graphH + 3);
+}
+
+// ── 渲染與填充字母熱圖分布 ──
+function drawHeatmapKeyboard() {
+  const container = document.getElementById('keyboardHeatmap');
+  container.innerHTML = '';
+
+  let maxErrors = Math.max(...Object.values(errorKeyMap), 0);
+
+  KB_LAYOUT.forEach(rowStr => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'heatmap-row';
+    for (let char of rowStr) {
+      const keySpan = document.createElement('div');
+      keySpan.className = 'heatmap-key';
+      keySpan.textContent = char;
+
+      const errCount = errorKeyMap[char] || 0;
+      if (errCount > 0 && maxErrors > 0) {
+        // 依據出錯頻率強度由淺至深調整紅色漸層背景色
+        const alpha = 0.15 + (errCount / maxErrors) * 0.75;
+        keySpan.style.backgroundColor = `rgba(169, 68, 66, ${alpha})`;
+        keySpan.style.color = '#FFFFFF';
+        keySpan.style.borderColor = 'var(--red)';
+        keySpan.title = `打錯 ${errCount} 次`;
+      }
+      rowDiv.appendChild(keySpan);
+    }
+    container.appendChild(rowDiv);
+  });
 }
 
 function renderRecords() {
@@ -421,12 +577,27 @@ function renderRecords() {
   }
 }
 
-// ── Input handler ──
+// ── 輸入控制交互的核心邏輯 ──
 document.getElementById('typingInput').addEventListener('input', e => {
   if (state === 'done') return;
   if (state === 'idle') startTimer();
 
   const typed = e.target.value;
+  
+  // 觸發錯誤音效回饋與熱圖統計
+  if (typed.length > typedHistory.length) {
+    const lastIdx = typed.length - 1;
+    if (typed[lastIdx] !== currentText[lastIdx]) {
+      Sound.playError(); // 原生 Web Audio 打錯提示音
+
+      // 提取出打錯的標準字母，填入熱圖對照表
+      const targetChar = currentText[lastIdx].toUpperCase();
+      if (/[A-Z]/.test(targetChar)) {
+        errorKeyMap[targetChar] = (errorKeyMap[targetChar] || 0) + 1;
+      }
+    }
+  }
+
   typedHistory = typed;
   totalTyped   = typed.length;
   totalCorrect = 0; totalWrong = 0;
@@ -441,7 +612,7 @@ document.getElementById('typingInput').addEventListener('input', e => {
 document.getElementById('restartBtn').addEventListener('click', restart);
 document.getElementById('newTextBtn').addEventListener('click', () => { buildText(); renderDisplay(); if (state !== 'idle') restart(); });
 
-// init
+// 初始化
 totalCorrect = 0; totalWrong = 0; totalTyped = 0;
 buildText();
 renderDisplay();
