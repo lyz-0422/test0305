@@ -39,7 +39,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .hero-title em{font-style:italic;color:var(--ac);}
 .hero-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;margin-bottom:32px;}
 
-/* ── 改裝：大廳綜合數據中心橫條 ── */
+/* ── 大廳綜合數據中心橫條 ── */
 .stats-strip{display:flex;gap:0;border:1px solid var(--bd);background:var(--panel);margin-bottom:48px;width:100%;max-width:720px;}
 .strip-item{flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--bd);text-align:center;}
 .strip-item:last-child{border-right:none;}
@@ -97,9 +97,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* ── Footer ── */
 .hub-footer{border-top:1px solid var(--bd);padding:20px 0 0;display:flex;justify-content:space-between;align-items:center;}
 .footer-text{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.08em;}
-.footer-links{display:flex;gap:16px;}
+.footer-links{display:flex;gap:16px;align-items:center;}
 .footer-link{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--dim);text-decoration:none;letter-spacing:.08em;transition:color .2s;}
 .footer-link:hover{color:var(--ac);}
+
+/* 重置按鈕專屬精美樣式 */
+.reset-btn {font-family:'DM Mono',monospace;font-size:.55rem;color:var(--red);background:transparent;border:1px dashed rgba(169,68,66,0.4);padding:4px 10px;cursor:pointer;transition:all 0.2s;letter-spacing:1px;}
+.reset-btn:hover {background:rgba(169,68,66,0.08);border-color:var(--red);}
 
 @media(max-width:760px){
   .game-grid{grid-template-columns:repeat(2,1fr);}
@@ -144,11 +148,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       </div>
       <div class="strip-item">
         <div class="strip-label">Gamer Rank / 玩家稱號</div>
-        <div class="strip-val" id="statRank" style="font-size:1.15rem; font-weight:500; text-transform:uppercase; letter-spacing:1px;">—</div>
+        <div class="strip-val" id="statRank" style="font-size:1.1rem; font-weight:500; text-transform:uppercase; letter-spacing:1px;">—</div>
       </div>
       <div class="strip-item">
-        <div class="strip-label">Total Key Hits / 生涯總擊字數</div>
-        <div class="strip-val" id="statTotalChars">—</div>
+        <div class="strip-label">⚡ APM-X Index / 綜合戰力極限</div>
+        <div class="strip-val" id="statTotalChars" style="color:var(--gold); font-weight:500;">—</div>
       </div>
     </div>
   </div>
@@ -283,7 +287,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   </div>
 
   <div class="hub-footer">
-    <div class="footer-text">所有紀錄儲存於本機 localStorage · 清除瀏覽器快取會重置</div>
+    <div class="footer-text">數據中心 · <button class="reset-btn" onclick="resetAllScores()">🧹 清除本機所有遊戲紀錄</button></div>
     <div class="footer-links">
       <a class="footer-link" href="index.html">← Home</a>
       <a class="footer-link" href="about.html">Portfolio</a>
@@ -346,7 +350,7 @@ function render() {
   // 計算玩家玩過幾款遊戲項目
   const played = [snakeMax > 0, bko > 0, g2048 > 0, memTopScore > 0, bestWpm > 0].filter(Boolean).length;
 
-  // ── 💡 頂部改裝後的綜合大廳數據渲染 ──
+  // 1. 遊戲解鎖度進度條
   document.getElementById('statPlayed').textContent = `${played} / 5`;
   
   // 依據完成度動態賦予段位稱號
@@ -356,10 +360,16 @@ function render() {
   else if (played >= 1) rankStr = "🎮 Casual Player / 休閒玩家";
   document.getElementById('statRank').textContent = rankStr;
 
-  // 統計總擊字量（以最高 WPM 粗略換算，使無數據時優雅呈現）
-  document.getElementById('statTotalChars').textContent = bestWpm > 0 ? (bestWpm * 5).toLocaleString() + " 字次" : "—";
+  // 2. 💡 綜合手速戰力指標：結合 WPM 與 貪吃蛇得分做動態係數演算法加權
+  let apmXIndex = 0;
+  if (bestWpm > 0 || snakeMax > 0) {
+    apmXIndex = Math.round((bestWpm * 12) + (snakeMax * 35));
+    // 保底基礎分
+    if (apmXIndex < 100) apmXIndex += 120;
+  }
+  document.getElementById('statTotalChars').textContent = apmXIndex > 0 ? "Rank " + apmXIndex.toLocaleString() : "—";
 
-  // 各遊戲卡片頁尾
+  // 各遊戲卡片頁尾展示
   const isOldMem = localStorage.getItem('mem-best-4') && !localStorage.getItem('mem-records-4');
   document.getElementById('snakeBest').textContent   = snakeMax > 0 ? snakeMax.toLocaleString() : '—';
   document.getElementById('bkoBest').textContent     = bko > 0 ? bko.toLocaleString() : '—';
@@ -367,19 +377,51 @@ function render() {
   document.getElementById('memBest').textContent     = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
   document.getElementById('typingBest').textContent  = bestWpm > 0 ? bestWpm : '—';
 
-  // 下方成就看板
+  // 下方成就看板詳細概覽
   document.getElementById('snakeScore').textContent  = snakeMax > 0 ? `${snakeMax} Pts` : '—';
   document.getElementById('bkoScore').textContent    = bko > 0 ? bko.toLocaleString() : '—';
   document.getElementById('g2048Score').textContent  = g2048 > 0 ? g2048.toLocaleString() : '—';
   document.getElementById('memScore').textContent    = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
   document.getElementById('typingScore').textContent = bestWpm > 0 ? `${bestWpm} WPM` : '—';
 
-  // 點亮已獲得分數的 CSS 顏色
+  // 點亮已有得分數據格的字體顏色
   if (snakeMax > 0) document.getElementById('snakeScore').className = 'score-val';
   if (bko > 0) document.getElementById('bkoScore').className = 'score-val';
   if (g2048 > 0) document.getElementById('g2048Score').className = 'score-val';
   if (memTopScore > 0) document.getElementById('memScore').className = 'score-val';
   if (bestWpm > 0) document.getElementById('typingScore').className = 'score-val';
+}
+
+// ── 💡 重置機制的 JavaScript 持久清理邏輯 ──
+function resetAllScores() {
+  const check = confirm("⚠️ 確定要清除所有遊戲數據嗎？\n這將會抹除所有的歷史最高分、排行榜名次與折線趨勢圖，此動作無法復原！");
+  if (check) {
+    // 遍歷並精準定位所有子遊戲產生的 localStorage 鍵值進行清空
+    const keysToRemove = [
+      'bko-best', '2048-best', '2048-best-4', '2048-best-5', 
+      'mem-best-4', 'mem-best-6', 'mem-records-4', 'mem-records-6'
+    ];
+    
+    // 移除跨難度與跨模式的打字與貪吃蛇動態鍵
+    ['single', 'double'].forEach(m => {
+      ['easy', 'normal', 'hard'].forEach(d => {
+        keysToRemove.push(`david-snake-best-${m}-${d}`);
+      });
+    });
+    ['15','30','60','120'].forEach(t => {
+      ['en','zh'].forEach(l => {
+        keysToRemove.push(`typing-best-${t}-${l}`);
+        keysToRemove.push(`2048-history-4`); // 2048 圖表歷史
+        keysToRemove.push(`2048-history-5`);
+      });
+    });
+
+    // 執行刪除
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+    
+    alert("🧹 所有遊戲紀錄已全數初始化成功！頁面即將重整...");
+    window.location.reload(); // 刷新網頁，資料看板完美歸零
+  }
 }
 
 render();
