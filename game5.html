@@ -48,8 +48,8 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .race-track {position:relative;height:28px;background:var(--bg);border-bottom:1px dashed var(--bd2);display:flex;align-items:center;padding:0 10px;}
 .race-track:last-child {border-bottom:none;}
 .racer-name {font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);width:105px;z-index:5;background:rgba(255,255,255,0.85);padding-right:6px;flex-shrink:0;}
-.racer-lane {position:relative;flex:1;height:100%;overflow:visible;} /* 💡 允許頭像稍微超出軌道邊緣 */
-.racer-avatar {position:absolute;top:50%;transform:translateY(-50%);font-size:15px;transition:left 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);left:0px;margin-left:8px;} /* 💡 加入安全起跑間距，徹底解決開局被遮擋的問題 */
+.racer-lane {position:relative;flex:1;height:100%;overflow:visible;}
+.racer-avatar {position:absolute;top:50%;transform:translateY(-50%);font-size:15px;transition:left 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);left:0px;margin-left:8px;}
 
 /* ── Timer ring ── */
 .timer-wrap{position:relative;width:100px;height:100px;margin-bottom:20px;flex-shrink:0;}
@@ -71,11 +71,11 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .custom-drawer.show {display:flex;}
 .custom-textarea {width:100%;height:60px;background:var(--bg);border:1px solid var(--bd);padding:8px;font-family:inherit;font-size:13px;color:var(--text);outline:none;resize:none;}
 
-/* ── Text display ── */
-.text-display{width:100%;background:var(--panel);border:1px solid var(--bd);padding:20px 24px;font-family:'DM Mono',monospace;font-size:1.05rem;line-height:1.8;letter-spacing:.02em;margin-bottom:16px;height:160px;position:relative;user-select:none;overflow-y:auto;} /* 💡 高度硬化，並加入隱藏滾動條，任何字數都絕不超出白框 */
+/* ── Text display (💡 已調整字體優化) ── */
+.text-display{width:100%;background:var(--panel);border:1px solid var(--bd);padding:22px 24px;font-family:'DM Mono', 'Noto Sans TC', monospace, sans-serif;font-size:1.15rem;font-weight:400;line-height:1.9;letter-spacing:.01em;margin-bottom:16px;height:160px;position:relative;user-select:none;overflow-y:auto;}
 .text-display .char{position:relative;transition:color .08s;display:inline-block;}
-.char.correct{color:var(--ac);}
-.char.wrong{color:var(--red);background:rgba(169,68,66,.1);}
+.char.correct{color:var(--ac);font-weight:500;}
+.char.wrong{color:var(--red);background:rgba(169,68,66,.1);font-weight:500;}
 .char.cursor{border-left:2px solid var(--text);animation:blink .9s step-end infinite;}
 .char.cursor.wrong{border-left-color:var(--red);}
 @keyframes blink{50%{border-left-color:transparent;}}
@@ -178,7 +178,7 @@ canvas#wpmChart {width:100%;height:150px;display:block;}
   </div>
 
   <div class="custom-drawer" id="customDrawer">
-    <div class="race-title">貼上自訂练习文章 / Paste Custom Text</div>
+    <div class="race-title">貼上自訂練習文章 / Paste Custom Text</div>
     <textarea class="custom-textarea" id="customTextarea" placeholder="在此貼上您想練習的自訂內容，完成後點擊下方 New Text 載入..."></textarea>
   </div>
 
@@ -419,7 +419,6 @@ function startTimer() {
     if (remaining <= 5) document.getElementById('timerRing').style.stroke = '#A94442';
     else if (remaining <= 10) document.getElementById('timerRing').style.stroke = '#C5A059';
 
-    // 💡 換算百分比並分配給 left 樣式
     const totalLen = currentText.length || 1;
     const userPct = Math.min(100, (totalTyped / totalLen) * 100);
     document.getElementById('avatar-user').style.left = `calc(${userPct}% - ${userPct * 0.15}px)`;
