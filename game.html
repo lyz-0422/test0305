@@ -262,17 +262,58 @@
             color: var(--ac);
         }
 
-        /* ── 名字輸入畫面 ── */
+        /* ── 設定選單畫面 ── */
         #name-screen {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
             padding: 40px;
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             width: 100%;
             max-width: 500px;
+        }
+
+        .setup-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .setup-label {
+            font-family: 'DM Mono', monospace;
+            font-size: .65rem;
+            font-weight: 500;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .mode-select-group, .diff-select-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .select-btn {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--bd);
+            color: var(--text-dim);
+            padding: 10px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .select-btn.active {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: rgba(58, 50, 45, 0.05);
+            font-weight: 500;
         }
 
         .name-row {
@@ -320,6 +361,7 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
         .start-btn:hover {
@@ -423,8 +465,17 @@
             letter-spacing: .15em;
             text-transform: uppercase;
             font-weight: 500;
+            margin-top: 2px;
         }
         .mode-badge.extreme { background: var(--extreme-red); color: #FFFFFF; }
+
+        /* 歷史最高分顯示 */
+        .best-score-display {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
 
         /* ── Canvas ── */
         #canvas-outer { width: 100%; max-width: 820px; display: none; }
@@ -444,6 +495,87 @@
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
+        }
+
+        /* ── 行動裝置虛擬搖桿 ── */
+        #joystick-container {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding: 0 10px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .dpad {
+            position: relative;
+            width: 140px;
+            height: 140px;
+        }
+
+        .dpad-btn {
+            position: absolute;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-family: 'DM Mono', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+        }
+        .dpad-btn:active {
+            background: var(--text-main);
+            color: var(--bg);
+        }
+
+        .dpad-up    { top: 0; left: 48px; }
+        .dpad-left  { top: 48px; left: 0; }
+        .dpad-right { top: 48px; right: 0; }
+        .dpad-down  { bottom: 0; left: 48px; }
+
+        .action-pad {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .boost-btn {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: var(--panel-bg);
+            border: 2px dashed var(--border-color);
+            color: var(--text-main);
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 var(--border-color);
+            transition: transform 0.1s;
+        }
+        .boost-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 var(--border-color);
+            background: var(--as);
+        }
+        .boost-btn.active-boost {
+            border-style: solid;
+            background: var(--text-main);
+            color: var(--bg);
         }
 
         /* ── 遊戲結束彈窗 ── */
@@ -544,16 +676,21 @@
             #name-screen { padding: 24px 16px; }
             .name-row label { width: 100px; }
             .panel-score, .stars-count { font-size: 18px; }
-            .control-cards { flex-direction: column; }
+            .control-cards { display: none; } /* 隱藏桌機鍵盤卡片 */
             .site-nav { padding: 0 16px; }
-            .nav-links { gap: 16px; }
+            .nav-links { display: none; } /* 縮小導覽 */
+            #joystick-container { display: flex; } /* 開啟手機搖桿 */
+        }
+
+        /* 如果是觸控裝置但寬度大於600也允許開啟搖桿 */
+        @media (pointer: coarse) {
+            #joystick-container { display: flex; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- 導覽列 -->
     <nav class="site-nav">
         <a href="index.html" class="nav-logo">LYZ.dev</a>
         <ul class="nav-links">
@@ -571,9 +708,8 @@
         </ul>
     </nav>
 
-    <!-- 開場頁面 -->
     <div class="site-header" id="site-header">
-        <div class="eyebrow">Mini Game · 雙人對戰</div>
+        <div class="eyebrow">Mini Game · 經典對決</div>
         <h1>誰是 <em>DAVID</em> 蛇</h1>
         <p class="intro-desc">
             兩條蛇，一張棋盤，一個冠軍。<br>
@@ -581,7 +717,6 @@
             全部星星吃完後解鎖 · 極限模式 ·
         </p>
 
-        <!-- 控制鍵卡片 -->
         <div class="control-cards">
             <div class="control-card p1">
                 <div class="cc-label">■ P1 · WASD</div>
@@ -614,14 +749,40 @@
         <div class="game-title">誰是 <em>DAVID</em> 蛇 ?</div>
 
         <div id="name-screen" style="display:flex">
-            <div class="name-row">
-                <label style="color:var(--snake-p1)">■ P1 (WASD)</label>
-                <input id="p1input" maxlength="8" placeholder="玩家1名稱" value="P1" />
+            <div class="setup-row">
+                <div class="setup-label">遊戲模式 / Game Mode</div>
+                <div class="mode-select-group">
+                    <button class="select-btn active" id="mode-single">單人挑戰</button>
+                    <button class="select-btn" id="mode-double">雙人對戰</button>
+                </div>
             </div>
-            <div class="name-row">
-                <label style="color:var(--snake-p2)">■ P2 (方向鍵)</label>
-                <input id="p2input" maxlength="8" placeholder="玩家2名稱" value="P2" />
+
+            <div class="setup-row">
+                <div class="setup-label">速度難度 / Difficulty</div>
+                <div class="diff-select-group">
+                    <button class="select-btn" id="diff-easy">Easy</button>
+                    <button class="select-btn active" id="diff-normal">Normal</button>
+                    <button class="select-btn" id="diff-hard">Hard</button>
+                </div>
             </div>
+
+            <div class="setup-row" id="p1-name-row">
+                <div class="name-row">
+                    <label style="color:var(--snake-p1)">■ P1 (WASD)</label>
+                    <input id="p1input" maxlength="8" placeholder="玩家1名稱" value="P1" />
+                </div>
+            </div>
+            <div class="setup-row" id="p2-name-row" style="display:none">
+                <div class="name-row">
+                    <label style="color:var(--snake-p2)">■ P2 (方向鍵)</label>
+                    <input id="p2input" maxlength="8" placeholder="玩家2名稱" value="P2" />
+                </div>
+            </div>
+
+            <div class="best-score-display" id="best-score-board">
+                Best Score: 0
+            </div>
+
             <button class="start-btn" id="startBtn">進入賽局</button>
         </div>
 
@@ -660,19 +821,31 @@
                 <canvas id="gameCanvas" width="800" height="600"></canvas>
             </div>
         </div>
+
+        <div id="joystick-container">
+            <div class="dpad">
+                <button class="dpad-btn dpad-up" id="joy-up">↑</button>
+                <button class="dpad-btn dpad-left" id="joy-left">←</button>
+                <button class="dpad-btn dpad-right" id="joy-right">→</button>
+                <button class="dpad-btn dpad-down" id="joy-down">↓</button>
+            </div>
+            <div class="action-pad">
+                <button class="boost-btn" id="joy-boost">Boost</button>
+            </div>
+        </div>
     </div>
 
     <div id="gameover-modal">
         <div class="modal-box">
             <div class="modal-winner" id="modal-winner">—</div>
             <div class="score-compare" id="score-compare">
-                <div class="score-compare-row">
+                <div class="score-compare-row" id="modal-p1-row">
                     <div class="sc-name" id="sc-p1name" style="color:var(--snake-p1)">P1</div>
                     <div class="sc-bar-wrap">
                         <div class="sc-bar p1" id="sc-bar-p1" style="width:0%">0</div>
                     </div>
                 </div>
-                <div class="score-compare-row">
+                <div class="score-compare-row" id="modal-p2-row">
                     <div class="sc-name" id="sc-p2name" style="color:var(--snake-p2)">P2</div>
                     <div class="sc-bar-wrap">
                         <div class="sc-bar p2" id="sc-bar-p2" style="width:0%">0</div>
@@ -692,10 +865,85 @@
         const { createApp } = Vue;
         createApp({}).mount("#app");
 
+        // ── Web Audio API 復古音效生成器 (免去載入外部 .mp3 檔案痛點) ──
+        const Sound = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playEat() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
+                osc.frequency.setValueAtTime(880, this.ctx.currentTime + 0.08); // A5
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.2);
+            },
+            playDie() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, this.ctx.currentTime); // A3
+                osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.45);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.45);
+            }
+        };
+
+        // ── 前端表單切換與持久化交互 ──
+        let selectedMode = 'single'; // single | double
+        let selectedDiff = 'normal'; // easy | normal | hard
+
+        function updateBestScoreLabel() {
+            const key = `david-snake-best-${selectedMode}-${selectedDiff}`;
+            const best = localStorage.getItem(key) || 0;
+            document.getElementById('best-score-board').textContent = `🏆 歷史最高紀錄 (Best): ${best}`;
+        }
+
         document.getElementById("btn").addEventListener("click", () => {
             document.getElementById("site-header").style.display = "none";
             document.getElementById("game-wrapper").style.display = "flex";
+            updateBestScoreLabel();
             setTimeout(() => document.getElementById("game-wrapper").scrollIntoView({ behavior: "smooth" }), 50);
+        });
+
+        // 模式切換按鈕事件
+        document.getElementById('mode-single').addEventListener('click', () => {
+            selectedMode = 'single';
+            document.getElementById('mode-single').classList.add('active');
+            document.getElementById('mode-double').classList.remove('active');
+            document.getElementById('p2-name-row').style.display = 'none';
+            updateBestScoreLabel();
+        });
+        document.getElementById('mode-double').addEventListener('click', () => {
+            selectedMode = 'double';
+            document.getElementById('mode-double').classList.add('active');
+            document.getElementById('mode-single').classList.remove('active');
+            document.getElementById('p2-name-row').style.display = 'flex';
+            updateBestScoreLabel();
+        });
+
+        // 難度切換按鈕事件
+        ['easy', 'normal', 'hard'].forEach(d => {
+            document.getElementById(`diff-${d}`).addEventListener('click', () => {
+                selectedDiff = d;
+                ['easy', 'normal', 'hard'].forEach(x => document.getElementById(`diff-${x}`).classList.remove('active'));
+                document.getElementById(`diff-${d}`).classList.add('active');
+                updateBestScoreLabel();
+            });
         });
 
         // ══════════════════════════════════════════
@@ -774,20 +1022,35 @@
         }
 
         class Game {
-            constructor(canvas, p1name, p2name) {
+            constructor(canvas, p1name, p2name, mode, diff) {
                 this.cv = canvas; this.ctx = canvas.getContext("2d");
                 this.p1name = p1name; this.p2name = p2name;
+                this.mode = mode; this.diff = diff;
                 this.ripples = [];
                 this.countdown = 3;
                 this.countdownStart = 0;
                 this.countdownDone = false;
+
+                // 根據難度設定不同的移動間隔 (ms值越小跑越快)
+                this.baseInterval = 170;
+                if (diff === 'easy') this.baseInterval = 220;
+                if (diff === 'hard') this.baseInterval = 100;
+                this.boostInterval = Math.floor(this.baseInterval * 0.4);
+
                 this.reset();
             }
             reset() {
                 const p1k = { KeyW: [0, -1], KeyS: [0, 1], KeyA: [-1, 0], KeyD: [1, 0] };
                 const p2k = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
+                
                 this.p1 = new Snake(Math.floor(GW / 3), Math.floor(GH / 3), C.p1, C.p1h, p1k, this.p1name);
-                this.p2 = new Snake(Math.floor(GW / 3 * 2), Math.floor(GH / 3 * 2), C.p2, C.p2h, p2k, this.p2name);
+                
+                if (this.mode === 'double') {
+                    this.p2 = new Snake(Math.floor(GW / 3 * 2), Math.floor(GH / 3 * 2), C.p2, C.p2h, p2k, this.p2name);
+                } else {
+                    this.p2 = null;
+                }
+
                 this.wormholes = []; this.spawnWormholes();
                 this.foods = []; this.totalSpawned = 0; this.maxStars = 16;
                 this.extreme = false; this.extremeStart = 0; this.state = "countdown";
@@ -797,7 +1060,8 @@
                 this.countdownDone = false;
                 for (let i = 0; i < 3; i++) this.spawnStar();
                 const now = performance.now();
-                this.p1.lastMoveTime = now; this.p2.lastMoveTime = now;
+                this.p1.lastMoveTime = now; 
+                if (this.p2) this.p2.lastMoveTime = now;
             }
             spawnWormholes() {
                 while (true) {
@@ -807,9 +1071,9 @@
             }
             spawnStar() {
                 if (this.totalSpawned >= this.maxStars) return;
-                for (let t = 0; t < 30; t++) {
+                for (let t = 0; t < 50; t++) {
                     const pos = [rng(1, GW - 2), rng(2, GH - 2)];
-                    if (!posIn(pos, this.p1.coord) && !posIn(pos, this.p2.coord) &&
+                    if (!posIn(pos, this.p1.coord) && (!this.p2 || !posIn(pos, this.p2.coord)) &&
                         !this.foods.some(f => posEq(f.pos, pos)) && !posIn(pos, this.wormholes)) {
                         this.foods.push({ pos, type: Math.random() < 0.5 ? "big" : "small" });
                         this.totalSpawned++; break;
@@ -819,13 +1083,14 @@
             moveSnake(s, enemy) {
                 if (!s.alive) return false;
                 const nh = s.nextHead(this.wormholes);
-                if (nh[0] < 0 || nh[0] >= GW || nh[1] < 0 || nh[1] >= GH) { s.alive = false; return false; }
-                if (posIn(nh, s.coord) || posIn(nh, enemy.coord)) { s.alive = false; return false; }
+                if (nh[0] < 0 || nh[0] >= GW || nh[1] < 0 || nh[1] >= GH) { s.alive = false; Sound.playDie(); return false; }
+                if (posIn(nh, s.coord) || (enemy && posIn(nh, enemy.coord))) { s.alive = false; Sound.playDie(); return false; }
                 s.coord.unshift(nh);
                 const fi = this.foods.findIndex(f => posEq(nh, f.pos));
                 if (fi >= 0) {
                     const pts = this.foods[fi].type === "big" ? 1 : 3;
                     s.score += pts;
+                    Sound.playEat();
                     const cx = nh[0] * CELL + CELL / 2, cy = nh[1] * CELL + CELL / 2;
                     this.ripples.push(new EatRipple(cx, cy, s.color));
                     this.foods.splice(fi, 1);
@@ -839,14 +1104,15 @@
 
             handleKey(code) {
                 if (this.state === "playing" || this.state === "extreme") {
-                    this.p1.handleKey(code); this.p2.handleKey(code);
+                    this.p1.handleKey(code); 
+                    if (this.p2) this.p2.handleKey(code);
                 }
                 if (this.state === "extreme_unlock" && code === "Enter") {
                     this.extreme = true; this.extremeStart = performance.now();
                     this.totalSpawned = 0; this.foods = [];
                     for (let i = 0; i < 16; i++) this.spawnStar();
                     const now = performance.now();
-                    this.p1.lastMoveTime = now; this.p2.lastMoveTime = now;
+                    this.p1.lastMoveTime = now; if (this.p2) this.p2.lastMoveTime = now;
                     this.state = "extreme";
                     document.getElementById("canvas-container").classList.add("extreme");
                     const badge = document.getElementById("sb-mode");
@@ -865,25 +1131,53 @@
 
             showGameover() {
                 let msg = "";
-                if (!this.p1.alive && !this.p2.alive) msg = "雙方同時陣亡 — 平手";
-                else if (!this.p1.alive) msg = `${this.p2.name} 贏得了 DAVID 稱號 🏆`;
-                else if (!this.p2.alive) msg = `${this.p1.name} 贏得了 DAVID 稱號 🏆`;
-                else if (this.p1.score > this.p2.score) msg = `${this.p1.name} 以分數優勢勝出`;
-                else if (this.p2.score > this.p1.score) msg = `${this.p2.name} 以分數優勢勝出`;
-                else msg = "雙方平分秋色";
+                
+                // 儲存最高分到 LocalStorage
+                const key = `david-snake-best-${this.mode}-${this.diff}`;
+                const localBest = parseInt(localStorage.getItem(key) || 0);
+
+                if (this.mode === 'single') {
+                    msg = `挑戰結束！你獲得了 ${this.p1.score} 分`;
+                    if (this.p1.score > localBest) {
+                        localStorage.setItem(key, this.p1.score);
+                        msg += " 🏆 創下新紀錄！";
+                    }
+                } else {
+                    if (!this.p1.alive && !this.p2.alive) msg = "雙方同時陣亡 — 平手";
+                    else if (!this.p1.alive) msg = `${this.p2.name} 贏得了 DAVID 稱號 🏆`;
+                    else if (!this.p2.alive) msg = `${this.p1.name} 贏得了 DAVID 稱號 🏆`;
+                    else if (this.p1.score > this.p2.score) msg = `${this.p1.name} 以分數優勢勝出`;
+                    else if (this.p2.score > this.p2.score) msg = `${this.p2.name} 以分數優勢勝出`;
+                    else msg = "雙方平分秋色";
+
+                    const currentMax = Math.max(this.p1.score, this.p2.score);
+                    if (currentMax > localBest) {
+                        localStorage.setItem(key, currentMax);
+                    }
+                }
+
                 document.getElementById("modal-winner").textContent = msg;
 
-                const max = Math.max(this.p1.score, this.p2.score, 1);
+                const max = Math.max(this.p1.score, this.p2 ? this.p2.score : 0, 1);
                 const w1 = Math.max(8, Math.round(this.p1.score / max * 100));
-                const w2 = Math.max(8, Math.round(this.p2.score / max * 100));
+                
                 document.getElementById("sc-p1name").textContent = this.p1.name;
-                document.getElementById("sc-p2name").textContent = this.p2.name;
                 const b1 = document.getElementById("sc-bar-p1");
-                const b2 = document.getElementById("sc-bar-p2");
                 b1.style.width = "0%"; b1.textContent = this.p1.score;
-                b2.style.width = "0%"; b2.textContent = this.p2.score;
+
+                if (this.mode === 'double') {
+                    document.getElementById("modal-p2-row").style.display = 'flex';
+                    const w2 = Math.max(8, Math.round(this.p2.score / max * 100));
+                    document.getElementById("sc-p2name").textContent = this.p2.name;
+                    const b2 = document.getElementById("sc-bar-p2");
+                    b2.style.width = "0%"; b2.textContent = this.p2.score;
+                    setTimeout(() => { b1.style.width = w1 + "%"; b2.style.width = w2 + "%"; }, 100);
+                } else {
+                    document.getElementById("modal-p2-row").style.display = 'none';
+                    setTimeout(() => { b1.style.width = w1 + "%"; }, 100);
+                }
+                
                 document.getElementById("gameover-modal").classList.add("show");
-                setTimeout(() => { b1.style.width = w1 + "%"; b2.style.width = w2 + "%"; }, 100);
             }
 
             update(now) {
@@ -892,7 +1186,7 @@
                     const newCd = 3 - Math.floor(elapsed / 1000);
                     if (newCd <= 0) {
                         this.state = "playing";
-                        this.p1.lastMoveTime = now; this.p2.lastMoveTime = now;
+                        this.p1.lastMoveTime = now; if (this.p2) this.p2.lastMoveTime = now;
                     } else {
                         this.countdown = newCd;
                         this._updateScorebar();
@@ -900,21 +1194,42 @@
                     }
                 }
 
-                const BASE = 130, BOOST = 40;
                 if (this.state === "extreme") {
                     const elapsed = now - this.extremeStart;
-                    if (elapsed >= 5000) { this.p1.boosted = true; this.p2.boosted = true; }
-                    else { this.p1.boosted = false; this.p2.boosted = false; }
-                }
-                if (this.state === "playing" || this.state === "extreme") {
-                    for (const [s, e] of [[this.p1, this.p2], [this.p2, this.p1]]) {
-                        const spd = s.boosted ? BOOST : BASE;
-                        if (now - s.lastMoveTime >= spd) { this.moveSnake(s, e); s.lastMoveTime = now; }
+                    if (elapsed >= 5000) { 
+                        this.p1.boosted = true; 
+                        if (this.p2) this.p2.boosted = true; 
+                    } else { 
+                        this.p1.boosted = false; 
+                        if (this.p2) this.p2.boosted = false; 
                     }
-                    if (this.state === "playing" && !this.extreme && this.p1.alive && this.p2.alive && this.remaining === 0)
+                }
+
+                if (this.state === "playing" || this.state === "extreme") {
+                    // P1 移動控制
+                    const p1Spd = this.p1.boosted ? this.boostInterval : this.baseInterval;
+                    if (now - this.p1.lastMoveTime >= p1Spd) { 
+                        this.moveSnake(this.p1, this.p2); 
+                        this.p1.lastMoveTime = now; 
+                    }
+
+                    // P2 移動控制 (僅在雙人模式下)
+                    if (this.mode === 'double' && this.p2) {
+                        const p2Spd = this.p2.boosted ? this.boostInterval : this.baseInterval;
+                        if (now - this.p2.lastMoveTime >= p2Spd) { 
+                            this.moveSnake(this.p2, this.p1); 
+                            this.p2.lastMoveTime = now; 
+                        }
+                    }
+
+                    // 檢查是否完成目標進極限模式
+                    const isAllDead = this.mode === 'double' ? (!this.p1.alive || !this.p2.alive) : !this.p1.alive;
+                    if (this.state === "playing" && !this.extreme && !isAllDead && this.remaining === 0)
                         this.state = "extreme_unlock";
+                    
+                    // 檢查遊戲結束
                     if ((this.state === "playing" || this.state === "extreme") &&
-                        (!this.p1.alive || !this.p2.alive || (this.state === "extreme" && this.remaining === 0))) {
+                        (isAllDead || (this.state === "extreme" && this.remaining === 0))) {
                         this.state = "gameover";
                         this.showGameover();
                     }
@@ -923,21 +1238,30 @@
             }
 
             _updateScorebar() {
-                const maxScore = Math.max(this.p1.score, this.p2.score, 1);
+                const maxScore = Math.max(this.p1.score, this.p2 ? this.p2.score : 0, 1);
                 document.getElementById("sb-p1name").textContent = this.p1.name;
-                document.getElementById("sb-p2name").textContent = this.p2.name;
                 document.getElementById("sb-p1score").textContent = String(this.p1.score).padStart(2, "0");
-                document.getElementById("sb-p2score").textContent = String(this.p2.score).padStart(2, "0");
                 document.getElementById("bar-p1").style.width = (this.p1.score / maxScore * 100) + "%";
-                document.getElementById("bar-p2").style.width = (this.p2.score / maxScore * 100) + "%";
                 document.getElementById("sb-stars").textContent = String(this.remaining).padStart(2, "0");
 
-                const pp1 = document.getElementById("panel-p1"), pp2 = document.getElementById("panel-p2");
-                const bl1 = document.getElementById("boost-p1"), bl2 = document.getElementById("boost-p2");
+                const pp1 = document.getElementById("panel-p1");
+                const bl1 = document.getElementById("boost-p1");
                 if (this.p1.boosted) { pp1.classList.add("boosted"); bl1.textContent = "✦ Boost"; bl1.classList.add("on"); }
                 else { pp1.classList.remove("boosted"); bl1.textContent = ""; bl1.classList.remove("on"); }
-                if (this.p2.boosted) { pp2.classList.add("boosted"); bl2.textContent = "✦ Boost"; bl2.classList.add("on"); }
-                else { pp2.classList.remove("boosted"); bl2.textContent = ""; bl2.classList.remove("on"); }
+
+                if (this.mode === 'double' && this.p2) {
+                    document.getElementById("panel-p2").style.display = "flex";
+                    document.getElementById("sb-p2name").textContent = this.p2.name;
+                    document.getElementById("sb-p2score").textContent = String(this.p2.score).padStart(2, "0");
+                    document.getElementById("bar-p2").style.width = (this.p2.score / maxScore * 100) + "%";
+                    
+                    const pp2 = document.getElementById("panel-p2");
+                    const bl2 = document.getElementById("boost-p2");
+                    if (this.p2.boosted) { pp2.classList.add("boosted"); bl2.textContent = "✦ Boost"; bl2.classList.add("on"); }
+                    else { pp2.classList.remove("boosted"); bl2.textContent = ""; bl2.classList.remove("on"); }
+                } else {
+                    document.getElementById("panel-p2").style.display = "none";
+                }
             }
 
             _drawHeadIndicator(ctx, s) {
@@ -984,8 +1308,10 @@
                 for (const r of this.ripples) r.draw(ctx);
                 this.ripples = this.ripples.filter(r => !r.done);
 
-                for (const s of [this.p1, this.p2]) {
-                    if (!s.alive) continue;
+                // 畫蛇蛇
+                const renderSnakes = this.mode === 'double' ? [this.p1, this.p2] : [this.p1];
+                for (const s of renderSnakes) {
+                    if (!s || !s.alive) continue;
                     for (let i = 0; i < s.coord.length; i++) {
                         const p = s.coord[i], x = p[0] * CELL + 1, y = p[1] * CELL + 1, sz = CELL - 2;
                         ctx.fillStyle = i === 0 ? s.headColor : s.color;
@@ -1057,13 +1383,21 @@
         document.getElementById("modal-quit").addEventListener("click", quitToMenu);
 
         function startGame() {
+            // 點擊互動激活瀏覽器聲音Context
+            Sound.init();
+
             const p1 = document.getElementById("p1input").value.trim() || "P1";
             const p2 = document.getElementById("p2input").value.trim() || "P2";
+            
             document.getElementById("name-screen").style.display = "none";
             document.getElementById("scorebar").style.display = "flex";
             document.getElementById("canvas-outer").style.display = "block";
+            
             const canvas = document.getElementById("gameCanvas");
-            game = new Game(canvas, p1, p2);
+            
+            // 初始化包含單/雙人模式及難度
+            game = new Game(canvas, p1, p2, selectedMode, selectedDiff);
+            
             if (animId) cancelAnimationFrame(animId);
             loop();
         }
@@ -1076,6 +1410,7 @@
             document.getElementById("name-screen").style.display = "flex";
             if (animId) { cancelAnimationFrame(animId); animId = null; }
             game = null;
+            updateBestScoreLabel();
         }
 
         function loop() {
@@ -1085,11 +1420,26 @@
             animId = requestAnimationFrame(loop);
         }
 
+        // ── 實體鍵盤事件處理 ──
         document.addEventListener("keydown", e => {
             if (!game) return;
             if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
             if (game.state === "gameover" && e.code === "Escape") { quitToMenu(); return; }
             game.handleKey(e.code);
+        });
+
+        // ── 虛擬搖桿事件綁定 ──
+        document.getElementById('joy-up').addEventListener('click', () => { if (game) game.handleKey('KeyW'); });
+        document.getElementById('joy-left').addEventListener('click', () => { if (game) game.handleKey('KeyA'); });
+        document.getElementById('joy-right').addEventListener('click', () => { if (game) game.handleKey('KeyD'); });
+        document.getElementById('joy-down').addEventListener('click', () => { if (game) game.handleKey('KeyS'); });
+        
+        const joyBoost = document.getElementById('joy-boost');
+        joyBoost.addEventListener('click', () => {
+            if (game && game.p1) {
+                game.p1.boosted = !game.p1.boosted;
+                joyBoost.classList.toggle('active-boost', game.p1.boosted);
+            }
         });
     </script>
 </body>
