@@ -45,11 +45,11 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 /* ── Multiplayer Tracks ── */
 .race-container {width:100%;background:var(--panel);border:1px solid var(--bd);padding:12px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px;}
 .race-title {font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;}
-.race-track {position:relative;height:24px;background:var(--bg);border-bottom:1px dashed var(--bd2);display:flex;align-items:center;padding:0 10px;}
+.race-track {position:relative;height:28px;background:var(--bg);border-bottom:1px dashed var(--bd2);display:flex;align-items:center;padding:0 10px;}
 .race-track:last-child {border-bottom:none;}
-.racer-name {font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);width:90px;z-index:5;background:rgba(255,255,255,0.7);padding-right:4px;}
-.racer-lane {position:relative;flex:1;height:100%;}
-.racer-avatar {position:absolute;top:50%;transform:translateY(-50%) translateX(-50%);font-size:14px;transition:left 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);left:0%;}
+.racer-name {font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);width:105px;z-index:5;background:rgba(255,255,255,0.85);padding-right:6px;flex-shrink:0;}
+.racer-lane {position:relative;flex:1;height:100%;overflow:visible;} /* 💡 允許頭像稍微超出軌道邊緣 */
+.racer-avatar {position:absolute;top:50%;transform:translateY(-50%);font-size:15px;transition:left 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);left:0px;margin-left:8px;} /* 💡 加入安全起跑間距，徹底解決開局被遮擋的問題 */
 
 /* ── Timer ring ── */
 .timer-wrap{position:relative;width:100px;height:100px;margin-bottom:20px;flex-shrink:0;}
@@ -72,8 +72,8 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .custom-textarea {width:100%;height:60px;background:var(--bg);border:1px solid var(--bd);padding:8px;font-family:inherit;font-size:13px;color:var(--text);outline:none;resize:none;}
 
 /* ── Text display ── */
-.text-display{width:100%;background:var(--panel);border:1px solid var(--bd);padding:20px 24px;font-family:'DM Mono',monospace;font-size:1.05rem;line-height:2;letter-spacing:.02em;margin-bottom:16px;min-height:110px;position:relative;user-select:none;}
-.text-display .char{position:relative;transition:color .08s;}
+.text-display{width:100%;background:var(--panel);border:1px solid var(--bd);padding:20px 24px;font-family:'DM Mono',monospace;font-size:1.05rem;line-height:1.8;letter-spacing:.02em;margin-bottom:16px;height:160px;position:relative;user-select:none;overflow-y:auto;} /* 💡 高度硬化，並加入隱藏滾動條，任何字數都絕不超出白框 */
+.text-display .char{position:relative;transition:color .08s;display:inline-block;}
 .char.correct{color:var(--ac);}
 .char.wrong{color:var(--red);background:rgba(169,68,66,.1);}
 .char.cursor{border-left:2px solid var(--text);animation:blink .9s step-end infinite;}
@@ -285,7 +285,7 @@ canvas#wpmChart {width:100%;height:150px;display:block;}
 </div>
 
 <script>
-// ── Web Audio API 原生電子音效發聲引擎 (免依賴外部音訊資產) ──
+// ── Web Audio API 原生電子音效發聲引擎 ──
 const Sound = {
   ctx: null,
   init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
@@ -307,11 +307,9 @@ let timer, elapsed2, totalCorrect, totalWrong, totalTyped;
 let currentText = '';
 let typedHistory = '';
 
-// 特效追蹤矩陣
-let wpmTimelineData = []; // 紀錄每秒的實時 WPM
-let errorKeyMap = {};    // 紀錄各按鍵錯誤次數
+let wpmTimelineData = []; 
+let errorKeyMap = {};    
 
-// NPC 真人模擬競速設定值
 let npc1_speed = 0, npc2_speed = 0;
 
 const KB_LAYOUT = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
@@ -328,7 +326,6 @@ function setLang(l, btn) {
   restart();
 }
 
-// 展開與關閉自訂文章抽屜
 document.getElementById('customToggleBtn').addEventListener('click', function() {
   this.classList.toggle('on');
   document.getElementById('customDrawer').classList.toggle('show');
@@ -381,10 +378,9 @@ function resetDisplay() {
   document.getElementById('sErr').textContent = '—';
   document.getElementById('result').classList.remove('show');
   
-  // 重置競速小車頭像
-  document.getElementById('avatar-user').style.left = '0%';
-  document.getElementById('avatar-npc1').style.left = '0%';
-  document.getElementById('avatar-npc2').style.left = '0%';
+  document.getElementById('avatar-user').style.left = '0px';
+  document.getElementById('avatar-npc1').style.left = '0px';
+  document.getElementById('avatar-npc2').style.left = '0px';
 
   buildText();
   renderDisplay();
@@ -404,14 +400,13 @@ function restart() {
 }
 
 function startTimer() {
-  Sound.init(); // 用戶互動時激活音訊模組
+  Sound.init(); 
   state = 'running';
   elapsed2 = 0;
   wpmTimelineData = [0];
 
-  // 隨機賦予 NPC 本局進展速度常數
-  npc1_speed = 35 + Math.random() * 25; // 速度落在 35~60 WPM
-  npc2_speed = 45 + Math.random() * 35; // 速度落在 45~80 WPM
+  npc1_speed = 35 + Math.random() * 25; 
+  npc2_speed = 45 + Math.random() * 35; 
 
   const circ = 2 * Math.PI * 44; 
   timer = setInterval(() => {
@@ -424,18 +419,20 @@ function startTimer() {
     if (remaining <= 5) document.getElementById('timerRing').style.stroke = '#A94442';
     else if (remaining <= 10) document.getElementById('timerRing').style.stroke = '#C5A059';
 
-    // 真人與 NPC 競速進度條位置實時映射
+    // 💡 換算百分比並分配給 left 樣式
     const totalLen = currentText.length || 1;
     const userPct = Math.min(100, (totalTyped / totalLen) * 100);
-    document.getElementById('avatar-user').style.left = userPct + '%';
+    document.getElementById('avatar-user').style.left = `calc(${userPct}% - ${userPct * 0.15}px)`;
 
-    // 依時間等比換算 NPC 進度
     const npc1_chars = (npc1_speed * 5) * (elapsed2 / 60);
     const npc2_chars = (npc2_speed * 5) * (elapsed2 / 60);
-    document.getElementById('avatar-npc1').style.left = Math.min(100, (npc1_chars / totalLen) * 100) + '%';
-    document.getElementById('avatar-npc2').style.left = Math.min(100, (npc2_chars / totalLen) * 100) + '%';
+    
+    const npc1Pct = Math.min(100, (npc1_chars / totalLen) * 100);
+    const npc2Pct = Math.min(100, (npc2_chars / totalLen) * 100);
+    
+    document.getElementById('avatar-npc1').style.left = `calc(${npc1Pct}% - ${npc1Pct * 0.15}px)`;
+    document.getElementById('avatar-npc2').style.left = `calc(${npc2Pct}% - ${npc2Pct * 0.15}px)`;
 
-    // 收集每秒 WPM 作為折線圖座標
     const min = elapsed2 / 60;
     const currentWpm = min > 0 ? Math.round(totalCorrect / 5 / min) : 0;
     wpmTimelineData.push(currentWpm);
@@ -473,11 +470,9 @@ function finish() {
   
   document.getElementById('result').classList.add('show');
 
-  // 本局遊戲結束，繪製 WPM 趨勢圖與熱圖
   drawWpmChart();
   drawHeatmapKeyboard();
 
-  // save best
   const key = `typing-best-${timeLimit}-${lang}`;
   const prev = JSON.parse(localStorage.getItem(key) || 'null');
   if (!prev || wpm > prev.wpm) {
@@ -486,7 +481,6 @@ function finish() {
   renderRecords();
 }
 
-// ── 繪製即時 WPM 趨勢折線圖 (Canvas) ──
 function drawWpmChart() {
   const canvas = document.getElementById('wpmChart');
   const ctx = canvas.getContext('2d');
@@ -498,7 +492,6 @@ function drawWpmChart() {
 
   const maxWpm = Math.max(...wpmTimelineData, 60);
 
-  // 襯底水平輔助線
   ctx.strokeStyle = '#F5F2EB'; ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(paddingLeft, paddingTop); ctx.lineTo(paddingLeft + graphW, paddingTop);
@@ -506,7 +499,6 @@ function drawWpmChart() {
   ctx.moveTo(paddingLeft, paddingTop + graphH); ctx.lineTo(paddingLeft + graphW, paddingTop + graphH);
   ctx.stroke();
 
-  // 速度折線主體軌跡
   ctx.strokeStyle = '#6b4c32'; ctx.lineWidth = 2.5;
   ctx.beginPath();
   const stepX = graphW / (wpmTimelineData.length - 1);
@@ -517,14 +509,12 @@ function drawWpmChart() {
   });
   ctx.stroke();
 
-  // 渲染端點文字
   ctx.fillStyle = '#8A827B'; ctx.font = '9px "DM Mono"'; ctx.textAlign = 'right';
   ctx.fillText(maxWpm, paddingLeft - 6, paddingTop + 3);
   ctx.fillText(Math.round(maxWpm/2), paddingLeft - 6, paddingTop + graphH/2 + 3);
   ctx.fillText(0, paddingLeft - 6, paddingTop + graphH + 3);
 }
 
-// ── 渲染與填充字母熱圖分布 ──
 function drawHeatmapKeyboard() {
   const container = document.getElementById('keyboardHeatmap');
   container.innerHTML = '';
@@ -541,7 +531,6 @@ function drawHeatmapKeyboard() {
 
       const errCount = errorKeyMap[char] || 0;
       if (errCount > 0 && maxErrors > 0) {
-        // 依據出錯頻率強度由淺至深調整紅色漸層背景色
         const alpha = 0.15 + (errCount / maxErrors) * 0.75;
         keySpan.style.backgroundColor = `rgba(169, 68, 66, ${alpha})`;
         keySpan.style.color = '#FFFFFF';
@@ -577,20 +566,17 @@ function renderRecords() {
   }
 }
 
-// ── 輸入控制交互的核心邏輯 ──
 document.getElementById('typingInput').addEventListener('input', e => {
   if (state === 'done') return;
   if (state === 'idle') startTimer();
 
   const typed = e.target.value;
   
-  // 觸發錯誤音效回饋與熱圖統計
   if (typed.length > typedHistory.length) {
     const lastIdx = typed.length - 1;
     if (typed[lastIdx] !== currentText[lastIdx]) {
-      Sound.playError(); // 原生 Web Audio 打錯提示音
+      Sound.playError(); 
 
-      // 提取出打錯的標準字母，填入熱圖對照表
       const targetChar = currentText[lastIdx].toUpperCase();
       if (/[A-Z]/.test(targetChar)) {
         errorKeyMap[targetChar] = (errorKeyMap[targetChar] || 0) + 1;
@@ -612,7 +598,6 @@ document.getElementById('typingInput').addEventListener('input', e => {
 document.getElementById('restartBtn').addEventListener('click', restart);
 document.getElementById('newTextBtn').addEventListener('click', () => { buildText(); renderDisplay(); if (state !== 'idle') restart(); });
 
-// 初始化
 totalCorrect = 0; totalWrong = 0; totalTyped = 0;
 buildText();
 renderDisplay();
