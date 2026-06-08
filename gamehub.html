@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -7,27 +7,57 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('lyz-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  })();
+</script>
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
+
+/* ── 💡 網頁亮色主題配置 (Light Theme) ── */
+:root[data-theme="light"] {
   --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
   --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
   --as:rgba(107,76,50,.09);--gold:#C5A059;--red:#A94442;
+  --noise-opacity: .025;
 }
-body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+/* ── 💡 網頁深色主題配置 (Dark Theme) ── */
+:root[data-theme="dark"] {
+  --bg:#1A1614;--panel:#25201E;--text:#EAE3D5;--dim:#A29990;
+  --bd:#3A322D;--bd2:#4A3F3A;--ac:#C5A059;--ac2:#DFD5BF;
+  --as:rgba(197,160,89,.08);--gold:#DFD5BF;--red:#E26D6D;
+  --noise-opacity: .04;
+}
+
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background-color 0.3s, color 0.3s;}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:.025;}
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:var(--noise-opacity);}
 
 /* ── Nav ── */
-.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;transition:background-color 0.3s, border-color 0.3s;}
+:root[data-theme="dark"] .site-nav { background: rgba(26, 22, 20, 0.9); }
 @keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
 .nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
 .nav-logo:hover{color:var(--ac);}
-.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
-.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
+.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;align-items:center;}
+
+/* 💡 第 45 行已修正完畢：移除中途卡入的 Suspend 亂碼 */
+.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1rem;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
 .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+
+.theme-toggle-btn {
+  background: transparent; border: 1px solid var(--bd); color: var(--text);
+  font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 10px;
+  cursor: pointer; transition: all 0.2s; margin-left: 8px; text-transform: uppercase;
+}
+.theme-toggle-btn:hover { background: var(--as); border-color: var(--ac); }
 
 /* ── Page ── */
 .page{width:100%;max-width:1000px;padding:80px 24px 60px;position:relative;z-index:1;}
@@ -40,7 +70,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .hero-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;margin-bottom:32px;}
 
 /* ── 大廳綜合數據中心橫條 ── */
-.stats-strip{display:flex;gap:0;border:1px solid var(--bd);background:var(--panel);margin-bottom:48px;width:100%;max-width:720px;}
+.stats-strip{display:flex;gap:0;border:1px solid var(--bd);background:var(--panel);margin-bottom:48px;width:100%;max-width:720px;transition:background-color 0.3s, border-color 0.3s;}
 .strip-item{flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--bd);text-align:center;}
 .strip-item:last-child{border-right:none;}
 .strip-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;}
@@ -56,9 +86,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px;}
 
 /* ── Game card ── */
-.game-card{background:var(--panel);border:1px solid var(--bd);text-decoration:none;color:var(--text);display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,border-color .3s;position:relative;overflow:hidden;animation:cardIn .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s);}
+.game-card{background:var(--panel);border:1px solid var(--bd);text-decoration:none;color:var(--text);display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,border-color .3s,background-color 0.3s;position:relative;overflow:hidden;animation:cardIn .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s);}
 .game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.16,1,.3,1);}
 .game-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(107,76,50,.12);border-color:var(--bd2);}
+:root[data-theme="dark"] .game-card:hover { box-shadow:0 16px 40px rgba(0,0,0,.4); }
 .game-card:hover::before{transform:scaleX(1);}
 @keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
@@ -86,13 +117,31 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .diff-dot.on{background:var(--ac);}
 .diff-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--dim);letter-spacing:.1em;margin-left:6px;}
 
-/* ── Recent scores section ── */
-.scores-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:40px;}
-.score-card{background:var(--panel);border:1px solid var(--bd);padding:16px;display:flex;flex-direction:column;gap:6px;}
+/* ── Personal Best Section ── */
+.scores-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+.score-card{background:var(--panel);border:1px solid var(--bd);padding:16px;display:flex;flex-direction:column;gap:6px;transition:background-color 0.3s, border-color 0.3s;}
 .score-game{font-size:1.4rem;margin-bottom:2px;}
 .score-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;}
 .score-val{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--ac);}
 .score-none{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--bd2);}
+
+/* 分享工具列 */
+.share-action-row {
+  display: flex; gap: 10px; width: 100%; margin-bottom: 48px; max-width: 400px; margin-left: auto; margin-right: auto;
+}
+.share-btn {
+  flex: 1; font-family: 'DM Mono', monospace; font-size: 11px; padding: 10px 14px;
+  background: transparent; border: 1px solid var(--bd2); color: var(--text);
+  cursor: pointer; transition: all 0.2s; letter-spacing: 1px; text-transform: uppercase; text-align: center;
+}
+.share-btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+.toast-msg {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--text); color: var(--bg); font-family: 'DM Mono', monospace;
+  font-size: 11px; padding: 8px 20px; letter-spacing: 1px; z-index: 300;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
 
 /* ── Footer ── */
 .hub-footer{border-top:1px solid var(--bd);padding:20px 0 0;display:flex;justify-content:space-between;align-items:center;}
@@ -101,7 +150,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .footer-link{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--dim);text-decoration:none;letter-spacing:.08em;transition:color .2s;}
 .footer-link:hover{color:var(--ac);}
 
-/* 重置按鈕專屬精美樣式 */
 .reset-btn {font-family:'DM Mono',monospace;font-size:.55rem;color:var(--red);background:transparent;border:1px dashed rgba(169,68,66,0.4);padding:4px 10px;cursor:pointer;transition:all 0.2s;letter-spacing:1px;}
 .reset-btn:hover {background:rgba(169,68,66,0.08);border-color:var(--red);}
 
@@ -118,6 +166,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .game-grid{grid-template-columns:1fr;}
   .scores-grid{grid-template-columns:repeat(2,1fr);}
   .hub-footer{flex-direction:column;gap:12px;text-align:center;}
+  .share-action-row { padding: 0 16px; }
 }
 </style>
 </head>
@@ -131,13 +180,14 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <li><a href="gamehub.html" class="active">Games</a></li>
     <li><a href="notes.html">Notes</a></li>
     <li><a href="exercise.html">Exercises</a></li>
+    <li><button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">Dark</button></li>
   </ul>
 </nav>
 
 <div class="page">
 
   <div class="hero">
-    <div class="eyebrow">Game Hub · 遊戲大廳</div>
+    <div class="eyebrow">Game Hub · 數據大廳</div>
     <h1 class="hero-title">Play &amp; <em>Challenge</em></h1>
     <p class="hero-sub">五款網頁核心遊戲 · 內建音效與統計圖表 · 全紀錄本機自動儲存</p>
 
@@ -168,7 +218,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <div class="card-emoji">🐍</div>
       <span class="card-badge versus">Versus · 經典</span>
       <div class="card-title">誰是 <em>DAVID</em> 蛇</div>
-      <div class="card-desc">支援單人突破與雙人對戰！內建 Easy/Normal/Hard 速度模式、行動搖桿方向鍵、網頁原生 8-bit 電子音效與極限狂飆狂暴化模式。</div>
+      <div class="card-desc">雙人貪食蛇。支援單人突破與雙人對戰！內建 Easy/Normal/Hard 速度模式、行動搖桿方向鍵、網頁原生 8-bit 電子音效與極限狂飆狂暴化模式。</div>
       <div class="diff-row">
         <div class="diff-dot on"></div><div class="diff-dot on"></div><div class="diff-dot on"></div><div class="diff-dot"></div>
         <span class="diff-label">Variable</span>
@@ -258,32 +308,39 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <div class="section-line"></div>
   </div>
 
-  <div class="scores-grid">
-    <div class="score-card">
-      <div class="score-game">🐍</div>
-      <div class="score-label">Snake Max</div>
-      <div class="score-val" id="snakeScore">—</div>
+  <div id="captureArea">
+    <div class="scores-grid">
+      <div class="score-card">
+        <div class="score-game">🐍</div>
+        <div class="score-label">Snake Max</div>
+        <div class="score-val" id="snakeScore">—</div>
+      </div>
+      <div class="score-card">
+        <div class="score-game">🧱</div>
+        <div class="score-label">Breakout</div>
+        <div class="score-val" id="bkoScore">—</div>
+      </div>
+      <div class="score-card">
+        <div class="score-game">🔢</div>
+        <div class="score-label">2048 Max</div>
+        <div class="score-val" id="g2048Score">—</div>
+      </div>
+      <div class="score-card">
+        <div class="score-game">🃏</div>
+        <div class="score-label">Memory Top</div>
+        <div class="score-val" id="memScore">—</div>
+      </div>
+      <div class="score-card">
+        <div class="score-game">⌨️</div>
+        <div class="score-label">Typing Max</div>
+        <div class="score-val" id="typingScore">—</div>
+      </div>
     </div>
-    <div class="score-card">
-      <div class="score-game">🧱</div>
-      <div class="score-label">Breakout</div>
-      <div class="score-val" id="bkoScore">—</div>
-    </div>
-    <div class="score-card">
-      <div class="score-game">🔢</div>
-      <div class="score-label">2048 Max</div>
-      <div class="score-val" id="g2048Score">—</div>
-    </div>
-    <div class="score-card">
-      <div class="score-game">🃏</div>
-      <div class="score-label">Memory Top</div>
-      <div class="score-val" id="memScore">—</div>
-    </div>
-    <div class="score-card">
-      <div class="score-game">⌨️</div>
-      <div class="score-label">Typing Max</div>
-      <div class="score-val" id="typingScore">—</div>
-    </div>
+  </div>
+
+  <div class="share-action-row">
+    <button class="share-btn" onclick="copyScoresToClipboard()">📤 複製成績文字</button>
+    <button class="share-btn" onclick="generateScorecardImage()">📸 下載戰績卡片</button>
   </div>
 
   <div class="hub-footer">
@@ -297,10 +354,31 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 </div>
 
+<div class="toast-msg" id="toastMsg">已複製到剪貼簿</div>
+
 <script>
-// ── 從全新的各遊戲 localStorage 鍵值中萃取最優分數 ──
+let cachedStats = { playedCount: 0, rankName: "Novice", apmIndex: 0, snake: "—", breakout: "—", g2048: "—", memory: "—", typing: "—" };
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('lyz-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? 'Light' : 'Dark';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = current === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+}
+
+window.addEventListener('storage', (e) => {
+  if (e.key === 'lyz-theme' && e.newValue) {
+    applyTheme(e.newValue);
+  }
+});
+
 function getBest() {
-  // 1. 撈取貪吃蛇最高分
   let snakeMax = 0;
   ['single', 'double'].forEach(m => {
     ['easy', 'normal', 'hard'].forEach(d => {
@@ -309,16 +387,13 @@ function getBest() {
     });
   });
 
-  // 2. 打磚塊最高分
   const bko = parseInt(localStorage.getItem('bko-best') || '0');
 
-  // 3. 2048 最高分 (同步相容 4x4 與 5x5)
   const g2048Base = parseInt(localStorage.getItem('2048-best') || '0');
   const g2048_4 = parseInt(localStorage.getItem('2048-best-4') || '0');
   const g2048_5 = parseInt(localStorage.getItem('2048-best-5') || '0');
   const g2048 = Math.max(g2048Base, g2048_4, g2048_5);
 
-  // 4. 記憶翻牌排行榜最高分
   let memTopScore = 0;
   ['4', '6'].forEach(s => {
     const records = JSON.parse(localStorage.getItem(`mem-records-${s}`) || '[]');
@@ -332,7 +407,6 @@ function getBest() {
     if (oldMem4) memTopScore = oldMem4.moves; 
   }
 
-  // 5. 打字測試最高 WPM
   let bestWpm = 0;
   ['15','30','60','120'].forEach(t => {
     ['en','zh'].forEach(l => {
@@ -346,30 +420,26 @@ function getBest() {
 
 function render() {
   const { snakeMax, bko, g2048, memTopScore, bestWpm } = getBest();
-  
-  // 計算玩家玩過幾款遊戲項目
   const played = [snakeMax > 0, bko > 0, g2048 > 0, memTopScore > 0, bestWpm > 0].filter(Boolean).length;
 
-  // 1. 遊戲解鎖度進度條
   document.getElementById('statPlayed').textContent = `${played} / 5`;
+  cachedStats.playedCount = played;
   
-  // 依據完成度動態賦予段位稱號
   let rankStr = "Novice / 遊戲初學者";
   if (played >= 5) rankStr = "👑 Arcade Master / 街機達人";
   else if (played >= 3) rankStr = "🔥 Elite Gamer / 菁英玩家";
   else if (played >= 1) rankStr = "🎮 Casual Player / 休閒玩家";
   document.getElementById('statRank').textContent = rankStr;
+  cachedStats.rankName = rankStr;
 
-  // 2. 💡 綜合手速戰力指標：結合 WPM 與 貪吃蛇得分做動態係數演算法加權
   let apmXIndex = 0;
   if (bestWpm > 0 || snakeMax > 0) {
     apmXIndex = Math.round((bestWpm * 12) + (snakeMax * 35));
-    // 保底基礎分
     if (apmXIndex < 100) apmXIndex += 120;
   }
   document.getElementById('statTotalChars').textContent = apmXIndex > 0 ? "Rank " + apmXIndex.toLocaleString() : "—";
+  cachedStats.apmIndex = apmXIndex;
 
-  // 各遊戲卡片頁尾展示
   const isOldMem = localStorage.getItem('mem-best-4') && !localStorage.getItem('mem-records-4');
   document.getElementById('snakeBest').textContent   = snakeMax > 0 ? snakeMax.toLocaleString() : '—';
   document.getElementById('bkoBest').textContent     = bko > 0 ? bko.toLocaleString() : '—';
@@ -377,14 +447,18 @@ function render() {
   document.getElementById('memBest').textContent     = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
   document.getElementById('typingBest').textContent  = bestWpm > 0 ? bestWpm : '—';
 
-  // 下方成就看板詳細概覽
-  document.getElementById('snakeScore').textContent  = snakeMax > 0 ? `${snakeMax} Pts` : '—';
-  document.getElementById('bkoScore').textContent    = bko > 0 ? bko.toLocaleString() : '—';
-  document.getElementById('g2048Score').textContent  = g2048 > 0 ? g2048.toLocaleString() : '—';
-  document.getElementById('memScore').textContent    = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
-  document.getElementById('typingScore').textContent = bestWpm > 0 ? `${bestWpm} WPM` : '—';
+  cachedStats.snake = snakeMax > 0 ? `${snakeMax} Pts` : '—';
+  cachedStats.breakout = bko > 0 ? bko.toLocaleString() : '—';
+  cachedStats.g2048 = g2048 > 0 ? g2048.toLocaleString() : '—';
+  cachedStats.memory = memTopScore > 0 ? (isOldMem ? `${memTopScore} 步` : `${memTopScore} 分`) : '—';
+  cachedStats.typing = bestWpm > 0 ? `${bestWpm} WPM` : '—';
 
-  // 點亮已有得分數據格的字體顏色
+  document.getElementById('snakeScore').textContent  = cachedStats.snake;
+  document.getElementById('bkoScore').textContent    = cachedStats.breakout;
+  document.getElementById('g2048Score').textContent  = cachedStats.g2048;
+  document.getElementById('memScore').textContent    = cachedStats.memory;
+  document.getElementById('typingScore').textContent = cachedStats.typing;
+
   if (snakeMax > 0) document.getElementById('snakeScore').className = 'score-val';
   if (bko > 0) document.getElementById('bkoScore').className = 'score-val';
   if (g2048 > 0) document.getElementById('g2048Score').className = 'score-val';
@@ -392,17 +466,139 @@ function render() {
   if (bestWpm > 0) document.getElementById('typingScore').className = 'score-val';
 }
 
-// ── 💡 重置機制的 JavaScript 持久清理邏輯 ──
+function showToast(msg) {
+  const toast = document.getElementById('toastMsg');
+  toast.textContent = msg;
+  toast.style.opacity = 1;
+  setTimeout(() => toast.style.opacity = 0, 2000);
+}
+
+function copyScoresToClipboard() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const modeMark = currentTheme === 'dark' ? '🌙 深色模式' : '☀️ 亮色模式';
+  
+  const textContent = `🎮 LYZ · Game Hub 個人成就簡報 (${modeMark})\n` +
+                      `──────────────────────────────\n` +
+                      `🏆 玩家稱號 : ${cachedStats.rankName}\n` +
+                      `🧩 解鎖進度 : ${cachedStats.playedCount} / 5 款遊戲\n` +
+                      `⚡ 綜合戰力極限 : ${cachedStats.apmIndex > 0 ? cachedStats.apmIndex.toLocaleString() : '—'}\n\n` +
+                      `📊 各項最高得分紀錄 (Personal Best):\n` +
+                      ` 🐍 貪吃蛇大師 : ${cachedStats.snake}\n` +
+                      ` 🧱 打磚塊爆破 : ${cachedStats.breakout}\n` +
+                      ` 🔢 2048戰神矩陣 : ${cachedStats.g2048}\n` +
+                      ` 🃏 記憶限時翻牌 : ${cachedStats.memory}\n` +
+                      ` ⌨️ 鍵盤盲打速測 : ${cachedStats.typing}\n` +
+                      `──────────────────────────────\n` +
+                      `快來追上我的街機霸榜紀錄吧！`;
+
+  navigator.clipboard.writeText(textContent).then(() => {
+    showToast('📋 成績文字已完美複製到剪貼簿！');
+  }).catch(() => {
+    showToast('❌ 瀏覽器暫不支援自動複製');
+  });
+}
+
+function generateScorecardImage() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 640;
+  canvas.height = 400;
+
+  const colors = currentTheme === 'dark' ? {
+    bg: '#1A1614', panel: '#25201E', text: '#EAE3D5', dim: '#A29990', ac: '#C5A059', bd: '#3A322D'
+  } : {
+    bg: '#F5F2EB', panel: '#FFFFFF', text: '#3A322D', dim: '#8A827B', ac: '#6b4c32', bd: '#D0C9BC'
+  };
+
+  ctx.fillStyle = colors.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = colors.panel;
+  ctx.strokeStyle = colors.bd;
+  ctx.lineWidth = 1;
+  ctx.fillRect(30, 30, canvas.width - 60, canvas.height - 60);
+  ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+  ctx.fillStyle = colors.ac;
+  ctx.fillRect(30, 30, canvas.width - 60, 4);
+
+  ctx.fillStyle = colors.text;
+  ctx.font = 'normal 22px "Playfair Display", Times, serif';
+  ctx.fillText("LYZ · Personal Achievement Tracker", 50, 72);
+
+  ctx.fillStyle = colors.dim;
+  ctx.font = '500 10px "DM Mono", monospace';
+  ctx.fillText(`GAMER RANK: ${cachedStats.rankName.toUpperCase()}   |   GAMES: ${cachedStats.playedCount}/5`, 50, 102);
+  
+  ctx.fillStyle = colors.ac;
+  ctx.font = 'normal 13px "DM Mono", monospace';
+  ctx.fillText("APM-X COMBAT INDEX: " + (cachedStats.apmIndex > 0 ? cachedStats.apmIndex.toLocaleString() : '—'), 50, 124);
+
+  ctx.strokeStyle = colors.bd;
+  ctx.beginPath(); ctx.moveTo(50, 145); ctx.lineTo(canvas.width - 50, 145); ctx.stroke();
+
+  const items = [
+    { label: "SNAKE", val: cachedStats.snake, icon: "🐍" },
+    { label: "BREAKOUT", val: cachedStats.breakout, icon: "🧱" },
+    { label: "2048 MAX", val: cachedStats.g2048, icon: "🔢" },
+    { label: "MEMORY TOP", val: cachedStats.memory, icon: "🃏" },
+    { label: "TYPING MAX", val: cachedStats.typing, icon: "⌨️" }
+  ];
+
+  const startX = 50;
+  const startY = 175;
+  const blockW = 100;
+  const blockH = 135;
+  const gap = 10;
+
+  items.forEach((item, idx) => {
+    const x = startX + idx * (blockW + gap);
+    const y = startY;
+
+    ctx.fillStyle = colors.panel;
+    ctx.strokeStyle = colors.bd;
+    ctx.fillRect(x, y, blockW, blockH);
+    ctx.strokeRect(x, y, blockW, blockH);
+
+    ctx.font = '24px "Noto Sans TC", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(item.icon, x + blockW/2, y + 42);
+
+    ctx.fillStyle = colors.dim;
+    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.fillText(item.label, x + blockW/2, y + 74);
+
+    ctx.fillStyle = item.val !== '—' ? colors.ac : colors.dim;
+    ctx.font = 'normal 12px "Playfair Display", serif';
+    ctx.fillText(item.val, x + blockW/2, y + 106);
+  });
+
+  ctx.fillStyle = colors.dim;
+  ctx.font = 'italic 9px "DM Mono", monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText("SAVED LOCALLY IN LOCALSTORAGE · LYZ.DEV", canvas.width - 50, canvas.height - 48);
+
+  try {
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.download = `LYZ-GameHub-Achievement-${currentTheme}.png`;
+    link.href = dataUrl;
+    link.click();
+    showToast('🎨 高畫質戰績成就卡片已下載完成！');
+  } catch (err) {
+    showToast('❌ 圖片產生失敗，請再試一次');
+  }
+}
+
 function resetAllScores() {
   const check = confirm("⚠️ 確定要清除所有遊戲數據嗎？\n這將會抹除所有的歷史最高分、排行榜名次與折線趨勢圖，此動作無法復原！");
   if (check) {
-    // 遍歷並精準定位所有子遊戲產生的 localStorage 鍵值進行清空
     const keysToRemove = [
       'bko-best', '2048-best', '2048-best-4', '2048-best-5', 
-      'mem-best-4', 'mem-best-6', 'mem-records-4', 'mem-records-6'
+      'mem-best-4', 'mem-best-6', 'mem-records-4', 'mem-records-6',
+      '2048-history-4', '2048-history-5'
     ];
-    
-    // 移除跨難度與跨模式的打字與貪吃蛇動態鍵
     ['single', 'double'].forEach(m => {
       ['easy', 'normal', 'hard'].forEach(d => {
         keysToRemove.push(`david-snake-best-${m}-${d}`);
@@ -411,19 +607,16 @@ function resetAllScores() {
     ['15','30','60','120'].forEach(t => {
       ['en','zh'].forEach(l => {
         keysToRemove.push(`typing-best-${t}-${l}`);
-        keysToRemove.push(`2048-history-4`); // 2048 圖表歷史
-        keysToRemove.push(`2048-history-5`);
       });
     });
-
-    // 執行刪除
     keysToRemove.forEach(k => localStorage.removeItem(k));
-    
     alert("🧹 所有遊戲紀錄已全數初始化成功！頁面即將重整...");
-    window.location.reload(); // 刷新網頁，資料看板完美歸零
+    window.location.reload();
   }
 }
 
+const initialTheme = localStorage.getItem('lyz-theme') || 'light';
+applyTheme(initialTheme);
 render();
 </script>
 </body>
