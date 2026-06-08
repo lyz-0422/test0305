@@ -34,7 +34,12 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
 .page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;letter-spacing:.02em;}
 .page-title em{font-style:italic;color:var(--ac);}
-.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:32px;}
+.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:20px;}
+
+/* ── Size Selector ── */
+.size-row{display:flex;gap:8px;margin-bottom:20px;width:100%;}
+.size-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;flex:1;}
+.size-btn:hover,.size-btn.on{background:var(--text);color:var(--bg);border-color:var(--text);}
 
 /* ── Score bar ── */
 .score-row{display:flex;gap:12px;width:100%;margin-bottom:20px;}
@@ -46,53 +51,66 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 
 /* ── Buttons ── */
 .btn-row{display:flex;gap:10px;margin-bottom:20px;width:100%;}
-.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 24px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
+.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
 .btn:hover{background:var(--text);color:var(--bg);}
 .btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
 .btn.primary:hover{background:var(--ac);border-color:var(--ac);}
 
-/* ── Board ── */
-.board-wrap{width:100%;position:relative;}
-.board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:var(--bd);padding:10px;width:100%;}
-.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--t2);font-family:'Playfair Display',serif;font-weight:600;transition:transform .08s ease;position:relative;overflow:hidden;}
-.cell.pop{animation:pop .12s ease-out;}
-@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
-.cell.new{animation:appear .15s ease-out;}
+/* ── Board & Animations ── */
+.board-wrap{width:100%;position:relative;margin-bottom:20px;}
+.board{position:relative;background:var(--bd);padding:10px;width:100%;aspect-ratio:1;user-select:none;}
+.grid-bg-container {display:grid;gap:10px;width:100%;height:100%;position:absolute;top:10px;left:10px;width:calc(100% - 20px);height:calc(100% - 20px);z-index:1;}
+.bg-cell{background:rgba(234,227,213,0.5);width:100%;height:100%;}
+.tile-container{position:absolute;top:10px;left:10px;width:calc(100% - 20px);height:calc(100% - 20px);z-index:2;}
+
+.tile{position:absolute;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;transition:transform .12s cubic-bezier(0.1, 0.7, 0.1, 1);will-change:transform;}
+.tile-inner {width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:background-color .12s, color .12s;}
+.tile.pop .tile-inner{animation:pop .12s ease-out;}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.tile.new .tile-inner{animation:appear .15s ease-out both;}
 @keyframes appear{0%{transform:scale(0);opacity:0}80%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 
 /* tile colours */
-.cell[data-v="0"]{background:var(--t2);}
-.cell[data-v="2"]{background:var(--t2);color:var(--text);}
-.cell[data-v="4"]{background:var(--t4);color:var(--text);}
-.cell[data-v="8"]{background:var(--t8);color:#fff;}
-.cell[data-v="16"]{background:var(--t16);color:#fff;}
-.cell[data-v="32"]{background:var(--t32);color:#fff;}
-.cell[data-v="64"]{background:var(--t64);color:#fff;}
-.cell[data-v="128"]{background:var(--t128);color:#fff;}
-.cell[data-v="256"]{background:var(--t256);color:#fff;}
-.cell[data-v="512"]{background:var(--t512);color:#fff;}
-.cell[data-v="1024"]{background:var(--t1024);color:#fff;}
-.cell[data-v="2048"]{background:var(--t2048);color:var(--ac);border:2px solid var(--ac);}
+.tile[data-v="2"] .tile-inner{background:var(--t2);color:var(--text);}
+.tile[data-v="4"] .tile-inner{background:var(--t4);color:var(--text);}
+.tile[data-v="8"] .tile-inner{background:var(--t8);color:#fff;}
+.tile[data-v="16"] .tile-inner{background:var(--t16);color:#fff;}
+.tile[data-v="32"] .tile-inner{background:var(--t32);color:#fff;}
+.tile[data-v="64"] .tile-inner{background:var(--t64);color:#fff;}
+.tile[data-v="128"] .tile-inner{background:var(--t128);color:#fff;}
+.tile[data-v="256"] .tile-inner{background:var(--t256);color:#fff;}
+.tile[data-v="512"] .tile-inner{background:var(--t512);color:#fff;}
+.tile[data-v="1024"] .tile-inner{background:var(--t1024);color:#fff;}
+.tile[data-v="2048"] .tile-inner{background:var(--t2048);color:var(--ac);border:2px solid var(--ac);}
+.tile[data-v="4096"] .tile-inner{background:#000;color:#fff;}
 
 /* ── Overlay ── */
-.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.88);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:10;}
+.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.9);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:10;}
 .overlay.show{display:flex;}
 .overlay-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
 .overlay-title em{font-style:italic;color:var(--ac);}
 .overlay-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;}
 
+/* ── Stats Chart ── */
+.chart-card {width:100%;border:1px solid var(--bd);background:var(--panel);padding:16px;margin-bottom:20px;}
+.chart-title {font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
+canvas#statsChart {width:100%;height:140px;background:#fff;display:block;}
+
 /* ── Hint ── */
-.hint-row{display:flex;gap:16px;margin-top:20px;width:100%;}
+.hint-row{display:flex;gap:16px;width:100%;}
 .hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;}
 .hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
 .hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--dim);line-height:1.7;}
 
+/* ── Share Notification ── */
+.toast {position:fixed;bottom:20px;background:var(--text);color:var(--bg);font-family:'DM Mono',monospace;font-size:11px;padding:8px 16px;letter-spacing:1px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;}
+
 /* ── Responsive ── */
 @media(max-width:500px){
   .site-nav{padding:0 16px;}
-  .nav-links{gap:12px;}
+  .nav-links{display:none;}
   .page{padding:70px 16px 40px;}
-  .board{gap:7px;padding:7px;}
+  .hint-row {flex-direction:column;gap:12px;}
 }
 </style>
 </head>
@@ -118,7 +136,12 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 <div class="page">
   <div class="eyebrow">Puzzle Game · 益智</div>
   <h1 class="page-title"><em>2048</em></h1>
-  <p class="page-sub">合併相同數字，拼出 2048</p>
+  <p class="page-sub">合併相同數字，拼出更高成就</p>
+
+  <div class="size-row">
+    <button class="size-btn on" id="size4" onclick="changeSize(4)">4 × 4 Classic</button>
+    <button class="size-btn" id="size5" onclick="changeSize(5)">5 × 5 Expanded</button>
+  </div>
 
   <div class="score-row">
     <div class="score-box main">
@@ -138,10 +161,14 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
   <div class="btn-row">
     <button class="btn primary" id="newBtn">New Game</button>
     <button class="btn" id="undoBtn">Undo</button>
+    <button class="btn" id="shareBtn">Share Score</button>
   </div>
 
   <div class="board-wrap">
-    <div class="board" id="board"></div>
+    <div class="board" id="board">
+      <div class="grid-bg-container" id="grid-bg"></div>
+      <div class="tile-container" id="tile-container"></div>
+    </div>
     <div class="overlay" id="overlay">
       <div class="overlay-title" id="overlay-title">Game <em>Over</em></div>
       <div class="overlay-sub" id="overlay-sub">— 沒有可移動的方塊 —</div>
@@ -149,147 +176,338 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
     </div>
   </div>
 
+  <div class="chart-card">
+    <div class="chart-title">📈 Score History Trend (Recent 10 Games)</div>
+    <canvas id="statsChart" width="500" height="140"></canvas>
+  </div>
+
   <div class="hint-row">
     <div class="hint-card">
       <div class="hint-title">操作方式</div>
-      <div class="hint-text">鍵盤方向鍵 / WASD 移動<br>手機可左右上下滑動</div>
+      <div class="hint-text">鍵盤方向鍵 / WASD 移動<br>手機觸控螢幕滑動</div>
     </div>
     <div class="hint-card">
-      <div class="hint-title">規則</div>
-      <div class="hint-text">相同數字碰撞時合併<br>拼出 2048 即勝利</div>
+      <div class="hint-title">全新挑戰</div>
+      <div class="hint-text">支援 4×4 / 5×5 雙模式切換<br>內建平滑滑動軌跡動畫</div>
     </div>
   </div>
 </div>
 
+<div class="toast" id="toast">分數已複製到剪貼簿！</div>
+
 <script>
-const SIZE = 4;
-let grid, score, best, moves, prev;
+let SIZE = 4;
+let grid, score, best, moves, prevGrid, prevScore, prevMoves;
+let tilesData = []; // 持久記錄所有活動方塊對象供動畫追蹤
+
+function changeSize(s) {
+  if (SIZE === s) return;
+  SIZE = s;
+  document.getElementById('size4').classList.toggle('on', s === 4);
+  document.getElementById('size5').classList.toggle('on', s === 5);
+  init();
+}
 
 function init() {
-  grid  = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
-  score = 0; moves = 0; prev = null;
-  best  = parseInt(localStorage.getItem('2048-best') || '0');
+  grid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
+  score = 0; moves = 0; 
+  prevGrid = null; prevScore = 0; prevMoves = 0;
+  best = parseInt(localStorage.getItem(`2048-best-${SIZE}`) || '0');
+  
+  // 建立底層網格佈局
+  const bg = document.getElementById('grid-bg');
+  bg.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
+  bg.innerHTML = '';
+  for(let i=0; i<SIZE*SIZE; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'bg-cell';
+    bg.appendChild(cell);
+  }
+
+  tilesData = [];
+  document.getElementById('tile-container').innerHTML = '';
+  
   addTile(); addTile();
   render();
+  drawChart();
   document.getElementById('overlay').classList.remove('show');
 }
 
-function addTile(isNew = true) {
+function addTile() {
   const empty = [];
   for (let r = 0; r < SIZE; r++)
     for (let c = 0; c < SIZE; c++)
       if (grid[r][c] === 0) empty.push([r, c]);
-  if (!empty.length) return false;
+  if (!empty.length) return;
+  
   const [r, c] = empty[Math.floor(Math.random() * empty.length)];
-  grid[r][c] = Math.random() < 0.85 ? 2 : 4;
-  if (isNew) markNew(r, c);
-  return true;
+  const val = Math.random() < 0.85 ? 2 : 4;
+  grid[r][c] = val;
+
+  // 動態建立方塊物件元素
+  const id = Math.random().toString(36).substr(2, 9);
+  tilesData.push({ id, r, c, val, isNew: true, isPop: false });
 }
 
-const newCells = new Set();
-const popCells = new Set();
-function markNew(r, c) { newCells.add(`${r},${c}`); }
-function markPop(r, c) { popCells.add(`${r},${c}`); }
-
 function render() {
-  const board = document.getElementById('board');
-  board.innerHTML = '';
-  for (let r = 0; r < SIZE; r++) {
-    for (let c = 0; c < SIZE; c++) {
-      const div = document.createElement('div');
-      div.className = 'cell';
-      const v = grid[r][c];
-      div.setAttribute('data-v', v);
-      const key = `${r},${c}`;
-      if (newCells.has(key))  div.classList.add('new');
-      if (popCells.has(key))  div.classList.add('pop');
+  const container = document.getElementById('tile-container');
+  container.innerHTML = '';
 
-      // font-size by digit count
-      const fs = v >= 1024 ? '1.1rem' : v >= 128 ? '1.4rem' : v >= 16 ? '1.7rem' : '2rem';
-      div.style.fontSize = fs;
-      if (v) div.textContent = v;
-      board.appendChild(div);
-    }
-  }
-  newCells.clear(); popCells.clear();
+  const cellSize = 100 / SIZE;
+
+  tilesData.forEach(t => {
+    const tileDiv = document.createElement('div');
+    tileDiv.className = `tile`;
+    if (t.isNew) tileDiv.classList.add('new');
+    if (t.isPop) tileDiv.classList.add('pop');
+    
+    tileDiv.setAttribute('data-v', t.val);
+    tileDiv.style.width = `${cellSize}%`;
+    tileDiv.style.height = `${cellSize}%`;
+    
+    // 平滑移動的核心：利用 CSS transform translate 動態計算百分比位移
+    tileDiv.style.transform = `translate(${t.c * 100}%, ${t.r * 100}%)`;
+
+    const inner = document.createElement('div');
+    inner.className = 'tile-inner';
+    inner.textContent = t.val;
+    
+    const fs = SIZE === 5 ? (t.val >= 1024 ? '0.9rem' : '1.3rem') : (t.val >= 1024 ? '1.1rem' : '1.5rem');
+    inner.style.fontSize = fs;
+
+    tileDiv.appendChild(inner);
+    container.appendChild(tileDiv);
+
+    // 渲染後標籤清理
+    t.isNew = false;
+    t.isPop = false;
+  });
+
   document.getElementById('score').textContent = score;
   document.getElementById('best').textContent  = best;
   document.getElementById('moves').textContent = moves;
 }
 
-function slide(row) {
-  let arr = row.filter(x => x);
-  let merged = false;
+function move(dir) {
+  // 快照當前狀態以便 Undo
+  prevGrid = grid.map(r => [...r]);
+  prevScore = score;
+  prevMoves = moves;
+
+  let changed = false;
   let gained = 0;
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (arr[i] === arr[i+1]) {
-      arr[i] *= 2; gained += arr[i]; arr.splice(i+1, 1); merged = true;
+
+  // 定義矩陣轉置與旋轉對映，以統一歸納到左滑動邏輯
+  const rotatedGrid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
+  
+  // 建立映射矩陣協助定位追蹤
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      let targetR = r, targetC = c;
+      if (dir === 'right') { targetR = r; targetC = SIZE - 1 - c; }
+      if (dir === 'up')    { targetR = c; targetC = r; }
+      if (dir === 'down')  { targetR = SIZE - 1 - c; targetC = r; }
+      rotatedGrid[targetR][targetC] = grid[r][c];
     }
   }
-  while (arr.length < SIZE) arr.push(0);
-  return { arr, gained };
-}
 
-function move(dir) {
-  prev = grid.map(r => [...r]);
-  let changed = false;
-  let gained  = 0;
+  // 處理內部滑動合併追蹤核心
+  const nextRotatedGrid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
+  const mergeTracker = Array.from({length:SIZE}, () => Array(SIZE).fill(false));
 
-  for (let i = 0; i < SIZE; i++) {
-    let row;
-    if (dir === 'left')  row = grid[i];
-    if (dir === 'right') row = [...grid[i]].reverse();
-    if (dir === 'up')    row = grid.map(r => r[i]);
-    if (dir === 'down')  row = grid.map(r => r[i]).reverse();
-
-    const { arr, gained: g } = slide(row);
-    gained += g;
-
-    const result = dir === 'right' || dir === 'down' ? [...arr].reverse() : arr;
-    for (let j = 0; j < SIZE; j++) {
-      let old, cur;
-      if (dir === 'left')  { old = grid[i][j]; grid[i][j] = result[j]; cur = grid[i][j]; }
-      if (dir === 'right') { old = grid[i][j]; grid[i][j] = result[j]; cur = grid[i][j]; }
-      if (dir === 'up')    { old = grid[j][i]; grid[j][i] = result[j]; cur = grid[j][i]; }
-      if (dir === 'down')  { old = grid[j][i]; grid[j][i] = result[j]; cur = grid[j][i]; }
-      if (old !== cur) changed = true;
-      if (cur > 0 && cur !== old) {
-        const r = (dir === 'up' || dir === 'down') ? j : i;
-        const c = (dir === 'up' || dir === 'down') ? i : j;
-        markPop(r, c);
+  for (let r = 0; r < SIZE; r++) {
+    let targetC = 0;
+    for (let c = 0; c < SIZE; c++) {
+      if (rotatedGrid[r][c] === 0) continue;
+      
+      if (targetC > 0 && nextRotatedGrid[r][targetC - 1] === rotatedGrid[r][c] && !mergeTracker[r][targetC - 1]) {
+        // 發生碰撞合併
+        nextRotatedGrid[r][targetC - 1] *= 2;
+        gained += nextRotatedGrid[r][targetC - 1];
+        mergeTracker[r][targetC - 1] = true;
+        changed = true;
+        
+        // 更新動畫追蹤方塊群的終點座標
+        updateTilePosition(r, c, r, targetC - 1, dir, nextRotatedGrid[r][targetC - 1], true);
+      } else {
+        nextRotatedGrid[r][targetC] = rotatedGrid[r][c];
+        if (targetC !== c) changed = true;
+        updateTilePosition(r, c, r, targetC, dir, rotatedGrid[r][c], false);
+        targetC++;
       }
     }
   }
 
-  if (!changed) return;
+  if (!changed) {
+    // 若無實質位移，恢復動畫陣列原有位置狀態
+    syncTilesDataWithGrid();
+    return;
+  }
+
+  // 重新將旋轉過後的狀態寫回原本 grid 矩陣
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      let srcR = r, srcC = c;
+      if (dir === 'right') { srcR = r; srcC = SIZE - 1 - c; }
+      if (dir === 'up')    { srcR = c; srcC = r; }
+      if (dir === 'down')  { srcR = SIZE - 1 - c; srcC = r; }
+      grid[r][c] = nextRotatedGrid[srcR][srcC];
+    }
+  }
+
   score += gained; moves++;
-  if (score > best) { best = score; localStorage.setItem('2048-best', best); }
+  if (score > best) { best = score; localStorage.setItem(`2048-best-${SIZE}`, best); }
+  
+  // 清洗已合併被覆蓋的舊方塊物件，確保動畫連續性
+  tilesData = tilesData.filter(t => !t.mergedOut);
+
   addTile();
   render();
   checkEnd();
 }
 
+// 根據滑動方向方向，逆向換算原本的行、列，以此賦予 DOM 位移軌跡
+function updateTilePosition(rotR, rotC, nextRotR, nextRotC, dir, newVal, isMerge) {
+  let origR = rotR, origC = rotC;
+  if (dir === 'right') { origR = rotR; origC = SIZE - 1 - rotC; }
+  if (dir === 'up')    { origR = rotC; origC = rotR; }
+  if (dir === 'down')  { origR = SIZE - 1 - rotC; origC = rotR; }
+
+  let destR = nextRotR, destC = nextRotC;
+  if (dir === 'right') { destR = nextRotR; destC = SIZE - 1 - nextRotC; }
+  if (dir === 'up')    { destR = nextRotC; destC = nextRotR; }
+  if (dir === 'down')  { destR = SIZE - 1 - nextRotC; destC = nextRotR; }
+
+  const tile = tilesData.find(t => t.r === origR && t.c === origC && !t.mergedOut);
+  if (tile) {
+    tile.r = destR;
+    tile.c = destC;
+    tile.val = newVal;
+    if (isMerge) {
+      tile.isPop = true;
+      // 同一終點格內若已有另個方塊，將此方塊打上記號並在下次 render 時清除
+      const duplicate = tilesData.find(t => t.r === destR && t.c === destC && t.id !== tile.id && !t.mergedOut);
+      if (duplicate) duplicate.mergedOut = true;
+    }
+  }
+}
+
+function syncTilesDataWithGrid() {
+  tilesData = [];
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      if (grid[r][c] > 0) {
+        tilesData.push({ id: Math.random().toString(36).substr(2, 9), r, c, val: grid[r][c], isNew: false, isPop: false });
+      }
+    }
+  }
+}
+
 function checkEnd() {
-  // win
+  let win = false;
   for (let r = 0; r < SIZE; r++)
     for (let c = 0; c < SIZE; c++)
-      if (grid[r][c] === 2048) { showOverlay('You Win!', '— 恭喜拼出 2048 🏆 —'); return; }
-  // lose
+      if (grid[r][c] === 2048) win = true;
+
+  if (win) { 
+    showOverlay('You Win!', '— 恭喜拼出 2048 🏆 —'); 
+    saveGameToHistory();
+    return; 
+  }
+
   for (let r = 0; r < SIZE; r++)
     for (let c = 0; c < SIZE; c++) {
       if (grid[r][c] === 0) return;
-      if (r+1 < SIZE && grid[r][c] === grid[r+1][c]) return;
-      if (c+1 < SIZE && grid[r][c] === grid[r][c+1]) return;
+      if (r + 1 < SIZE && grid[r][c] === grid[r+1][c]) return;
+      if (c + 1 < SIZE && grid[r][c] === grid[r][c+1]) return;
     }
+    
   showOverlay('Game Over', '— 沒有可移動的方塊 —');
+  saveGameToHistory();
 }
 
 function showOverlay(title, sub) {
-  document.getElementById('overlay-title').innerHTML = title.includes('Win')
-    ? 'You <em>Win!</em>' : 'Game <em>Over</em>';
+  document.getElementById('overlay-title').innerHTML = title.includes('Win') ? 'You <em>Win!</em>' : 'Game <em>Over</em>';
   document.getElementById('overlay-sub').textContent = sub;
   document.getElementById('overlay').classList.add('show');
 }
+
+// ── 歷史數據儲存與圖表繪製 ──
+function saveGameToHistory() {
+  let history = JSON.parse(localStorage.getItem(`2048-history-${SIZE}`) || '[]');
+  history.push({ score, date: new Date().toLocaleDateString(), moves });
+  if (history.length > 10) history.shift(); // 只保留最近 10 次
+  localStorage.setItem(`2048-history-${SIZE}`, JSON.stringify(history));
+  drawChart();
+}
+
+function drawChart() {
+  const canvas = document.getElementById('statsChart');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const history = JSON.parse(localStorage.getItem(`2048-history-${SIZE}`) || '[]');
+  if (history.length === 0) {
+    ctx.font = '11px "DM Mono"'; ctx.fillStyle = '#8A827B'; ctx.textAlign = 'center';
+    ctx.fillText('NO GAME DATA YET. COMPLETE A GAME TO TRACK TRENDS.', canvas.width/2, canvas.height/2);
+    return;
+  }
+
+  const padding = 30;
+  const chartW = canvas.width - padding * 2;
+  const chartH = canvas.height - padding * 2;
+  
+  const scores = history.map(h => h.score);
+  const maxScore = Math.max(...scores, 100);
+
+  // 繪製格線襯底
+  ctx.strokeStyle = '#F5F2EB'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding); ctx.lineTo(padding + chartW, padding);
+  ctx.moveTo(padding, padding + chartH/2); ctx.lineTo(padding + chartW, padding + chartH/2);
+  ctx.moveTo(padding, padding + chartH); ctx.lineTo(padding + chartW, padding + chartH);
+  ctx.stroke();
+
+  // 繪製數據折線軌跡
+  ctx.strokeStyle = '#6b4c32'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  
+  const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
+
+  history.forEach((h, index) => {
+    const x = padding + index * stepX;
+    const y = padding + chartH - (h.score / maxScore) * chartH;
+    if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // 繪製數據節點標籤
+  history.forEach((h, index) => {
+    const x = padding + index * stepX;
+    const y = padding + chartH - (h.score / maxScore) * chartH;
+    
+    ctx.fillStyle = '#3A322D'; ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();
+
+    ctx.font = '9px "DM Mono"'; ctx.fillStyle = '#8A827B'; ctx.textAlign = 'center';
+    ctx.fillText(h.score, x, y - 8);
+    ctx.fillText(`G${index+1}`, x, padding + chartH + 14);
+  });
+}
+
+// ── 分享成績功能 ──
+document.getElementById('shareBtn').addEventListener('click', () => {
+  const text = `🕹️ LYZ · 2048 (${SIZE}x${SIZE} 模式)\n我的最新戰績：${score} 分！總步數：${moves} 步。\n快來挑戰看看吧！`;
+  if (navigator.share) {
+    navigator.share({ title: 'LYZ · 2048 Achievement', text: text }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.getElementById('toast');
+      toast.style.opacity = 1;
+      setTimeout(() => toast.style.opacity = 0, 2000);
+    });
+  }
+});
 
 // Keyboard
 const KEYS = {ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',
@@ -302,25 +520,31 @@ document.addEventListener('keydown', e => {
 let tx, ty;
 document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
 document.addEventListener('touchend', e => {
+  if(!tx || !ty) return;
   const dx = e.changedTouches[0].clientX - tx;
   const dy = e.changedTouches[0].clientY - ty;
-  if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+  if (Math.abs(dx) < 25 && Math.abs(dy) < 25) return;
   if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'right' : 'left');
   else move(dy > 0 ? 'down' : 'up');
+  tx = null; ty = null;
 }, {passive:true});
 
 // Undo
 document.getElementById('undoBtn').addEventListener('click', () => {
-  if (!prev) return;
-  grid = prev.map(r => [...r]); prev = null;
-  if (moves > 0) moves--;
+  if (!prevGrid) return;
+  grid = prevGrid.map(r => [...r]); 
+  score = prevScore;
+  moves = prevMoves;
+  prevGrid = null;
+  syncTilesDataWithGrid();
   render();
   document.getElementById('overlay').classList.remove('show');
 });
 
-document.getElementById('newBtn').addEventListener('click', init);
+document.getElementById('newBtn').addEventListener('click', () => { saveGameToHistory(); init(); });
 document.getElementById('overlay-btn').addEventListener('click', init);
 
+// 首次加載
 init();
 </script>
 </body>
