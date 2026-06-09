@@ -51,7 +51,7 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 
 /* ── Buttons ── */
 .btn-row{display:flex;gap:10px;margin-bottom:20px;width:100%;}
-.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
+.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
 .btn:hover{background:var(--text);color:var(--bg);}
 .btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
 .btn.primary:hover{background:var(--ac);border-color:var(--ac);}
@@ -127,7 +127,7 @@ canvas#statsChart {width:100%;height:140px;background:#fff;display:block;}
     <li><a href="gamehub.html">🎮 遊戲大廳</a></li>
     <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
     <li><a href="game2.html">🧱 磚塊爆破樂</a></li>
-    <li><a href="game3.html">🕹️ 2048</a></li>
+    <li><a href="game3.html" class="active">🕹️ 2048</a></li>
     <li><a href="game4.html">🃏 記憶卡片</a></li>
     <li><a href="game5.html">⌨ 打字測試</a></li>
   </ul>
@@ -305,8 +305,8 @@ function move(dir) {
     for (let c = 0; c < SIZE; c++) {
       let targetR = r, targetC = c;
       if (dir === 'right') { targetR = r; targetC = SIZE - 1 - c; }
-      if (dir === 'up')    { targetR = c; targetC = r; }
-      if (dir === 'down')  { targetR = SIZE - 1 - c; targetC = SIZE - 1 - r; } // 已修正修正為標準順時針旋轉
+      if (dir === 'up')    { targetR = c; targetC = SIZE - 1 - r; }
+      if (dir === 'down')  { targetR = SIZE - 1 - c; targetC = r; }
       rotatedGrid[targetR][targetC] = grid[r][c];
     }
   }
@@ -344,14 +344,14 @@ function move(dir) {
     return;
   }
 
-  // 重新將旋轉過後的狀態寫回原本 grid 矩陣
+  // 重新將旋轉過後的狀態正確映射寫回原本 grid 矩陣
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
-      let srcR = r, srcC = c;
-      if (dir === 'right') { srcR = r; srcC = SIZE - 1 - c; }
-      if (dir === 'up')    { srcR = c; srcC = r; }
-      if (dir === 'down')  { srcR = SIZE - 1 - c; srcC = SIZE - 1 - r; } // 已同步修正
-      grid[r][c] = nextRotatedGrid[srcR][srcC];
+      let origR = r, origC = c;
+      if (dir === 'right') { origR = r; origC = SIZE - 1 - c; }
+      if (dir === 'up')    { origR = SIZE - 1 - c; origC = r; }
+      if (dir === 'down')  { origR = c; origC = SIZE - 1 - r; }
+      grid[origR][origC] = nextRotatedGrid[r][c];
     }
   }
 
@@ -370,13 +370,13 @@ function move(dir) {
 function updateTilePosition(rotR, rotC, nextRotR, nextRotC, dir, newVal, isMerge) {
   let origR = rotR, origC = rotC;
   if (dir === 'right') { origR = rotR; origC = SIZE - 1 - rotC; }
-  if (dir === 'up')    { origR = rotC; origC = rotR; }
-  if (dir === 'down')  { origR = SIZE - 1 - rotC; origC = rotR; } // 已修正：逆向解回原始面板的 Row
+  if (dir === 'up')    { origR = SIZE - 1 - rotC; origC = rotR; }
+  if (dir === 'down')  { origR = rotC; origC = SIZE - 1 - rotR; }
 
   let destR = nextRotR, destC = nextRotC;
   if (dir === 'right') { destR = nextRotR; destC = SIZE - 1 - nextRotC; }
-  if (dir === 'up')    { destR = nextRotC; destC = nextRotR; }
-  if (dir === 'down')  { destR = SIZE - 1 - nextRotC; destC = nextRotR; } // 已修正：逆向解回原始面板的 Column
+  if (dir === 'up')    { destR = SIZE - 1 - nextRotC; destC = nextRotR; }
+  if (dir === 'down')  { destR = nextRotC; destC = SIZE - 1 - nextRotR; }
 
   const tile = tilesData.find(t => t.r === origR && t.c === origC && !t.mergedOut);
   if (tile) {
@@ -511,7 +511,7 @@ document.getElementById('shareBtn').addEventListener('click', () => {
 
 // Keyboard
 const KEYS = {ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',
-               KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down'};
+              KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down'};
 document.addEventListener('keydown', e => {
   if (KEYS[e.code]) { e.preventDefault(); move(KEYS[e.code]); }
 });
