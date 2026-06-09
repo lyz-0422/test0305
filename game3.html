@@ -306,7 +306,7 @@ function move(dir) {
       let targetR = r, targetC = c;
       if (dir === 'right') { targetR = r; targetC = SIZE - 1 - c; }
       if (dir === 'up')    { targetR = c; targetC = r; }
-      if (dir === 'down')  { targetR = SIZE - 1 - c; targetC = r; }
+      if (dir === 'down')  { targetR = SIZE - 1 - c; targetC = SIZE - 1 - r; } // 已修正修正為標準順時針旋轉
       rotatedGrid[targetR][targetC] = grid[r][c];
     }
   }
@@ -350,7 +350,7 @@ function move(dir) {
       let srcR = r, srcC = c;
       if (dir === 'right') { srcR = r; srcC = SIZE - 1 - c; }
       if (dir === 'up')    { srcR = c; srcC = r; }
-      if (dir === 'down')  { srcR = SIZE - 1 - c; srcC = r; }
+      if (dir === 'down')  { srcR = SIZE - 1 - c; srcC = SIZE - 1 - r; } // 已同步修正
       grid[r][c] = nextRotatedGrid[srcR][srcC];
     }
   }
@@ -371,12 +371,12 @@ function updateTilePosition(rotR, rotC, nextRotR, nextRotC, dir, newVal, isMerge
   let origR = rotR, origC = rotC;
   if (dir === 'right') { origR = rotR; origC = SIZE - 1 - rotC; }
   if (dir === 'up')    { origR = rotC; origC = rotR; }
-  if (dir === 'down')  { origR = rotC; origC = SIZE - 1 - rotR; } // 修正部分：逆向解回原始面板
+  if (dir === 'down')  { origR = SIZE - 1 - rotC; origC = rotR; } // 已修正：逆向解回原始面板的 Row
 
   let destR = nextRotR, destC = nextRotC;
   if (dir === 'right') { destR = nextRotR; destC = SIZE - 1 - nextRotC; }
   if (dir === 'up')    { destR = nextRotC; destC = nextRotR; }
-  if (dir === 'down')  { destR = nextRotC; destC = SIZE - 1 - nextRotR; } // 修正部分：逆向解回原始面板
+  if (dir === 'down')  { destR = SIZE - 1 - nextRotC; destC = nextRotR; } // 已修正：逆向解回原始面板的 Column
 
   const tile = tilesData.find(t => t.r === origR && t.c === origC && !t.mergedOut);
   if (tile) {
