@@ -8,28 +8,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-        /* ── Light Theme ── */
-        :root[data-theme="light"]{
-            --bg:#F5F2EB; --panel-bg:#FFFFFF; --text-main:#3A322D; --text-dim:#8A827B;
-            --border-color:#3A322D; --snake-p1:#3A322D; --snake-p2:#8A827B;
-            --star-gold:#C5A059; --extreme-red:#A94442;
-            --bd:#d8cfc2; --bd2:#c9bfb0; --ac:#6b4c32; --as:rgba(107,76,50,.09);
-            --canvas-bg:#FFFFFF; --canvas-grid:#F5F2EB;
-            --nav-bg:rgba(245,242,235,.92);
-        }
-        /* ── Dark Theme ── */
-        :root[data-theme="dark"]{
-            --bg:#1A1614; --panel-bg:#25201E; --text-main:#EAE3D5; --text-dim:#A29990;
-            --border-color:#C5A059; --snake-p1:#EAE3D5; --snake-p2:#A29990;
-            --star-gold:#DFD5BF; --extreme-red:#E26D6D;
-            --bd:#3A322D; --bd2:#4A3F3A; --ac:#C5A059; --as:rgba(197,160,89,.08);
-            --canvas-bg:#1E1A16; --canvas-grid:#252018;
-            --nav-bg:rgba(26,22,20,.92);
-        }
-
-        body{background:var(--bg);color:var(--text-main);font-family:'Noto Sans TC',sans-serif;font-weight:300;min-height:100vh;display:flex;flex-direction:column;align-items:center;letter-spacing:1px;transition:background .3s,color .3s;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
+  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+  --red:#A94442;--gold:#C5A059;
+}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
 
 /* ── Nav ── */
 .site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245, 242, 235, 0.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
