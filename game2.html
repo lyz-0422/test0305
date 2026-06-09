@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW" data-theme="light">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -7,35 +7,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
-
-<script>
-  (function() {
-    const theme = localStorage.getItem('lyz-theme') || 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-  })();
-</script>
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-/* ── 完美的雙模 CSS 變數系統 ── */
-:root[data-theme="light"] {
+:root{
   --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
   --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
   --red:#A94442;--gold:#C5A059;
-  --canvas-bg:#FFFFFF;--canvas-grid:#F5F2EB;
 }
-:root[data-theme="dark"] {
-  --bg:#1A1614;--panel:#26211E;--text:#EAE3D5;--dim:#A69D95;
-  --bd:#423A35;--bd2:#544A43;--ac:#C5A059;--ac2:#D9B673;
-  --red:#E06666;--gold:#F1C232;
-  --canvas-bg:#211C19;--canvas-grid:#2A2420;
-}
-
-body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s, color .3s;}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
 
 /* ── Nav ── */
-.site-nav{position:fixed;top:0;left:0;width:100%;background:var(--bg);opacity:0.95;backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;transition:background .3s, border-color .3s;}
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245, 242, 235, 0.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
 .nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
 .nav-logo:hover{color:var(--ac);}
 .nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
@@ -46,54 +29,35 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 
 /* ── Page ── */
 .page{width:100%;max-width:660px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;}
-.eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;transition:color .3s;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
 .page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;}
-.page-title em{font-style:italic;color:var(--ac);transition:color .3s;}
+.page-title em{font-style:italic;color:var(--ac);}
 .page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:28px;}
 
 /* ── HUD ── */
 .hud{display:flex;gap:12px;width:100%;margin-bottom:16px;}
-.hud-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;transition:background .3s, border-color .3s;}
+.hud-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;}
 .hud-box.accent{border-color:var(--ac);}
 .hud-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
-.hud-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);transition:color .3s;}
+.hud-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);}
 .hud-box.accent .hud-val{color:var(--ac);}
-
-/* ── 視覺化道具倒數計時條 ── */
-.timer-container {
-  width: 100%;
-  background: var(--panel);
-  border: 1px solid var(--bd);
-  padding: 6px 16px;
-  margin-bottom: 16px;
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  transition: background .3s, border-color .3s;
-}
-.timer-container.active { display: flex; }
-.timer-label { font-family: 'DM Mono', monospace; font-size: .55rem; color: var(--red); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; transition: color .3s; }
-.timer-progress-bg { flex: 1; height: 6px; background: var(--bd); position: relative; overflow: hidden; transition: background .3s; }
-.timer-progress-bar { height: 100%; width: 100%; background: var(--red); transform-origin: left; transition: transform 0.1s linear, background .3s; }
-.timer-countdown { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--text); font-weight: bold; transition: color .3s; }
 
 /* ── Btn row ── */
 .btn-row{display:flex;gap:10px;margin-bottom:16px;width:100%;}
 .btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 24px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
-.btn:hover,.btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
+.btn:hover,.btn.primary{background:var(--text);color:var(--bg);}
 .btn.primary{border-color:var(--text);}
 .btn.primary:hover{background:var(--ac);border-color:var(--ac);}
 
 /* ── Canvas wrapper ── */
-.canvas-wrap{width:100%;position:relative;border:1px solid var(--text);background:var(--canvas-bg);overflow:hidden;transition:border-color .3s, background .3s;}
+.canvas-wrap{width:100%;position:relative;border:1px solid var(--text);background:#fff;overflow:hidden;}
 canvas{display:block;width:100%;height:auto;}
 
 /* ── Overlay ── */
-.overlay{display:none;position:absolute;inset:0;background:var(--bg);opacity:0.94;backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;transition:background .3s;}
+.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.88);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;}
 .overlay.show{display:flex;}
-.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);transition:color .3s;}
-.ov-title em{font-style:italic;color:var(--ac);transition:color .3s;}
+.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
+.ov-title em{font-style:italic;color:var(--ac);}
 .ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;}
 
 /* ── Level badges ── */
@@ -115,15 +79,14 @@ canvas{display:block;width:100%;height:auto;}
   border: 1px solid var(--text);
   color: var(--text);
   font-family: 'DM Mono', monospace;
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-size: 18px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
   -webkit-user-select: none;
   cursor: pointer;
-  transition: background .3s, border-color .3s, color .3s;
 }
 .touch-btn:active {
   background: var(--text);
@@ -132,24 +95,9 @@ canvas{display:block;width:100%;height:auto;}
 
 /* ── Hint ── */
 .hint-row{display:flex;gap:12px;margin-top:16px;width:100%;}
-.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;transition:background .3s, border-color .3s;}
-.hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;transition:color .3s;}
+.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;}
+.hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
 .hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--dim);line-height:1.7;}
-
-.back-link {
-  margin-top: 32px; 
-  font-family: 'DM Mono', monospace; 
-  font-size: 0.65rem; 
-  color: var(--dim); 
-  text-decoration: none; 
-  letter-spacing: 1px; 
-  border-bottom: 1px dashed var(--bd);
-  transition: color .2s, border-color .2s;
-}
-.back-link:hover {
-  color: var(--text);
-  border-bottom-color: var(--text);
-}
 
 @media(max-width:600px){
   .site-nav{padding:0 16px;}
@@ -163,20 +111,26 @@ canvas{display:block;width:100%;height:auto;}
 <body>
 
 <nav class="site-nav">
-  <a href="gamehub.html" class="nav-logo">LYZ.dev</a>
+  <a href="index.html" class="nav-logo">LYZ.dev</a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="about.html">About</a></li>
-    <li><a href="gamehub.html" class="active">Game</a></li>
+    <li><a href="game.html">Game</a></li>
     <li><a href="notes.html">Notes</a></li>
     <li><a href="exercise.html">Exercises</a></li>
+    <li><a href="gamehub.html">🎮 遊戲大廳</a></li>
+    <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
+    <li><a href="game2.html">🧱 磚塊爆破樂</a></li>
+    <li><a href="game3.html">🕹️ 2048</a></li>
+    <li><a href="game4.html">🃏 記憶卡片</a></li>
+    <li><a href="game5.html">⌨ 打字測試</a></li>
   </ul>
 </nav>
 
 <div class="page">
   <div class="eyebrow">Action Game · 動作</div>
   <h1 class="page-title"><em>Breakout</em></h1>
-  <p class="page-sub">打磚塊 — 消滅所有磚塊即可晉級下一關</p>
+  <p class="page-sub">打磚塊 — 消滅所有磚塊即可過關</p>
 
   <div class="hud">
     <div class="hud-box accent">
@@ -192,17 +146,9 @@ canvas{display:block;width:100%;height:auto;}
       <div class="hud-val" id="hLives">♥ ♥ ♥</div>
     </div>
     <div class="hud-box">
-      <div class="hud-label">Stage</div>
+      <div class="hud-label">Level</div>
       <div class="hud-val" id="hLevel">1</div>
     </div>
-  </div>
-
-  <div class="timer-container" id="timerContainer">
-    <div class="timer-label" id="timerLabel">PADDLE WIDE</div>
-    <div class="timer-progress-bg">
-      <div class="timer-progress-bar" id="timerBar"></div>
-    </div>
-    <div class="timer-countdown" id="timerCountdown">7.5s</div>
   </div>
 
   <div class="btn-row">
@@ -242,8 +188,6 @@ canvas{display:block;width:100%;height:auto;}
       <div class="hint-text">⭐ 帶有標章的磚塊會掉落道具：<br><b>[W]</b> 板子加寬變長 | <b>[M]</b> 分裂多球分身</div>
     </div>
   </div>
-  
-  <a href="gamehub.html" class="back-link">← BACK TO GAME HUB</a>
 </div>
 
 <script>
@@ -283,41 +227,27 @@ const Sound = {
   }
 };
 
-// ── 動態獲取雙模調色盤（關鍵：讓 Canvas 的背景、格線與元素跟隨深淺色渲染） ──
-function getPalette() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  if (isDark) {
-    return {
-      bg: '#211C19', grid: '#2A2420', paddle: '#EAE3D5', ball: '#EAE3D5', trail: 'rgba(197,160,89,',
-      bricks: [
-        ['#3A322D','#EAE3D5'], ['#4A4039','#EAE3D5'], ['#C5A059','#1A1614'],
-        ['#D9B673','#1A1614'], ['#E06666','#FFFFFF'], ['#A69D95','#1A1614']
-      ],
-      text: '#EAE3D5', dim: '#A69D95', ac: '#C5A059', power: '#E06666'
-    };
-  } else {
-    return {
-      bg: '#FFFFFF', grid: '#F5F2EB', paddle: '#3A322D', ball: '#3A322D', trail: 'rgba(58,50,45,',
-      bricks: [
-        ['#EAE3D5','#3A322D'], ['#DFD5BF','#3A322D'], ['#C5A059','#FFFFFF'],
-        ['#B8843A','#FFFFFF'], ['#A94442','#FFFFFF'], ['#6b4c32','#FFFFFF']
-      ],
-      text: '#3A322D', dim: '#8A827B', ac: '#6b4c32', power: '#A94442'
-    };
-  }
-}
+// ── Palette ──
+const PAL = {
+  bg:     '#FFFFFF', grid:   '#F5F2EB', paddle: '#3A322D', ball:   '#3A322D',
+  bricks: [
+    ['#EAE3D5','#3A322D'], ['#DFD5BF','#3A322D'], ['#C5A059','#FFFFFF'],
+    ['#B8843A','#FFFFFF'], ['#A94442','#FFFFFF'], ['#6b4c32','#FFFFFF'],
+  ],
+  text: '#3A322D', dim:  '#8A827B', ac:   '#6b4c32', power: '#A94442'
+};
 
 // ── Config & Map Layouts ──
 const COLS = 10, ROWS = 6;
 const BRICK_W = 52, BRICK_H = 18, BRICK_GAD = 5;
 const BRICK_OX = (W - (COLS * (BRICK_W + BRICK_GAD) - BRICK_GAD)) / 2;
 const BRICK_OY = 52;
-const PADDLE_H = 10;
+const PADDLE_H = 10, PADDLE_W_BASE = 90;
 const BALL_R = 7;
-const TOTAL_PADDLE_TIME = 450; // 60fps * 7.5秒 = 450幀
 
+// 關卡矩陣矩陣圖案設計 (0 = 空白, 1 = 磚塊, 2 = 必定隨機道具磚)
 const LAYOUTS = [
-  [ // Lv.1 Easy
+  [ // Lv.1 Easy - 經典金字塔型
     [0,0,0,1,1,1,1,0,0,0],
     [0,0,1,1,1,1,1,1,0,0],
     [0,1,1,1,2,1,1,1,1,0],
@@ -325,7 +255,7 @@ const LAYOUTS = [
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0]
   ],
-  [ // Lv.2 Normal
+  [ // Lv.2 Normal - 斑馬交叉條紋
     [1,1,1,1,1,1,1,1,1,1],
     [1,0,2,0,1,1,0,2,0,1],
     [1,1,1,1,1,1,1,1,1,1],
@@ -333,7 +263,7 @@ const LAYOUTS = [
     [1,1,1,1,1,1,1,1,1,1],
     [0,0,0,0,0,0,0,0,0,0]
   ],
-  [ // Lv.3 Hard
+  [ // Lv.3 Hard - 雙重堡壘收縮
     [1,1,1,0,0,0,0,1,1,1],
     [1,2,1,0,1,1,0,1,2,1],
     [1,1,1,1,1,1,1,1,1,1],
@@ -341,7 +271,7 @@ const LAYOUTS = [
     [0,0,1,1,1,1,1,1,0,0],
     [0,0,0,1,1,1,1,0,0,0]
   ],
-  [ // Lv.4 Expert
+  [ // Lv.4 Expert - 極限矩陣地獄
     [1,1,1,1,1,1,1,1,1,1],
     [1,2,0,0,1,1,0,0,2,1],
     [1,1,1,2,0,0,2,1,1,1],
@@ -360,7 +290,7 @@ const LEVELS = [
 
 let level = 0;
 let state = 'idle'; 
-let score = 0, best = 0, lives = 3;
+let score, best, lives;
 let paddle, balls = [], bricks = [], powers = [], raf;
 let keys = {};
 let paddleWidthTimer = 0;
@@ -368,20 +298,18 @@ let paddleWidthTimer = 0;
 function setLevel(lv) {
   level = lv - 1;
   document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.lv) === lv));
-  best = parseInt(localStorage.getItem(`bko-best-lv${level}`) || '0');
-  updateHUD();
-  if (state !== 'idle') restartGameSystem();
+  if (state !== 'idle') restart();
 }
 
 function makeBricks() {
   const arr = [];
   const map = LAYOUTS[level];
-  const PAL = getPalette();
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const type = map[r][c];
       if (type === 0) continue; 
       
+      // 有機率自然產生道具，或者依據地圖配置生成
       const isPower = type === 2 || Math.random() < 0.15;
       const pType = isPower ? (Math.random() < 0.5 ? 'W' : 'M') : null;
 
@@ -399,7 +327,7 @@ function makeBricks() {
   return arr;
 }
 
-function resetBallAndPaddleOnly() {
+function reset() {
   const cfg = LEVELS[level];
   paddle = { x: W/2 - cfg.paddleW/2, y: H - 36, w: cfg.paddleW, h: PADDLE_H, baseW: cfg.paddleW };
   
@@ -411,21 +339,16 @@ function resetBallAndPaddleOnly() {
     launch: false,
     trail: []
   }];
+  
+  bricks = makeBricks();
   powers = [];
   paddleWidthTimer = 0;
-  document.getElementById('timerContainer').classList.remove('active');
-}
-
-function resetFullStage() {
-  resetBallAndPaddleOnly();
-  bricks = makeBricks();
 }
 
 function init() {
-  score = 0; 
-  lives = 3;
-  best = parseInt(localStorage.getItem(`bko-best-lv${level}`) || '0');
-  resetFullStage();
+  score = 0; lives = 3;
+  best = parseInt(localStorage.getItem('bko-best') || '0');
+  reset();
   updateHUD();
 }
 
@@ -437,23 +360,19 @@ function updateHUD() {
   document.getElementById('hLives').textContent = hearts || '💀';
 }
 
-// ── 核心繪製邏輯（動態追蹤最新調色盤） ──
-function draw() {
-  const PAL = getPalette();
-  
-  // 1. 背景與格線
+// ── Drawing ──
+function drawBG() {
   ctx.fillStyle = PAL.bg; ctx.fillRect(0, 0, W, H);
   ctx.strokeStyle = PAL.grid; ctx.lineWidth = 1;
   for (let x = 0; x <= W; x += 20) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
   for (let y = 0; y <= H; y += 20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+}
 
-  // 2. 磚塊陣列
+function drawBricks() {
   bricks.forEach(b => {
     if (!b.alive) return;
-    // 如果是道具磚，動態套用當前模式的道具紅，否則套用普通磚色
-    ctx.fillStyle = b.powerType ? PAL.power : b.color; 
-    ctx.fillRect(b.x, b.y, BRICK_W, BRICK_H);
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1;
+    ctx.fillStyle = b.color; ctx.fillRect(b.x, b.y, BRICK_W, BRICK_H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
     ctx.strokeRect(b.x+.5, b.y+.5, BRICK_W-1, BRICK_H-1);
     
     ctx.fillStyle = b.textColor;
@@ -466,27 +385,30 @@ function draw() {
       ctx.fillText(b.pts, b.x + BRICK_W/2, b.y + BRICK_H/2);
     }
   });
+}
 
-  // 3. 擋板
+function drawPaddle() {
   ctx.fillStyle = PAL.paddle;
   ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
-  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
   ctx.fillRect(paddle.x+2, paddle.y+2, paddle.w-4, 3);
+}
 
-  // 4. 球與動態粒子殘影
+function drawBalls() {
   balls.forEach(ball => {
     ball.trail.forEach((t, i) => {
-      const a = (i / ball.trail.length) * 0.25;
+      const a = (i / ball.trail.length) * 0.22;
       ctx.beginPath(); ctx.arc(t.x, t.y, BALL_R * (i/ball.trail.length), 0, Math.PI*2);
-      ctx.fillStyle = `${PAL.trail}${a})`; ctx.fill();
+      ctx.fillStyle = `rgba(58,50,45,${a})`; ctx.fill();
     });
     ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI*2);
     ctx.fillStyle = PAL.ball; ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
     ctx.beginPath(); ctx.arc(ball.x-2, ball.y-2, BALL_R*0.35, 0, Math.PI*2); ctx.fill();
   });
+}
 
-  // 5. 落下道具
+function drawPowers() {
   powers.forEach(p => {
     ctx.fillStyle = PAL.power;
     ctx.fillRect(p.x - 10, p.y - 10, 20, 20);
@@ -498,8 +420,9 @@ function draw() {
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(p.type, p.x, p.y);
   });
+}
 
-  // 6. 未發射時的文字提示
+function drawCountdown() {
   if (balls.length === 1 && !balls[0].launch) {
     ctx.font = '300 11px "DM Mono", monospace';
     ctx.fillStyle = PAL.dim; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -507,40 +430,35 @@ function draw() {
   }
 }
 
-// ── 遊戲物理運算 ──
+// ── Physics ──
 function update() {
   if (state !== 'playing') return;
 
   const cfg = LEVELS[level];
 
+  // 按鍵與手機點擊彈板移動機制
   if (keys['ArrowLeft'] || keys['KeyA'] || keys['MobileLeft']) paddle.x = Math.max(0, paddle.x - 7);
   if (keys['ArrowRight'] || keys['KeyD'] || keys['MobileRight']) paddle.x = Math.min(W - paddle.w, paddle.x + 7);
 
-  // 道具板子時間條校對
+  // 道具板子時間校對
   if (paddleWidthTimer > 0) {
     paddleWidthTimer--;
-    const pct = paddleWidthTimer / TOTAL_PADDLE_TIME;
-    document.getElementById('timerBar').style.transform = `scaleX(${pct})`;
-    document.getElementById('timerCountdown').textContent = `${(paddleWidthTimer / 60).toFixed(1)}s`;
-    
-    if (paddleWidthTimer <= 0) {
-      paddle.w = paddle.baseW;
-      document.getElementById('timerContainer').classList.remove('active');
-    }
+    if (paddleWidthTimer <= 0) paddle.w = paddle.baseW;
   }
 
-  // 處理道具碰撞與接取
+  // 處理道具下落
   for (let i = powers.length - 1; i >= 0; i--) {
     const p = powers[i];
     p.y += 2.2;
 
+    // 判斷板子接到道具
     if (p.y + 10 >= paddle.y && p.y - 10 <= paddle.y + paddle.h && p.x >= paddle.x && p.x <= paddle.x + paddle.w) {
       Sound.playPower();
       if (p.type === 'W') {
         paddle.w = paddle.baseW * 1.5;
-        paddleWidthTimer = TOTAL_PADDLE_TIME;
-        document.getElementById('timerContainer').classList.add('active');
+        paddleWidthTimer = 450; // 加寬持續約 7.5 秒
       } else if (p.type === 'M') {
+        // 多球分身
         const baseBall = balls[0] || { x: paddle.x + paddle.w/2, y: paddle.y - 10 };
         for (let k = 0; k < 2; k++) {
           const a = -Math.PI/2 + (Math.random() - 0.5) * 1.2;
@@ -557,7 +475,7 @@ function update() {
     if (p.y - 10 > H) powers.splice(i, 1);
   }
 
-  // 處理球群移動
+  // 處理每顆球的運動邏輯
   for (let i = balls.length - 1; i >= 0; i--) {
     const ball = balls[i];
 
@@ -571,10 +489,12 @@ function update() {
 
     ball.x += ball.vx; ball.y += ball.vy;
 
+    // 左右與上邊界碰撞
     if (ball.x - BALL_R < 0) { ball.x = BALL_R; ball.vx *= -1; Sound.playHit(); }
     if (ball.x + BALL_R > W) { ball.x = W-BALL_R; ball.vx *= -1; Sound.playHit(); }
     if (ball.y - BALL_R < 0) { ball.y = BALL_R; ball.vy *= -1; Sound.playHit(); }
 
+    // 掉落谷底判定
     if (ball.y - BALL_R > H) {
       balls.splice(i, 1);
       if (balls.length === 0) {
@@ -582,13 +502,25 @@ function update() {
         Sound.playLose();
         updateHUD();
         if (lives <= 0) { endGame(false); return; }
-        resetBallAndPaddleOnly();
+        
+        // 重置回單球待發射狀態
+        paddle.w = paddle.baseW;
+        paddleWidthTimer = 0;
+        const angle = -Math.PI/2 + (Math.random()-0.5)*0.6;
+        balls = [{
+          x: paddle.x + paddle.w/2, y: paddle.y - BALL_R - 2,
+          vx: cfg.speed * Math.cos(angle), vy: cfg.speed * Math.sin(angle),
+          launch: false, trail: []
+        }];
+        powers = [];
       }
       continue;
     }
 
+    // 彈板碰撞判定
     if (ball.y + BALL_R >= paddle.y && ball.y - BALL_R <= paddle.y + paddle.h &&
         ball.x >= paddle.x && ball.x <= paddle.x + paddle.w && ball.vy > 0) {
+      ball.vy *= -1;
       Sound.playHit();
       const hit = (ball.x - (paddle.x + paddle.w/2)) / (paddle.w/2);
       ball.vx = hit * cfg.speed * 1.15;
@@ -596,10 +528,10 @@ function update() {
       const spd = Math.hypot(ball.vx, ball.vy);
       const factor = cfg.speed / spd;
       ball.vx *= factor; ball.vy *= factor;
-      ball.vy = -Math.abs(ball.vy);
       ball.y = paddle.y - BALL_R - 1;
     }
 
+    // 磚塊碰撞判定
     for (const b of bricks) {
       if (!b.alive) continue;
       const dx = Math.max(b.x - ball.x, 0, ball.x - (b.x + BRICK_W));
@@ -610,13 +542,10 @@ function update() {
         score += b.pts;
         Sound.playBrick();
 
-        if (score > best) { 
-          best = score; 
-          localStorage.setItem(`bko-best-lv${level}`, best); 
-          localStorage.setItem('bko-best', best);
-        }
+        if (score > best) { best = score; localStorage.setItem('bko-best', best); }
         updateHUD();
 
+        // 觸發道具掉落
         if (b.powerType) {
           powers.push({ x: b.x + BRICK_W/2, y: b.y + BRICK_H, type: b.powerType });
         }
@@ -629,35 +558,8 @@ function update() {
     }
   }
 
-  // 自動判斷過關 -> 進下一關
-  if (bricks.length > 0 && bricks.every(b => !b.alive)) { 
-    handleStageClear(); 
-  }
-}
-
-function handleStageClear() {
-  cancelAnimationFrame(raf);
-  if (level < LAYOUTS.length - 1) {
-    state = 'stage_clear';
-    const ovTitle = document.getElementById('ovTitle');
-    const ovSub   = document.getElementById('ovSub');
-    ovTitle.innerHTML = `Stage ${level + 1} <em>Clear!</em>`;
-    ovSub.textContent = `— 目前得分: ${score} · 即將進入下一關 —`;
-    document.getElementById('ovBtn').textContent = `進入第 ${level + 2} 關`;
-    document.getElementById('overlay').classList.add('show');
-  } else {
-    endGame(true); 
-  }
-}
-
-function nextStage() {
-  level++;
-  document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.lv) === (level + 1)));
-  resetFullStage();
-  state = 'playing';
-  document.getElementById('overlay').classList.remove('show');
-  updateHUD();
-  loop();
+  // 是否清空所有磚塊
+  if (bricks.length > 0 && bricks.every(b => !b.alive)) { endGame(true); }
 }
 
 function endGame(won) {
@@ -665,14 +567,13 @@ function endGame(won) {
   cancelAnimationFrame(raf);
   const ovTitle = document.getElementById('ovTitle');
   const ovSub   = document.getElementById('ovSub');
-  ovTitle.innerHTML = won ? 'Victory! <em>🏆</em>' : 'Game <em>Over</em>';
-  ovSub.textContent = won ? `— 總得分 ${score} · 你征服了所有關卡！ —` : `— 得分 ${score} · 再試一次！—`;
-  document.getElementById('ovBtn').textContent = won ? "重頭挑戰" : "重新開始";
+  ovTitle.innerHTML = won ? 'Stage <em>Clear!</em>' : 'Game <em>Over</em>';
+  ovSub.textContent = won ? `— 得分 ${score} · 恭喜過關 🏆 —` : `— 得分 ${score} · 再試一次！—`;
   document.getElementById('overlay').classList.add('show');
 }
 
 function loop() {
-  draw();
+  drawBG(); drawBricks(); drawPaddle(); drawBalls(); drawPowers(); drawCountdown();
   update();
   raf = requestAnimationFrame(loop);
 }
@@ -681,17 +582,15 @@ function startGame() {
   Sound.init();
   if (state === 'playing') return;
   if (state === 'paused') { state = 'playing'; loop(); return; }
-  init(); 
-  state = 'playing';
+  init(); state = 'playing';
   document.getElementById('overlay').classList.remove('show');
   loop();
 }
 
-function restartGameSystem() {
+function restart() {
   cancelAnimationFrame(raf);
   state = 'idle';
-  init(); 
-  state = 'playing';
+  init(); state = 'playing';
   document.getElementById('overlay').classList.remove('show');
   loop();
 }
@@ -702,7 +601,6 @@ function pause() {
     cancelAnimationFrame(raf);
     document.getElementById('ovTitle').innerHTML = 'Paused';
     document.getElementById('ovSub').textContent = '— 按 Space 或點擊選單繼續 —';
-    document.getElementById('ovBtn').textContent = "繼續遊戲";
     document.getElementById('overlay').classList.add('show');
   } else if (state === 'paused') {
     state = 'playing';
@@ -711,7 +609,7 @@ function pause() {
   }
 }
 
-// ── 控制器監聽 ──
+// ── 滑鼠控制 ──
 document.getElementById('cvs').addEventListener('mousemove', e => {
   if (state !== 'playing') return;
   const rect = cvs.getBoundingClientRect();
@@ -720,6 +618,7 @@ document.getElementById('cvs').addEventListener('mousemove', e => {
   paddle.x = Math.max(0, Math.min(W - paddle.w, mx - paddle.w/2));
 });
 
+// ── 手機滑動與觸控控制 ──
 document.getElementById('cvs').addEventListener('touchmove', e => {
   e.preventDefault();
   if (state !== 'playing') return;
@@ -729,19 +628,20 @@ document.getElementById('cvs').addEventListener('touchmove', e => {
   paddle.x = Math.max(0, Math.min(W - paddle.w, tx - paddle.w/2));
 }, {passive:false});
 
+// 點擊發射機制
 document.getElementById('cvs').addEventListener('click', () => {
   if (state === 'playing') {
     balls.forEach(b => { if(!b.launch) b.launch = true; });
   }
 });
 
-// 手機虛擬大按鈕
+// ── 實體與手機按鈕點擊交互 ──
 document.getElementById('ctrl-left').addEventListener('touchstart', (e) => { e.preventDefault(); keys['MobileLeft'] = true; }, {passive:false});
 document.getElementById('ctrl-left').addEventListener('touchend', () => keys['MobileLeft'] = false);
 document.getElementById('ctrl-right').addEventListener('touchstart', (e) => { e.preventDefault(); keys['MobileRight'] = true; }, {passive:false});
 document.getElementById('ctrl-right').addEventListener('touchend', () => keys['MobileRight'] = false);
 
-// 鍵盤操控機制
+// 桌機鍵盤事件
 document.addEventListener('keydown', e => {
   keys[e.code] = true;
   if (e.code === 'Space') {
@@ -756,27 +656,17 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('keyup', e => { keys[e.code] = false; });
 
-// 按鈕交互事件
 document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('pauseBtn').addEventListener('click', pause);
-document.getElementById('restartBtn').addEventListener('click', restartGameSystem);
+document.getElementById('restartBtn').addEventListener('click', restart);
 document.getElementById('ovBtn').addEventListener('click', () => {
   if (state === 'idle' || state === 'dead' || state === 'won') startGame();
   else if (state === 'paused') pause();
-  else if (state === 'stage_clear') nextStage();
 });
 
-// 關鍵：監聽本地 LocalStorage 主題事件，當大廳切換深色時，打磚塊免刷新直接動態換色
-window.addEventListener('storage', (e) => {
-  if (e.key === 'lyz-theme') {
-    document.documentElement.setAttribute('data-theme', e.newValue);
-    draw();
-  }
-});
-
-// 首次加載初始化
+// 頁面初次靜態加載渲染
 init();
-draw();
+drawBG(); drawBricks(); drawPaddle(); drawBalls();
 </script>
 </body>
 </html>
