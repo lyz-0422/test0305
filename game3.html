@@ -371,12 +371,12 @@ function updateTilePosition(rotR, rotC, nextRotR, nextRotC, dir, newVal, isMerge
   let origR = rotR, origC = rotC;
   if (dir === 'right') { origR = rotR; origC = SIZE - 1 - rotC; }
   if (dir === 'up')    { origR = rotC; origC = rotR; }
-  if (dir === 'down')  { origR = SIZE - 1 - rotC; origC = rotR; }
+  if (dir === 'down')  { origR = rotC; origC = SIZE - 1 - rotR; } // 修正部分：逆向解回原始面板
 
   let destR = nextRotR, destC = nextRotC;
   if (dir === 'right') { destR = nextRotR; destC = SIZE - 1 - nextRotC; }
   if (dir === 'up')    { destR = nextRotC; destC = nextRotR; }
-  if (dir === 'down')  { destR = SIZE - 1 - nextRotC; destC = nextRotR; }
+  if (dir === 'down')  { destR = nextRotC; destC = SIZE - 1 - nextRotR; } // 修正部分：逆向解回原始面板
 
   const tile = tilesData.find(t => t.r === origR && t.c === origC && !t.mergedOut);
   if (tile) {
