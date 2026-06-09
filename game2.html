@@ -18,41 +18,34 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* ── 完美對齊 game.html 的雙模變數系統 ── */
+/* ── 完美的雙模 CSS 變數系統 ── */
 :root[data-theme="light"] {
-  --bg:#F5F2EB; --panel:#FFFFFF; --text:#3A322D; --dim:#8A827B;
-  --bd:#d8cfc2; --bd2:#c9bfb0; --ac:#6b4c32; --as:rgba(107,76,50,.09);
-  --red:#A94442; --gold:#C5A059;
-  --canvas-bg:#FFFFFF; --canvas-grid:#F5F2EB;
-  --nav-bg:rgba(245,242,235,.92);
+  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
+  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+  --red:#A94442;--gold:#C5A059;
+  --canvas-bg:#FFFFFF;--canvas-grid:#F5F2EB;
 }
 :root[data-theme="dark"] {
-  --bg:#1A1614; --panel:#25201E; --text:#EAE3D5; --dim:#A29990;
-  --bd:#3A322D; --bd2:#4A3F3A; --ac:#C5A059; --as:rgba(197,160,89,.08);
-  --red:#E26D6D; --gold:#DFD5BF;
-  --canvas-bg:#1E1A16; --canvas-grid:#252018;
-  --nav-bg:rgba(26,22,20,.92);
+  --bg:#1A1614;--panel:#26211E;--text:#EAE3D5;--dim:#A69D95;
+  --bd:#423A35;--bd2:#544A43;--ac:#C5A059;--ac2:#D9B673;
+  --red:#E06666;--gold:#F1C232;
+  --canvas-bg:#211C19;--canvas-grid:#2A2420;
 }
 
 body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s, color .3s;}
 
-/* ── Nav 與按鈕功能對齊 game.html ── */
-.site-nav{position:fixed;top:0;left:0;width:100%;background:var(--nav-bg);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;transition:background .3s, border-color .3s;}
+/* ── Nav ── */
+.site-nav{position:fixed;top:0;left:0;width:100%;background:var(--bg);opacity:0.95;backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;transition:background .3s, border-color .3s;}
 .nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
 .nav-logo:hover{color:var(--ac);}
-.nav-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap;}
+.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
 .nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
 .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
-.nav-right{display:flex;align-items:center;gap:8px;}
-.theme-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;}
-.theme-btn:hover{background:var(--as);border-color:var(--ac);color:var(--ac);}
-.hub-link{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--ac);background:var(--as);color:var(--ac);text-decoration:none;transition:all .2s;}
-.hub-link:hover{background:var(--ac);color:var(--bg);}
 
 /* ── Page ── */
-.page{width:100%;max-width:660px;padding:100px 24px 60px;display:flex;flex-direction:column;align-items:center;}
+.page{width:100%;max-width:660px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;}
 .eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;transition:color .3s;}
 .page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;}
 .page-title em{font-style:italic;color:var(--ac);transition:color .3s;}
@@ -170,25 +163,14 @@ canvas{display:block;width:100%;height:auto;}
 <body>
 
 <nav class="site-nav">
-  <div class="nav-left">
-      <a href="index.html" class="nav-logo">LYZ.dev</a>
-  </div>
+  <a href="gamehub.html" class="nav-logo">LYZ.dev</a>
   <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="game.html" class="active">Game</a></li>
-      <li><a href="notes.html">Notes</a></li>
-      <li><a href="exercise.html">Exercises</a></li>
-      <li><a href="gamehub.html">🎮 遊戲大廳</a></li>
-      <li><a href="game.html">🐍 DAVID蛇</a></li>
-      <li><a href="game3.html">🕹️ 2048</a></li>
-      <li><a href="game4.html">🃏 Memory</a></li>
-      <li><a href="game5.html">⌨ Typing</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="gamehub.html" class="active">Game</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercise.html">Exercises</a></li>
   </ul>
-  <div class="nav-right">
-      <a href="gamehub.html" class="hub-link">← 大廳</a>
-      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark</button>
-  </div>
 </nav>
 
 <div class="page">
@@ -265,24 +247,6 @@ canvas{display:block;width:100%;height:auto;}
 </div>
 
 <script>
-// ── 完全獨立的主題切換邏輯（對齊 game.html） ──
-function applyTheme(t){
-    document.documentElement.setAttribute('data-theme', t);
-    localStorage.setItem('lyz-theme', t);
-    const btn = document.getElementById('themeBtn');
-    if(btn) btn.textContent = t === 'dark' ? 'Light' : 'Dark';
-    if(typeof draw === 'function') draw(); // 當場重繪畫布，免刷新
-}
-function toggleTheme(){
-    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-}
-applyTheme(localStorage.getItem('lyz-theme') || 'light');
-
-// 監聽其他同源分頁（確保切換時，其他頁同步，但不透過大廳廣播）
-window.addEventListener('storage', e => {
-    if(e.key === 'lyz-theme' && e.newValue) applyTheme(e.newValue);
-});
-
 const cvs = document.getElementById('cvs');
 const ctx = cvs.getContext('2d');
 const W = 600, H = 480;
@@ -319,17 +283,17 @@ const Sound = {
   }
 };
 
-// ── 動態獲取雙模調色盤（與新配色變數高度對齊） ──
+// ── 動態獲取雙模調色盤（關鍵：讓 Canvas 的背景、格線與元素跟隨深淺色渲染） ──
 function getPalette() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   if (isDark) {
     return {
-      bg: '#1E1A16', grid: '#252018', paddle: '#EAE3D5', ball: '#EAE3D5', trail: 'rgba(197,160,89,',
+      bg: '#211C19', grid: '#2A2420', paddle: '#EAE3D5', ball: '#EAE3D5', trail: 'rgba(197,160,89,',
       bricks: [
-        ['#3A322D','#EAE3D5'], ['#4A3F3A','#EAE3D5'], ['#C5A059','#1A1614'],
-        ['#DFD5BF','#1A1614'], ['#E26D6D','#FFFFFF'], ['#A29990','#1A1614']
+        ['#3A322D','#EAE3D5'], ['#4A4039','#EAE3D5'], ['#C5A059','#1A1614'],
+        ['#D9B673','#1A1614'], ['#E06666','#FFFFFF'], ['#A69D95','#1A1614']
       ],
-      text: '#EAE3D5', dim: '#A29990', ac: '#C5A059', power: '#E26D6D'
+      text: '#EAE3D5', dim: '#A69D95', ac: '#C5A059', power: '#E06666'
     };
   } else {
     return {
@@ -350,10 +314,10 @@ const BRICK_OX = (W - (COLS * (BRICK_W + BRICK_GAD) - BRICK_GAD)) / 2;
 const BRICK_OY = 52;
 const PADDLE_H = 10;
 const BALL_R = 7;
-const TOTAL_PADDLE_TIME = 450; 
+const TOTAL_PADDLE_TIME = 450; // 60fps * 7.5秒 = 450幀
 
 const LAYOUTS = [
-  [ 
+  [ // Lv.1 Easy
     [0,0,0,1,1,1,1,0,0,0],
     [0,0,1,1,1,1,1,1,0,0],
     [0,1,1,1,2,1,1,1,1,0],
@@ -361,7 +325,7 @@ const LAYOUTS = [
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0]
   ],
-  [ 
+  [ // Lv.2 Normal
     [1,1,1,1,1,1,1,1,1,1],
     [1,0,2,0,1,1,0,2,0,1],
     [1,1,1,1,1,1,1,1,1,1],
@@ -369,7 +333,7 @@ const LAYOUTS = [
     [1,1,1,1,1,1,1,1,1,1],
     [0,0,0,0,0,0,0,0,0,0]
   ],
-  [ 
+  [ // Lv.3 Hard
     [1,1,1,0,0,0,0,1,1,1],
     [1,2,1,0,1,1,0,1,2,1],
     [1,1,1,1,1,1,1,1,1,1],
@@ -377,7 +341,7 @@ const LAYOUTS = [
     [0,0,1,1,1,1,1,1,0,0],
     [0,0,0,1,1,1,1,0,0,0]
   ],
-  [ 
+  [ // Lv.4 Expert
     [1,1,1,1,1,1,1,1,1,1],
     [1,2,0,0,1,1,0,0,2,1],
     [1,1,1,2,0,0,2,1,1,1],
@@ -473,6 +437,7 @@ function updateHUD() {
   document.getElementById('hLives').textContent = hearts || '💀';
 }
 
+// ── 核心繪製邏輯（動態追蹤最新調色盤） ──
 function draw() {
   const PAL = getPalette();
   
@@ -485,6 +450,7 @@ function draw() {
   // 2. 磚塊陣列
   bricks.forEach(b => {
     if (!b.alive) return;
+    // 如果是道具磚，動態套用當前模式的道具紅，否則套用普通磚色
     ctx.fillStyle = b.powerType ? PAL.power : b.color; 
     ctx.fillRect(b.x, b.y, BRICK_W, BRICK_H);
     ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1;
@@ -544,11 +510,13 @@ function draw() {
 // ── 遊戲物理運算 ──
 function update() {
   if (state !== 'playing') return;
+
   const cfg = LEVELS[level];
 
   if (keys['ArrowLeft'] || keys['KeyA'] || keys['MobileLeft']) paddle.x = Math.max(0, paddle.x - 7);
   if (keys['ArrowRight'] || keys['KeyD'] || keys['MobileRight']) paddle.x = Math.min(W - paddle.w, paddle.x + 7);
 
+  // 道具板子時間條校對
   if (paddleWidthTimer > 0) {
     paddleWidthTimer--;
     const pct = paddleWidthTimer / TOTAL_PADDLE_TIME;
@@ -561,6 +529,7 @@ function update() {
     }
   }
 
+  // 處理道具碰撞與接取
   for (let i = powers.length - 1; i >= 0; i--) {
     const p = powers[i];
     p.y += 2.2;
@@ -588,6 +557,7 @@ function update() {
     if (p.y - 10 > H) powers.splice(i, 1);
   }
 
+  // 處理球群移動
   for (let i = balls.length - 1; i >= 0; i--) {
     const ball = balls[i];
 
@@ -659,6 +629,7 @@ function update() {
     }
   }
 
+  // 自動判斷過關 -> 進下一關
   if (bricks.length > 0 && bricks.every(b => !b.alive)) { 
     handleStageClear(); 
   }
@@ -764,11 +735,13 @@ document.getElementById('cvs').addEventListener('click', () => {
   }
 });
 
+// 手機虛擬大按鈕
 document.getElementById('ctrl-left').addEventListener('touchstart', (e) => { e.preventDefault(); keys['MobileLeft'] = true; }, {passive:false});
 document.getElementById('ctrl-left').addEventListener('touchend', () => keys['MobileLeft'] = false);
 document.getElementById('ctrl-right').addEventListener('touchstart', (e) => { e.preventDefault(); keys['MobileRight'] = true; }, {passive:false});
 document.getElementById('ctrl-right').addEventListener('touchend', () => keys['MobileRight'] = false);
 
+// 鍵盤操控機制
 document.addEventListener('keydown', e => {
   keys[e.code] = true;
   if (e.code === 'Space') {
@@ -783,6 +756,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('keyup', e => { keys[e.code] = false; });
 
+// 按鈕交互事件
 document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('pauseBtn').addEventListener('click', pause);
 document.getElementById('restartBtn').addEventListener('click', restartGameSystem);
@@ -790,6 +764,14 @@ document.getElementById('ovBtn').addEventListener('click', () => {
   if (state === 'idle' || state === 'dead' || state === 'won') startGame();
   else if (state === 'paused') pause();
   else if (state === 'stage_clear') nextStage();
+});
+
+// 關鍵：監聽本地 LocalStorage 主題事件，當大廳切換深色時，打磚塊免刷新直接動態換色
+window.addEventListener('storage', (e) => {
+  if (e.key === 'lyz-theme') {
+    document.documentElement.setAttribute('data-theme', e.newValue);
+    draw();
+  }
 });
 
 // 首次加載初始化
