@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>LYZ · 2048</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -297,21 +297,20 @@ function move(dir) {
   let changed = false;
   let gained = 0;
 
-  // 定義矩陣轉置與旋轉對映，以統一歸納到左滑動邏輯
+  // 定義幾何旋轉矩陣，將所有滑動方向「歸一化」為向左滑動
   const rotatedGrid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
   
-  // 建立映射矩陣協助定位追蹤
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       let targetR = r, targetC = c;
       if (dir === 'right') { targetR = r; targetC = SIZE - 1 - c; }
-      if (dir === 'up')    { targetR = c; targetC = SIZE - 1 - r; }
-      if (dir === 'down')  { targetR = SIZE - 1 - c; targetC = r; }
+      if (dir === 'up')    { targetR = c; targetC = r; }
+      if (dir === 'down')  { targetR = SIZE - 1 - c; targetC = SIZE - 1 - r; }
       rotatedGrid[targetR][targetC] = grid[r][c];
     }
   }
 
-  // 處理內部滑動合併追蹤核心
+  // 執行向左合併邏輯
   const nextRotatedGrid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
   const mergeTracker = Array.from({length:SIZE}, () => Array(SIZE).fill(false));
 
@@ -321,13 +320,11 @@ function move(dir) {
       if (rotatedGrid[r][c] === 0) continue;
       
       if (targetC > 0 && nextRotatedGrid[r][targetC - 1] === rotatedGrid[r][c] && !mergeTracker[r][targetC - 1]) {
-        // 發生碰撞合併
         nextRotatedGrid[r][targetC - 1] *= 2;
         gained += nextRotatedGrid[r][targetC - 1];
         mergeTracker[r][targetC - 1] = true;
         changed = true;
         
-        // 更新動畫追蹤方塊群的終點座標
         updateTilePosition(r, c, r, targetC - 1, dir, nextRotatedGrid[r][targetC - 1], true);
       } else {
         nextRotatedGrid[r][targetC] = rotatedGrid[r][c];
@@ -339,18 +336,17 @@ function move(dir) {
   }
 
   if (!changed) {
-    // 若無實質位移，恢復動畫陣列原有位置狀態
     syncTilesDataWithGrid();
     return;
   }
 
-  // 重新將旋轉過後的狀態正確映射寫回原本 grid 矩陣
+  // 反向寫回原本的 grid 矩陣
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       let origR = r, origC = c;
       if (dir === 'right') { origR = r; origC = SIZE - 1 - c; }
-      if (dir === 'up')    { origR = SIZE - 1 - c; origC = r; }
-      if (dir === 'down')  { origR = c; origC = SIZE - 1 - r; }
+      if (dir === 'up')    { origR = c; origC = r; }
+      if (dir === 'down')  { origR = SIZE - 1 - c; origC = SIZE - 1 - r; }
       grid[origR][origC] = nextRotatedGrid[r][c];
     }
   }
@@ -358,7 +354,6 @@ function move(dir) {
   score += gained; moves++;
   if (score > best) { best = score; localStorage.setItem(`2048-best-${SIZE}`, best); }
   
-  // 清洗已合併被覆蓋的舊方塊物件，確保動畫連續性
   tilesData = tilesData.filter(t => !t.mergedOut);
 
   addTile();
@@ -366,17 +361,17 @@ function move(dir) {
   checkEnd();
 }
 
-// 根據滑動方向方向，逆向換算原本的行、列，以此賦予 DOM 位移軌跡
+// 根據滑動方向，精確反推 DOM 的起點與終點座標以利 CSS 平移
 function updateTilePosition(rotR, rotC, nextRotR, nextRotC, dir, newVal, isMerge) {
   let origR = rotR, origC = rotC;
   if (dir === 'right') { origR = rotR; origC = SIZE - 1 - rotC; }
-  if (dir === 'up')    { origR = SIZE - 1 - rotC; origC = rotR; }
-  if (dir === 'down')  { origR = rotC; origC = SIZE - 1 - rotR; }
+  if (dir === 'up')    { origR = rotC; origC = rotR; }
+  if (dir === 'down')  { origR = SIZE - 1 - rotC; origC = SIZE - 1 - rotR; }
 
   let destR = nextRotR, destC = nextRotC;
   if (dir === 'right') { destR = nextRotR; destC = SIZE - 1 - nextRotC; }
-  if (dir === 'up')    { destR = SIZE - 1 - nextRotC; destC = nextRotR; }
-  if (dir === 'down')  { destR = nextRotC; destC = SIZE - 1 - nextRotR; }
+  if (dir === 'up')    { destR = nextRotC; destC = nextRotR; }
+  if (dir === 'down')  { destR = SIZE - 1 - nextRotC; destC = SIZE - 1 - nextRotR; }
 
   const tile = tilesData.find(t => t.r === origR && t.c === origC && !t.mergedOut);
   if (tile) {
@@ -385,7 +380,6 @@ function updateTilePosition(rotR, rotC, nextRotR, nextRotC, dir, newVal, isMerge
     tile.val = newVal;
     if (isMerge) {
       tile.isPop = true;
-      // 同一終點格內若已有另個方塊，將此方塊打上記號並在下次 render 時清除
       const duplicate = tilesData.find(t => t.r === destR && t.c === destC && t.id !== tile.id && !t.mergedOut);
       if (duplicate) duplicate.mergedOut = true;
     }
