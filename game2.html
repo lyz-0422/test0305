@@ -1,854 +1,727 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>LYZ · Breakout</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
-    <style>
-        :root {
-            --bg: #f4f1ea;
-            --panel-bg: #ffffff;
-            --text-main: #2b2b2b;
-            --text-dim: #767676;
-            --ac: #d9534f;
-            --nav-bg: #fdfbf7;
-            --border-color: #e0dacb;
-            --shadow: 0 4px 12px rgba(0,0,0,0.05);
-            --font-game: 'Share Tech Mono', 'Press Start 2P', monospace;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · Breakout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
+  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+  --red:#A94442;--gold:#C5A059;
+}
 
-        [data-theme="dark"] {
-            --bg: #1a1a1a;
-            --panel-bg: #242424;
-            --text-main: #f5f5f5;
-            --text-dim: #aaaaaa;
-            --ac: #ff6b6b;
-            --nav-bg: #1f1f1f;
-            --border-color: #333333;
-            --shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+/* ── 完美對齊 David 蛇的深色模式變數 ── */
+[data-theme="dark"] {
+  --bg:#1A1A1A;--panel:#242424;--text:#F5F5F5;--dim:#AAAAAA;
+  --bd:#333333;--bd2:#444444;--ac:#FF6B6B;--ac2:#FF8787;
+  --red:#FF6B6B;--gold:#FFD93D;
+}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s, color .3s;}
 
-        /* 導覽列：置中設計 */
-        nav {
-            background-color: var(--nav-bg);
-            border-bottom: 1px solid var(--border-color);
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 0 20px;
-            z-index: 100;
-        }
-        .nav-logo {
-            position: absolute;
-            left: 20px;
-            font-family: var(--font-game);
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-main);
-        }
-        .nav-right {
-            position: absolute;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .hub-link {
-            text-decoration: none;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            background: var(--panel-bg);
-            transition: all 0.2s;
-        }
-        .hub-link:hover {
-            border-color: var(--text-main);
-        }
-        .theme-btn {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: var(--font-game);
-            font-size: 0.8rem;
-        }
+/* ── Nav ── */
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245, 242, 235, 0.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;transition:background .3s, border-color .3s;}
+[data-theme="dark"] .site-nav { background: rgba(26, 26, 26, 0.92); }
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-logo:hover{color:var(--ac);}
+.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
 
-        /* 遊戲區版面 */
-        main {
-            flex: 1;
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .game-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .game-subtitle {
-            font-family: var(--font-game);
-            color: var(--ac);
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .game-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        .game-desc {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
+/* 右側控制群 */
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.theme-btn { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; background:transparent; border:1px solid var(--bd2); color:var(--text); padding:4px 8px; cursor:pointer; transition:all .2s; }
+.theme-btn:hover { background:var(--text); color:var(--bg); }
 
-        /* 儀表板架構 */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 6px;
-            box-shadow: var(--shadow);
-        }
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            font-family: var(--font-game);
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-        .stat-value {
-            font-family: var(--font-game);
-            font-size: 1.6rem;
-            font-weight: bold;
-        }
-        .lives-heart {
-            color: var(--ac);
-            letter-spacing: 2px;
-        }
+/* ── Page ── */
+.page{width:100%;max-width:660px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;}
+.page-title em{font-style:italic;color:var(--ac);}
+.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:28px;}
 
-        /* 控制鈕與畫布 */
-        .controls-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .btn {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        .btn:hover {
-            border-color: var(--text-main);
-            background: var(--bg);
-        }
-        .btn-primary {
-            background: var(--text-main);
-            color: var(--panel-bg);
-            border-color: var(--text-main);
-        }
-        .btn-primary:hover {
-            background: var(--ac);
-            border-color: var(--ac);
-            color: white;
-        }
+/* ── HUD ── */
+.hud{display:flex;gap:12px;width:100%;margin-bottom:16px;}
+.hud-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;transition:background .3s, border-color .3s;}
+.hud-box.accent{border-color:var(--ac);}
+.hud-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
+.hud-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);}
+.hud-box.accent .hud-val{color:var(--ac);}
 
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            aspect-ratio: 4 / 3;
-        }
-        canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
+/* ── Btn row ── */
+.btn-row{display:flex;gap:10px;margin-bottom:16px;width:100%;}
+.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 24px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
+.btn:hover,.btn.primary{background:var(--text);color:var(--bg);}
+.btn.primary{border-color:var(--text);}
+.btn.primary:hover{background:var(--ac);border-color:var(--ac);}
 
-        /* 難度切換 */
-        .difficulty-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .btn-diff {
-            padding: 8px;
-            font-size: 0.8rem;
-            font-family: var(--font-game);
-        }
-        .btn-diff.active {
-            background: var(--text-main);
-            color: var(--panel-bg);
-            border-color: var(--text-main);
-        }
+/* ── Canvas wrapper ── */
+.canvas-wrap{width:100%;position:relative;border:1px solid var(--text);background:var(--panel);overflow:hidden;transition:border-color .3s, background .3s;}
+canvas{display:block;width:100%;height:auto;}
 
-        /* 說明指南 */
-        .guide-panel {
-            margin-top: 25px;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-        .guide-title {
-            font-weight: bold;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-        .badge {
-            background: var(--bg);
-            color: var(--ac);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: var(--font-game);
-            font-weight: bold;
-            margin: 0 4px;
-            border: 1px solid var(--border-color);
-        }
+/* ── Overlay ── */
+.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.88);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;transition:background .3s;}
+[data-theme="dark"] .overlay { background: rgba(26,26,26,.88); }
+.overlay.show{display:flex;}
+.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
+.ov-title em{font-style:italic;color:var(--ac);}
+.ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;}
 
-        @media (max-width: 600px) {
-            .nav-links { display: none; }
-            .dashboard { grid-template-columns: repeat(2, 1fr); }
-            .difficulty-row { grid-template-columns: repeat(2, 1fr); }
-        }
-    </style>
+/* ── Level badges ── */
+.level-row{display:flex;gap:8px;margin-top:16px;width:100%;}
+.level-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 0;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;flex:1;}
+.level-btn:hover,.level-btn.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+
+/* ── Mobile Control Pad ── */
+#mobile-ctrl-row {
+  display: none;
+  width: 100%;
+  gap: 12px;
+  margin-top: 16px;
+}
+.touch-btn {
+  flex: 1;
+  height: 60px;
+  background: var(--panel);
+  border: 1px solid var(--text);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+.touch-btn:active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* ── Hint ── */
+.hint-row{display:flex;gap:12px;margin-top:16px;width:100%;}
+.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;transition:background .3s, border-color .3s;}
+.hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--dim);line-height:1.7;}
+
+@media(max-width:600px){
+  .site-nav{padding:0 16px;}
+  .nav-links{display: none;}
+  .page{padding:68px 12px 40px;}
+  #mobile-ctrl-row { display: flex; }
+  .hint-row { flex-direction: column; }
+}
+</style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-logo">LYZ.DEV</div>
-        <ul class="nav-links">
-            <li><a href="#">HOME</a></li>
-            <li><a href="#">ABOUT</a></li>
-            <li><a href="#" class="active">GAME</a></li>
-            <li><a href="#">NOTES</a></li>
-            <li><a href="#">EXERCISES</a></li>
-        </ul>
-        <div class="nav-right">
-            <a href="#" class="hub-link">← 大廳</a>
-            <button class="theme-btn" id="themeToggle">DARK</button>
-        </div>
-    </nav>
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">LYZ.dev</a>
+  <ul class="nav-links">
+    <li><a href="gamehub.html">🎮 遊戲大廳</a></li>
+    <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
+    <li><a href="game2.html" class="active">🧱 磚塊爆破樂</a></li>
+    <li><a href="game3.html">🕹️ 2048</a></li>
+    <li><a href="game4.html">🃏 記憶卡片</a></li>
+    <li><a href="game5.html">⌨ 打字測試</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="gamehub.html" class="nav-logo" style="letter-spacing:0.05em;">← 大廳</a>
+    <button class="theme-btn" id="themeToggle">DARK</button>
+  </div>
+</nav>
 
-    <main>
-        <div class="game-header">
-            <div class="game-subtitle">ACTION GAME · 動作</div>
-            <h1 class="game-title">Breakout</h1>
-            <p class="game-desc">打磚塊 — 消滅所有磚塊即可過關</p>
-        </div>
+<div class="page">
+  <div class="eyebrow">Action Game · 動作</div>
+  <h1 class="page-title"><em>Breakout</em></h1>
+  <p class="page-sub">打磚塊 — 消滅所有磚塊即可過關</p>
 
-        <div class="dashboard">
-            <div class="stat-card">
-                <div class="stat-label">SCORE</div>
-                <div class="stat-value" id="scoreVal">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">BEST</div>
-                <div class="stat-value" id="bestVal">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">LIVES</div>
-                <div class="stat-value lives-heart" id="livesVal">♥♥♥</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">LEVEL</div>
-                <div class="stat-value" id="levelVal">1</div>
-            </div>
-        </div>
+  <div class="hud">
+    <div class="hud-box accent">
+      <div class="hud-label">Score</div>
+      <div class="hud-val" id="hScore">0</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Best</div>
+      <div class="hud-val" id="hBest">0</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Lives</div>
+      <div class="hud-val" id="hLives">♥ ♥ ♥</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-label">Level</div>
+      <div class="hud-val" id="hLevel">1</div>
+    </div>
+  </div>
 
-        <div class="controls-row">
-            <button class="btn btn-primary" id="startBtn">▶ START</button>
-            <button class="btn" id="pauseBtn">⏸ PAUSE</button>
-            <button class="btn" id="restartBtn">↺ RESTART</button>
-        </div>
+  <div class="btn-row">
+    <button class="btn primary" id="startBtn">▶ Start</button>
+    <button class="btn" id="pauseBtn">⏸ Pause</button>
+    <button class="btn" id="restartBtn">↺ Restart</button>
+  </div>
 
-        <div class="canvas-container">
-            <canvas id="gameCanvas" width="800" height="600"></canvas>
-        </div>
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="cvs" width="600" height="480"></canvas>
+    <div class="overlay" id="overlay">
+      <div class="ov-title" id="ovTitle">Ready?</div>
+      <div class="ov-sub" id="ovSub">— 按 Start 或點擊畫面開始 —</div>
+      <button class="btn primary" id="ovBtn" style="width:160px;margin-top:8px;">開始遊戲</button>
+    </div>
+  </div>
 
-        <div class="difficulty-row">
-            <button class="btn btn-diff active" data-diff="1">LV.1 EASY</button>
-            <button class="btn btn-diff" data-diff="2">LV.2 NORMAL</button>
-            <button class="btn btn-diff" data-diff="3">LV.3 HARD</button>
-            <button class="btn btn-diff" data-diff="4">LV.4 EXPERT</button>
-        </div>
+  <div id="mobile-ctrl-row">
+    <div class="touch-btn" id="ctrl-left">◀ Move Left</div>
+    <div class="touch-btn" id="ctrl-right">Move Right ▶</div>
+  </div>
 
-        <div class="guide-panel">
-            <div class="guide-title">操作說明</div>
-            <p>• 使用 <span class="badge">←</span> <span class="badge">→</span> 方向鍵 / <span class="badge">A</span> <span class="badge">D</span> 或滑鼠滑動控制擋板。</p>
-            <p>• 點擊畫布或按 <span class="badge">Space</span> 鍵可發射球或暫停遊戲。</p>
-            <div class="guide-title" style="margin-top: 10px;">特殊道具</div>
-            <p>• 帶有星號 ⭐ 的磚塊擊碎後會隨機掉落道具：<span class="badge">W</span> 加寬板子、<span class="badge">M</span> 多球分裂。</p>
-        </div>
-    </main>
+  <div class="level-row">
+    <button class="level-btn on" data-lv="1" onclick="setLevel(1)">Lv.1 Easy</button>
+    <button class="level-btn" data-lv="2" onclick="setLevel(2)">Lv.2 Normal</button>
+    <button class="level-btn" data-lv="3" onclick="setLevel(3)">Lv.3 Hard</button>
+    <button class="level-btn" data-lv="4" onclick="setLevel(4)">Lv.4 Expert</button>
+  </div>
 
-    <script>
-        // ==========================================
-        // 1. 核心狀態宣告 (必須放在最頂層，防止未初始化錯誤)
-        // ==========================================
-        const state = {
-            theme: 'light',
-            score: 0,
-            bestScore: parseInt(localStorage.getItem('breakout_best') || '0'),
-            lives: 3,
-            level: 1,
-            isPlaying: false,
-            isPaused: false,
-            difficulty: 1, // 1: Easy, 2: Normal, 3: Hard, 4: Expert
-            ballLaunched: false
-        };
+  <div class="hint-row">
+    <div class="hint-card">
+      <div class="hint-title">操作</div>
+      <div class="hint-text">← → 方向鍵 / A D / 滑鼠滑動 / 手機兩側大按鈕<br>點擊畫布或按 Space 發射/暫停</div>
+    </div>
+    <div class="hint-card">
+      <div class="hint-title">特殊道具</div>
+      <div class="hint-text">⭐ 帶有標章的磚塊會掉落道具：<br><b>[W]</b> 板子加寬變長 | <b>[M]</b> 分裂多球分身</div>
+    </div>
+  </div>
+</div>
 
-        // ==========================================
-        // 2. 畫布與遊戲變數設定
-        // ==========================================
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+<script>
+// ==========================================
+// 1. 全局狀態與變數宣告 (必須在最上層，解決 initialization 錯誤)
+// ==========================================
+let currentTheme = 'light';
+let level = 0;
+let state = 'idle'; 
+let score, best, lives;
+let paddle, balls = [], bricks = [], powers = [], raf;
+let keys = {};
+let paddleWidthTimer = 0;
 
-        // 擋板屬性
-        let paddleHeight = 15;
-        let paddleWidth = 120;
-        let paddleX = (canvas.width - paddleWidth) / 2;
-        let paddleSpeed = 8;
-        let isPaddleWide = false;
-        let paddleWideTimer = null;
+const cvs = document.getElementById('cvs');
+const ctx = cvs.getContext('2d');
+const W = 600, H = 480;
 
-        // 多球系統陣列
-        let balls = [];
-        const baseBallSpeed = 5;
+// ==========================================
+// 2. 亮暗色系動態色盤定義
+// ==========================================
+function getCanvasColors() {
+  const isDark = currentTheme === 'dark';
+  return {
+    bg:     isDark ? '#242424' : '#FFFFFF',
+    grid:   isDark ? '#2A2A2A' : '#F5F2EB',
+    paddle: isDark ? '#F5F5F5' : '#3A322D',
+    ball:   isDark ? '#FF6B6B' : '#3A322D',
+    text:   isDark ? '#F5F5F5' : '#3A322D',
+    dim:    isDark ? '#AAAAAA' : '#8A827B',
+    ac:     isDark ? '#FF6B6B' : '#6b4c32',
+    power:  isDark ? '#FF6B6B' : '#A94442',
+    bricks: isDark ? [
+      ['#3A3A3A','#F5F5F5'], ['#4A4A4A','#F5F5F5'], ['#FF6B6B','#FFFFFF'],
+      ['#FF8787','#FFFFFF'], ['#FFD93D','#333333'], ['#6B4C32','#FFFFFF'],
+    ] : [
+      ['#EAE3D5','#3A322D'], ['#DFD5BF','#3A322D'], ['#C5A059','#FFFFFF'],
+      ['#B8843A','#FFFFFF'], ['#A94442','#FFFFFF'], ['#6b4c32','#FFFFFF'],
+    ]
+  };
+}
 
-        // 磚塊設定
-        let brickRows = 5;
-        let brickCols = 8;
-        let brickWidth = 80;
-        let brickHeight = 24;
-        let brickPadding = 12;
-        let brickOffsetTop = 50;
-        let brickOffsetLeft = 35;
-        let bricks = [];
+// ── Web Audio API 復古音效引擎 ──
+const Sound = {
+  ctx: null,
+  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+  playHit() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(330, this.ctx.currentTime);
+    g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.08);
+  },
+  playBrick() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'triangle'; osc.frequency.setValueAtTime(587.33, this.ctx.currentTime);
+    g.gain.setValueAtTime(0.12, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.12);
+  },
+  playPower() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'square'; osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+    osc.frequency.setValueAtTime(880, this.ctx.currentTime + 0.08);
+    g.gain.setValueAtTime(0.08, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.005, this.ctx.currentTime + 0.2);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.2);
+  },
+  playLose() {
+    this.init(); const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.35);
+    g.gain.setValueAtTime(0.2, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+    osc.connect(g); g.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.4);
+  }
+};
 
-        // 掉落道具陣列
-        let powerUps = [];
+// ── Config & Map Layouts ──
+const COLS = 10, ROWS = 6;
+const BRICK_W = 52, BRICK_H = 18, BRICK_GAD = 5;
+const BRICK_OX = (W - (COLS * (BRICK_W + BRICK_GAD) - BRICK_GAD)) / 2;
+const BRICK_OY = 52;
+const PADDLE_H = 10, PADDLE_W_BASE = 90;
+const BALL_R = 7;
 
-        // 控制鍵狀態
-        let rightPressed = false;
-        let leftPressed = false;
+const LAYOUTS = [
+  [
+    [0,0,0,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,0,0],
+    [0,1,1,1,2,1,1,1,1,0],
+    [1,1,1,1,1,1,2,1,1,1],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0]
+  ],
+  [
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,0,2,0,1,1,0,2,0,1],
+    [1,1,1,1,1,1,1,1,1,1],
+    [0,1,0,1,0,1,0,1,0,1],
+    [1,1,1,1,1,1,1,1,1,1],
+    [0,0,0,0,0,0,0,0,0,0]
+  ],
+  [
+    [1,1,1,0,0,0,0,1,1,1],
+    [1,2,1,0,1,1,0,1,2,1],
+    [1,1,1,1,1,1,1,1,1,1],
+    [0,1,1,2,1,1,2,1,1,0],
+    [0,0,1,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,0,0,0]
+  ],
+  [
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,1,1,0,0,2,1],
+    [1,1,1,2,0,0,2,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,0,1,0,1,1,0,1,0,1],
+    [1,1,1,1,1,1,1,1,1,1]
+  ]
+];
 
-        // ==========================================
-        // 3. 亮暗主題調色盤 (動態取得 CSS 變數)
-        // ==========================================
-        function PAL(key) {
-            const rootStyle = getComputedStyle(document.documentElement);
-            if (key === 'paddle') return rootStyle.getPropertyValue('--text-main').trim();
-            if (key === 'ball') return rootStyle.getPropertyValue('--ac').trim();
-            if (key === 'grid') return rootStyle.getPropertyValue('--border-color').trim();
-            if (key === 'text') return rootStyle.getPropertyValue('--text-dim').trim();
-            
-            // 磚塊顏色組
-            const brickColors = {
-                light: ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db'],
-                dark:  ['#ff6b6b', '#ff9233', '#ffde59', '#51e27a', '#54a0ff']
-            };
-            return brickColors[state.theme][key] || '#cccccc';
+const LEVELS = [
+  { speed: 3.8, paddleW: 105, label:'Easy' },
+  { speed: 5.0, paddleW: 90,  label:'Normal' },
+  { speed: 6.5, paddleW: 75,  label:'Hard' },
+  { speed: 8.2, paddleW: 60,  label:'Expert' },
+];
+
+function setLevel(lv) {
+  level = lv - 1;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.lv) === lv));
+  if (state !== 'idle') restart();
+}
+
+function makeBricks() {
+  const arr = [];
+  const map = LAYOUTS[level];
+  const PAL = getCanvasColors();
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const type = map[r][c];
+      if (type === 0) continue; 
+      
+      const isPower = type === 2 || Math.random() < 0.15;
+      const pType = isPower ? (Math.random() < 0.5 ? 'W' : 'M') : null;
+
+      arr.push({
+        x: BRICK_OX + c * (BRICK_W + BRICK_GAD),
+        y: BRICK_OY + r * (BRICK_H + BRICK_GAD),
+        alive: true,
+        row: r,
+        powerType: pType
+      });
+    }
+  }
+  return arr;
+}
+
+function reset() {
+  const cfg = LEVELS[level];
+  paddle = { x: W/2 - cfg.paddleW/2, y: H - 36, w: cfg.paddleW, h: PADDLE_H, baseW: cfg.paddleW };
+  
+  const angle = -Math.PI/2 + (Math.random() - 0.5) * 0.6;
+  balls = [{
+    x: W/2, y: H - 60,
+    vx: cfg.speed * Math.cos(angle),
+    vy: cfg.speed * Math.sin(angle),
+    launch: false,
+    trail: []
+  }];
+  
+  bricks = makeBricks();
+  powers = [];
+  paddleWidthTimer = 0;
+}
+
+function init() {
+  score = 0; lives = 3;
+  best = parseInt(localStorage.getItem('bko-best') || '0');
+  reset();
+  updateHUD();
+}
+
+function updateHUD() {
+  document.getElementById('hScore').textContent = score;
+  document.getElementById('hBest').textContent  = best;
+  document.getElementById('hLevel').textContent  = level + 1;
+  const hearts = ['♥ ♥ ♥','♥ ♥','♥',''][Math.max(0, 3 - lives)];
+  document.getElementById('hLives').textContent = hearts || '💀';
+}
+
+// ── Drawing (全部改為實時讀取 getCanvasColors()) ──
+function drawBG() {
+  const PAL = getCanvasColors();
+  ctx.fillStyle = PAL.bg; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = PAL.grid; ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += 20) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += 20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+}
+
+function drawBricks() {
+  const PAL = getCanvasColors();
+  bricks.forEach(b => {
+    if (!b.alive) return;
+    const colorPair = PAL.bricks[b.row % PAL.bricks.length];
+    const brickColor = b.powerType ? PAL.power : colorPair[0];
+    const textColor = b.powerType ? '#FFFFFF' : colorPair[1];
+
+    ctx.fillStyle = brickColor; ctx.fillRect(b.x, b.y, BRICK_W, BRICK_H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+    ctx.strokeRect(b.x+.5, b.y+.5, BRICK_W-1, BRICK_H-1);
+    
+    ctx.fillStyle = textColor;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (b.powerType) {
+      ctx.font = 'bold 11px "DM Mono", monospace';
+      ctx.fillText(`[${b.powerType}]`, b.x + BRICK_W/2, b.y + BRICK_H/2);
+    } else {
+      ctx.font = '500 9px "DM Mono", monospace';
+      ctx.fillText((ROWS - b.row) * 10, b.x + BRICK_W/2, b.y + BRICK_H/2);
+    }
+  });
+}
+
+function drawPaddle() {
+  const PAL = getCanvasColors();
+  ctx.fillStyle = PAL.paddle;
+  ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fillRect(paddle.x+2, paddle.y+2, paddle.w-4, 3);
+}
+
+function drawBalls() {
+  const PAL = getCanvasColors();
+  balls.forEach(ball => {
+    ball.trail.forEach((t, i) => {
+      const a = (i / ball.trail.length) * 0.22;
+      ctx.beginPath(); ctx.arc(t.x, t.y, BALL_R * (i/ball.trail.length), 0, Math.PI*2);
+      ctx.fillStyle = isDarkTheme() ? `rgba(245,245,245,${a})` : `rgba(58,50,45,${a})`; ctx.fill();
+    });
+    ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI*2);
+    ctx.fillStyle = PAL.ball; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.beginPath(); ctx.arc(ball.x-2, ball.y-2, BALL_R*0.35, 0, Math.PI*2); ctx.fill();
+  });
+}
+
+function isDarkTheme() { return currentTheme === 'dark'; }
+
+function drawPowers() {
+  const PAL = getCanvasColors();
+  powers.forEach(p => {
+    ctx.fillStyle = PAL.power;
+    ctx.fillRect(p.x - 10, p.y - 10, 20, 20);
+    ctx.strokeStyle = PAL.paddle; ctx.lineWidth = 1;
+    ctx.strokeRect(p.x - 10, p.y - 10, 20, 20);
+    
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 11px "DM Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(p.type, p.x, p.y);
+  });
+}
+
+function drawCountdown() {
+  const PAL = getCanvasColors();
+  if (balls.length === 1 && !balls[0].launch) {
+    ctx.font = '300 11px "DM Mono", monospace';
+    ctx.fillStyle = PAL.dim; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('SPACE · CLICK TO LAUNCH BALL', W/2, H - 16);
+  }
+}
+
+// ── Physics ──
+function update() {
+  if (state !== 'playing') return;
+
+  const cfg = LEVELS[level];
+
+  if (keys['ArrowLeft'] || keys['KeyA'] || keys['MobileLeft']) paddle.x = Math.max(0, paddle.x - 7);
+  if (keys['ArrowRight'] || keys['KeyD'] || keys['MobileRight']) paddle.x = Math.min(W - paddle.w, paddle.x + 7);
+
+  if (paddleWidthTimer > 0) {
+    paddleWidthTimer--;
+    if (paddleWidthTimer <= 0) paddle.w = paddle.baseW;
+  }
+
+  for (let i = powers.length - 1; i >= 0; i--) {
+    const p = powers[i];
+    p.y += 2.2;
+
+    if (p.y + 10 >= paddle.y && p.y - 10 <= paddle.y + paddle.h && p.x >= paddle.x && p.x <= paddle.x + paddle.w) {
+      Sound.playPower();
+      if (p.type === 'W') {
+        paddle.w = paddle.baseW * 1.5;
+        paddleWidthTimer = 450; 
+      } else if (p.type === 'M') {
+        const baseBall = balls[0] || { x: paddle.x + paddle.w/2, y: paddle.y - 10 };
+        for (let k = 0; k < 2; k++) {
+          const a = -Math.PI/2 + (Math.random() - 0.5) * 1.2;
+          balls.push({
+            x: baseBall.x, y: Math.min(baseBall.y, paddle.y - 10),
+            vx: cfg.speed * Math.cos(a), vy: cfg.speed * Math.sin(a),
+            launch: true, trail: []
+          });
         }
+      }
+      powers.splice(i, 1);
+      continue;
+    }
+    if (p.y - 10 > H) powers.splice(i, 1);
+  }
 
-        // ==========================================
-        // 4. 主題初始化與切換邏輯
-        // ==========================================
-        const themeToggle = document.getElementById('themeToggle');
+  for (let i = balls.length - 1; i >= 0; i--) {
+    const ball = balls[i];
+
+    if (!ball.launch) {
+      ball.x = paddle.x + paddle.w / 2;
+      continue;
+    }
+
+    ball.trail.push({x: ball.x, y: ball.y});
+    if (ball.trail.length > 6) ball.trail.shift();
+
+    ball.x += ball.vx; ball.y += ball.vy;
+
+    if (ball.x - BALL_R < 0) { ball.x = BALL_R; ball.vx *= -1; Sound.playHit(); }
+    if (ball.x + BALL_R > W) { ball.x = W-BALL_R; ball.vx *= -1; Sound.playHit(); }
+    if (ball.y - BALL_R < 0) { ball.y = BALL_R; ball.vy *= -1; Sound.playHit(); }
+
+    if (ball.y - BALL_R > H) {
+      balls.splice(i, 1);
+      if (balls.length === 0) {
+        lives--;
+        Sound.playLose();
+        updateHUD();
+        if (lives <= 0) { endGame(false); return; }
         
-        function initTheme() {
-            const savedTheme = localStorage.getItem('lyz-theme') || 'light';
-            state.theme = savedTheme;
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            themeToggle.textContent = savedTheme.toUpperCase();
+        paddle.w = paddle.baseW;
+        paddleWidthTimer = 0;
+        const angle = -Math.PI/2 + (Math.random()-0.5)*0.6;
+        balls = [{
+          x: paddle.x + paddle.w/2, y: paddle.y - BALL_R - 2,
+          vx: cfg.speed * Math.cos(angle), vy: cfg.speed * Math.sin(angle),
+          launch: false, trail: []
+        }];
+        powers = [];
+      }
+      continue;
+    }
+
+    if (ball.y + BALL_R >= paddle.y && ball.y - BALL_R <= paddle.y + paddle.h &&
+        ball.x >= paddle.x && ball.x <= paddle.x + paddle.w && ball.vy > 0) {
+      ball.vy *= -1;
+      Sound.playHit();
+      const hit = (ball.x - (paddle.x + paddle.w/2)) / (paddle.w/2);
+      ball.vx = hit * cfg.speed * 1.15;
+      
+      const spd = Math.hypot(ball.vx, ball.vy);
+      const factor = cfg.speed / spd;
+      ball.vx *= factor; ball.vy *= factor;
+      ball.y = paddle.y - BALL_R - 1;
+    }
+
+    for (const b of bricks) {
+      if (!b.alive) continue;
+      const dx = Math.max(b.x - ball.x, 0, ball.x - (b.x + BRICK_W));
+      const dy = Math.max(b.y - ball.y, 0, ball.y - (b.y + BRICK_H));
+      
+      if (dx * dx + dy * dy < BALL_R * BALL_R) {
+        b.alive = false;
+        score += (ROWS - b.row) * 10;
+        Sound.playBrick();
+
+        if (score > best) { best = score; localStorage.setItem('bko-best', best); }
+        updateHUD();
+
+        if (b.powerType) {
+          powers.push({ x: b.x + BRICK_W/2, y: b.y + BRICK_H, type: b.powerType });
         }
 
-        themeToggle.addEventListener('click', () => {
-            const nextTheme = state.theme === 'light' ? 'dark' : 'light';
-            state.theme = nextTheme;
-            document.documentElement.setAttribute('data-theme', nextTheme);
-            localStorage.setItem('lyz-theme', nextTheme);
-            themeToggle.textContent = nextTheme.toUpperCase();
-            draw(); // 切換主題時重新渲染畫布顏色
-        });
+        const fromLeft  = ball.x < b.x;
+        const fromRight = ball.x > b.x + BRICK_W;
+        if (fromLeft || fromRight) ball.vx *= -1; else ball.vy *= -1;
+        break;
+      }
+    }
+  }
 
-        // 監聽來自其他頁面的主題同步
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'lyz-theme' && e.newValue) {
-                state.theme = e.newValue;
-                document.documentElement.setAttribute('data-theme', e.newValue);
-                themeToggle.textContent = e.newValue.toUpperCase();
-                draw();
-            }
-        });
+  if (bricks.length > 0 && bricks.every(b => !b.alive)) { endGame(true); }
+}
 
-        // ==========================================
-        // 5. 遊戲邏輯與初始化
-        // ==========================================
-        function initBricks() {
-            bricks = [];
-            for (let c = 0; c < brickCols; c++) {
-                bricks[c] = [];
-                for (let r = 0; r < brickRows; r++) {
-                    // 15% 機率生成特殊帶道具磚塊
-                    const isSpecial = Math.random() < 0.15;
-                    bricks[c][r] = { x: 0, y: 0, status: 1, r: r, special: isSpecial };
-                }
-            }
-        }
+function endGame(won) {
+  state = won ? 'won' : 'dead';
+  cancelAnimationFrame(raf);
+  const ovTitle = document.getElementById('ovTitle');
+  const ovSub   = document.getElementById('ovSub');
+  ovTitle.innerHTML = won ? 'Stage <em>Clear!</em>' : 'Game <em>Over</em>';
+  ovSub.textContent = won ? `— 得分 ${score} · 恭喜過關 🏆 —` : `— 得分 ${score} · 再試一次！—`;
+  document.getElementById('overlay').classList.add('show');
+}
 
-        function resetBallAndPaddle() {
-            paddleWidth = state.difficulty === 1 ? 140 : (state.difficulty === 4 ? 90 : 120);
-            paddleX = (canvas.width - paddleWidth) / 2;
-            isPaddleWide = false;
-            if (paddleWideTimer) clearTimeout(paddleWideTimer);
+function loop() {
+  drawBG(); drawBricks(); drawPaddle(); drawBalls(); drawPowers(); drawCountdown();
+  update();
+  raf = requestAnimationFrame(loop);
+}
 
-            balls = [{
-                x: canvas.width / 2,
-                y: canvas.height - paddleHeight - 15,
-                dx: 0,
-                dy: 0,
-                radius: 8
-            }];
-            state.ballLaunched = false;
-            powerUps = [];
-        }
+function startGame() {
+  Sound.init();
+  if (state === 'playing') return;
+  if (state === 'paused') { state = 'playing'; loop(); return; }
+  init(); state = 'playing';
+  document.getElementById('overlay').classList.remove('show');
+  loop();
+}
 
-        function launchBall() {
-            if (!state.ballLaunched && balls.length > 0) {
-                const angle = (Math.random() * 60 - 30) * Math.PI / 180; // -30到30度之間
-                const speed = baseBallSpeed + state.difficulty;
-                balls[0].dx = speed * Math.sin(angle);
-                balls[0].dy = -speed * Math.cos(angle);
-                state.ballLaunched = true;
-            }
-        }
+function restart() {
+  cancelAnimationFrame(raf);
+  state = 'idle';
+  init(); state = 'playing';
+  document.getElementById('overlay').classList.remove('show');
+  loop();
+}
 
-        // ==========================================
-        // 6. 繪製渲染功能
-        // ==========================================
-        function drawPaddle() {
-            ctx.beginPath();
-            ctx.rect(paddleX, canvas.height - paddleHeight - 5, paddleWidth, paddleHeight);
-            ctx.fillStyle = PAL('paddle');
-            ctx.fill();
-            ctx.closePath();
-        }
+function pause() {
+  if (state === 'playing') {
+    state = 'paused';
+    cancelAnimationFrame(raf);
+    document.getElementById('ovTitle').innerHTML = 'Paused';
+    document.getElementById('ovSub').textContent = '— 按 Space 或點擊選單繼續 —';
+    document.getElementById('overlay').classList.add('show');
+  } else if (state === 'paused') {
+    state = 'playing';
+    document.getElementById('overlay').classList.remove('show');
+    loop();
+  }
+}
 
-        function drawBalls() {
-            balls.forEach(ball => {
-                ctx.beginPath();
-                ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-                ctx.fillStyle = PAL('ball');
-                ctx.fill();
-                ctx.closePath();
-            });
-        }
+// ── 主題切換引擎 (完美對齊 David 蛇) ──
+const themeToggle = document.getElementById('themeToggle');
 
-        function drawBricks() {
-            for (let c = 0; c < brickCols; c++) {
-                for (let r = 0; r < brickRows; r++) {
-                    if (bricks[c][r].status === 1) {
-                        const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-                        const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-                        bricks[c][r].x = brickX;
-                        bricks[c][r].y = brickY;
-                        
-                        ctx.beginPath();
-                        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                        ctx.fillStyle = PAL(r % 5);
-                        ctx.fill();
-                        ctx.closePath();
+function initTheme() {
+  const savedTheme = localStorage.getItem('lyz-theme') || 'light';
+  currentTheme = savedTheme;
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  themeToggle.textContent = savedTheme.toUpperCase();
+  if(state !== 'playing') { drawBG(); drawBricks(); drawPaddle(); drawBalls(); }
+}
 
-                        // 如果是特殊道具磚，畫上一顆星星標誌
-                        if (bricks[c][r].special) {
-                            ctx.fillStyle = "#ffffff";
-                            ctx.font = "14px Arial";
-                            ctx.textAlign = "center";
-                            ctx.textBaseline = "middle";
-                            ctx.fillText("★", brickX + brickWidth / 2, brickY + brickHeight / 2);
-                        }
-                    }
-                }
-            }
-        }
+themeToggle.addEventListener('click', () => {
+  const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+  currentTheme = nextTheme;
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  localStorage.setItem('lyz-theme', nextTheme);
+  themeToggle.textContent = nextTheme.toUpperCase();
+  if(state !== 'playing') { drawBG(); drawBricks(); drawPaddle(); drawBalls(); }
+});
 
-        function drawPowerUps() {
-            powerUps.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = p.type === 'W' ? '#2ecc71' : '#9b59b6';
-                ctx.fill();
-                ctx.closePath();
+window.addEventListener('storage', (e) => {
+  if (e.key === 'lyz-theme' && e.newValue) {
+    currentTheme = e.newValue;
+    document.documentElement.setAttribute('data-theme', e.newValue);
+    themeToggle.textContent = e.newValue.toUpperCase();
+    if(state !== 'playing') { drawBG(); drawBricks(); drawPaddle(); drawBalls(); }
+  }
+});
 
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 10px sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(p.type, p.x, p.y);
-            });
-        }
+// ── 滑鼠控制 ──
+document.getElementById('cvs').addEventListener('mousemove', e => {
+  if (state !== 'playing') return;
+  const rect = cvs.getBoundingClientRect();
+  const scale = W / rect.width;
+  const mx = (e.clientX - rect.left) * scale;
+  paddle.x = Math.max(0, Math.min(W - paddle.w, mx - paddle.w/2));
+});
 
-        function drawStatusMessage(text) {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.font = "bold 24px 'Share Tech Mono', sans-serif";
-            ctx.fillStyle = "#ffffff";
-            ctx.textAlign = "center";
-            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-        }
+// ── 手機滑動與觸控控制 ──
+document.getElementById('cvs').addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (state !== 'playing') return;
+  const rect = cvs.getBoundingClientRect();
+  const scale = W / rect.width;
+  const tx = (e.touches[0].clientX - rect.left) * scale;
+  paddle.x = Math.max(0, Math.min(W - paddle.w, tx - paddle.w/2));
+}, {passive:false});
 
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // 畫背景格線微調視覺感
-            ctx.strokeStyle = PAL('grid');
-            ctx.lineWidth = 0.5;
-            for(let i=0; i<canvas.width; i+=40) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-            }
-            for(let j=0; j<canvas.height; j+=40) {
-                ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
-            }
+document.getElementById('cvs').addEventListener('click', () => {
+  if (state === 'playing') {
+    balls.forEach(b => { if(!b.launch) b.launch = true; });
+  }
+});
 
-            drawBricks();
-            drawPaddle();
-            drawBalls();
-            drawPowerUps();
+document.getElementById('ctrl-left').addEventListener('touchstart', (e) => { e.preventDefault(); keys['MobileLeft'] = true; }, {passive:false});
+document.getElementById('ctrl-left').addEventListener('touchend', () => keys['MobileLeft'] = false);
+document.getElementById('ctrl-right').addEventListener('touchstart', (e) => { e.preventDefault(); keys['MobileRight'] = true; }, {passive:false});
+document.getElementById('ctrl-right').addEventListener('touchend', () => keys['MobileRight'] = false);
 
-            // 若尚未發射，將球固定在板子上方隨板子移動
-            if (!state.ballLaunched && balls.length > 0) {
-                balls[0].x = paddleX + paddleWidth / 2;
-                balls[0].y = canvas.height - paddleHeight - 13;
-            }
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (state === 'playing') {
+      let anyUnlaunched = false;
+      balls.forEach(b => { if(!b.launch) { b.launch = true; anyUnlaunched = true; } });
+      if (anyUnlaunched) return;
+    }
+    pause();
+  }
+});
+document.addEventListener('keyup', e => { keys[e.code] = false; });
 
-            if (!state.isPlaying && state.score === 0) {
-                drawStatusMessage("PRESS START TO PLAY");
-            } else if (state.isPaused) {
-                drawStatusMessage("PAUSED");
-            }
-        }
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('pauseBtn').addEventListener('click', pause);
+document.getElementById('restartBtn').addEventListener('click', restart);
+document.getElementById('ovBtn').addEventListener('click', () => {
+  if (state === 'idle' || state === 'dead' || state === 'won') startGame();
+  else if (state === 'paused') pause();
+});
 
-        // ==========================================
-        // 7. 物理碰撞與核心更新
-        // ==========================================
-        function update() {
-            if (!state.isPlaying || state.isPaused) return;
-
-            // 擋板移動
-            if (rightPressed && paddleX < canvas.width - paddleWidth) {
-                paddleX += paddleSpeed;
-            } else if (leftPressed && paddleX > 0) {
-                paddleX -= paddleSpeed;
-            }
-
-            // 更新道具位置與碰撞
-            for (let i = powerUps.length - 1; i >= 0; i--) {
-                const p = powerUps[i];
-                p.y += p.speed;
-
-                // 道具落地消失
-                if (p.y > canvas.height) {
-                    powerUps.splice(i, 1);
-                    continue;
-                }
-
-                // 道具接取碰撞
-                if (p.y + p.radius >= canvas.height - paddleHeight - 5 && 
-                    p.x >= paddleX && p.x <= paddleX + paddleWidth) {
-                    
-                    if (p.type === 'W') { // 寬板道具
-                        if (!isPaddleWide) {
-                            paddleWidth += 50;
-                            isPaddleWide = true;
-                        }
-                        if (paddleWideTimer) clearTimeout(paddleWideTimer);
-                        paddleWideTimer = setTimeout(() => {
-                            paddleWidth -= 50;
-                            isPaddleWide = false;
-                        }, 8000);
-                    } else if (p.type === 'M') { // 多球分身道具
-                        const currentBallCount = balls.length;
-                        for (let j = 0; j < currentBallCount; j++) {
-                            const b = balls[j];
-                            balls.push({
-                                x: b.x, y: b.y,
-                                dx: b.dx * 0.8 + (Math.random() - 0.5) * 3,
-                                dy: -Math.abs(b.dy),
-                                radius: b.radius
-                            });
-                        }
-                    }
-                    powerUps.splice(i, 1);
-                }
-            }
-
-            // 更新所有球體的位置與碰撞
-            for (let i = balls.length - 1; i >= 0; i--) {
-                const ball = balls[i];
-                
-                if (!state.ballLaunched) continue;
-
-                ball.x += ball.dx;
-                ball.y += ball.dy;
-
-                // 左右牆壁碰撞
-                if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
-                    ball.dx = -ball.dx;
-                }
-                // 天花板碰撞
-                if (ball.y - ball.radius < 0) {
-                    ball.dy = -ball.dy;
-                }
-
-                // 擋板碰撞
-                if (ball.y + ball.radius >= canvas.height - paddleHeight - 5 && ball.dy > 0) {
-                    if (ball.x >= paddleX && ball.x <= paddleX + paddleWidth) {
-                        // 根據撞擊點計算反彈角度
-                        let hitPt = (ball.x - paddleX) / paddleWidth;
-                        let angle = (hitPt * 100 - 50) * 1.2 * Math.PI / 180;
-                        let speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-                        ball.dx = speed * Math.sin(angle);
-                        ball.dy = -speed * Math.cos(angle);
-                    }
-                }
-
-                // 磚塊碰撞偵測
-                let hitBrick = false;
-                for (let c = 0; c < brickCols; c++) {
-                    for (let r = 0; r < brickRows; r++) {
-                        const b = bricks[c][r];
-                        if (b.status === 1) {
-                            if (ball.x > b.x && ball.x < b.x + brickWidth && 
-                                ball.y > b.y && ball.y < b.y + brickHeight) {
-                                ball.dy = -ball.dy;
-                                b.status = 0;
-                                state.score += 10;
-                                document.getElementById('scoreVal').textContent = state.score;
-                                hitBrick = true;
-
-                                // 掉落道具觸發
-                                if (b.special) {
-                                    powerUps.push({
-                                        x: b.x + brickWidth / 2,
-                                        y: b.y + brickHeight,
-                                        radius: 10,
-                                        speed: 3,
-                                        type: Math.random() < 0.5 ? 'W' : 'M'
-                                    });
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    if (hitBrick) break;
-                }
-
-                // 球落入谷底判定
-                if (ball.y > canvas.height) {
-                    balls.splice(i, 1);
-                }
-            }
-
-            // 檢查所有球是否都掉光了
-            if (balls.length === 0) {
-                state.lives--;
-                updateUI();
-                if (state.lives <= 0) {
-                    gameOver();
-                } else {
-                    resetBallAndPaddle();
-                }
-            }
-
-            // 檢查過關判定（所有磚塊都消滅）
-            let allCleared = true;
-            for (let c = 0; c < brickCols; c++) {
-                for (let r = 0; r < brickRows; r++) {
-                    if (bricks[c][r].status === 1) allCleared = false;
-                }
-            }
-
-            if (allCleared) {
-                nextLevel();
-            }
-        }
-
-        // ==========================================
-        // 8. 狀態控制與 UI 更新
-        // ==========================================
-        function updateUI() {
-            document.getElementById('scoreVal').textContent = state.score;
-            document.getElementById('bestVal').textContent = state.bestScore;
-            document.getElementById('levelVal').textContent = state.level;
-            document.getElementById('livesVal').textContent = "♥".repeat(Math.max(0, state.lives));
-        }
-
-        function gameOver() {
-            state.isPlaying = false;
-            if (state.score > state.bestScore) {
-                state.bestScore = state.score;
-                localStorage.setItem('breakout_best', state.bestScore);
-            }
-            alert(`GAME OVER! Final Score: ${state.score}`);
-            resetGame();
-        }
-
-        function nextLevel() {
-            state.level++;
-            brickRows = Math.min(8, brickRows + 1);
-            initBricks();
-            resetBallAndPaddle();
-            updateUI();
-        }
-
-        function resetGame() {
-            state.score = 0;
-            state.lives = 3;
-            state.level = 1;
-            brickRows = 5;
-            state.isPlaying = false;
-            state.isPaused = false;
-            initBricks();
-            resetBallAndPaddle();
-            updateUI();
-        }
-
-        // ==========================================
-        // 9. 事件監聽處理
-        // ==========================================
-        
-        // 鍵盤操控
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Right" || e.key === "ArrowRight" || e.key.toLowerCase() === "d") rightPressed = true;
-            if (e.key === "Left" || e.key === "ArrowLeft" || e.key.toLowerCase() === "a") leftPressed = true;
-            if (e.key === " ") {
-                e.preventDefault();
-                if (!state.isPlaying) {
-                    state.isPlaying = true;
-                    launchBall();
-                } else if (!state.ballLaunched) {
-                    launchBall();
-                } else {
-                    state.isPaused = !state.isPaused;
-                }
-            }
-        });
-
-        document.addEventListener("keyup", (e) => {
-            if (e.key === "Right" || e.key === "ArrowRight" || e.key.toLowerCase() === "d") rightPressed = false;
-            if (e.key === "Left" || e.key === "ArrowLeft" || e.key.toLowerCase() === "a") leftPressed = false;
-        });
-
-        // 滑鼠與觸控滑動擋板
-        canvas.addEventListener("mousemove", (e) => {
-            const relativeX = e.clientX - canvas.getBoundingClientRect().left;
-            if (relativeX > 0 && relativeX < canvas.width) {
-                paddleX = (relativeX * canvas.width / canvas.offsetWidth) - paddleWidth / 2;
-            }
-        });
-
-        canvas.addEventListener("click", () => {
-            if (state.isPlaying && !state.ballLaunched) launchBall();
-        });
-
-        // 按鈕綁定
-        document.getElementById('startBtn').addEventListener('click', () => {
-            if (!state.isPlaying) {
-                state.isPlaying = true;
-                launchBall();
-            }
-        });
-        document.getElementById('pauseBtn').addEventListener('click', () => {
-            if (state.isPlaying) state.isPaused = !state.isPaused;
-        });
-        document.getElementById('restartBtn').addEventListener('click', resetGame);
-
-        // 難度切換
-        document.querySelectorAll('.btn-diff').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.btn-diff').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                state.difficulty = parseInt(e.target.getAttribute('data-diff'));
-                resetGame();
-            });
-        });
-
-        // ==========================================
-        // 10. 遊戲主迴圈發動機
-        // ==========================================
-        function gameLoop() {
-            update();
-            draw();
-            requestAnimationFrame(gameLoop);
-        }
-
-        // 頁面加載完成後立刻安全執行
-        initTheme();
-        resetGame();
-        gameLoop();
-    </script>
+// 頁面初次靜態加載與渲染
+initTheme();
+init();
+drawBG(); drawBricks(); drawPaddle(); drawBalls();
+</script>
 </body>
 </html>
