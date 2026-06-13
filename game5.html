@@ -17,7 +17,7 @@
   --chart-grid:#F5F2EB;
 }
 
-/* ── 完美對齊 David 蛇的深色模式變數 ── */
+/* ── 跨頁同步深色模式變數 ── */
 [data-theme="dark"] {
   --bg:#1A1A1A;--panel:#242424;--text:#F5F5F5;--dim:#AAAAAA;
   --bd:#333333;--bd2:#444444;--ac:#FF6B6B;--ac2:#FF8787;
@@ -27,20 +27,26 @@
 
 body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s, color .3s;}
 
-/* ── Nav (對齊設計語言，左、中、右絕對定位佈局) ── */
-.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:center;position:relative;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;transition:background .3s, border-color .3s;}
+/* ── Nav 核心置中與左右絕對定位佈局 ── */
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:center;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;transition:background .3s, border-color .3s;}
 [data-theme="dark"] .site-nav { background: rgba(26, 26, 26, 0.92); }
 @keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+
+/* 左側絕對定位 Logo */
 .nav-logo{position:absolute;left:32px;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
 .nav-logo:hover{color:var(--ac);}
+
+/* 中央置中選單 */
 .nav-links{display:flex;gap:22px;list-style:none;}
 .nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
 .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
 
-/* 右側控制群 */
-.nav-right { position: absolute; right: 32px; display: flex; align-items: center; gap: 16px; }
+/* 右側絕對定位控制群（大廳與亮暗切換） */
+.nav-right { position: absolute; right: 32px; display: flex; align-items: center; gap: 20px; }
+.nav-back-link { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.05em; text-transform:uppercase; color:var(--dim); text-decoration:none; transition:color .2s; }
+.nav-back-link:hover { color:var(--ac); }
 .theme-btn { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; background:transparent; border:1px solid var(--bd2); color:var(--text); padding:4px 8px; cursor:pointer; transition:all .2s; text-transform:uppercase;}
 .theme-btn:hover { background:var(--text); color:var(--bg); }
 
@@ -170,7 +176,7 @@ canvas#wpmChart {width:100%;height:150px;display:block;}
     <li><a href="game5.html" class="active">⌨ 打字測試</a></li>
   </ul>
   <div class="nav-right">
-    <a href="gamehub.html" class="nav-logo" style="letter-spacing:0.05em;">← 大廳</a>
+    <a href="gamehub.html" class="nav-back-link">← 大廳</a>
     <button class="theme-btn" id="themeToggle">DARK</button>
   </div>
 </nav>
@@ -592,7 +598,7 @@ function renderRecords() {
 }
 
 // ==========================================
-// 4. 主題操控控制引擎 (與 David 蛇、2048 完全共用同步)
+// 4. 主題操控控制引擎 (跨頁同步優化)
 // ==========================================
 const themeToggle = document.getElementById('themeToggle');
 
