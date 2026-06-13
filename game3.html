@@ -1,116 +1,156 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>LYZ · 2048</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script>(function(){var t=localStorage.getItem('lyz-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
-  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+
+/* ── Light Theme ── */
+:root[data-theme="light"]{
+  --bg:#F5F2EB; --panel-bg:#FFFFFF; --text-main:#3A322D; --text-dim:#8A827B;
+  --border-color:#3A322D; --bd:#d8cfc2; --bd2:#c9bfb0; --ac:#6b4c32; --as:rgba(107,76,50,.09);
+  --nav-bg:rgba(245,242,235,.92);
+  --overlay-bg:rgba(245,242,235,.90);
+  --bg-cell:rgba(234,227,213,0.5);
+  --board-bg:#D0C9BC;
   --t2:#EAE3D5;--t4:#DFD5BF;--t8:#C5A059;--t16:#B8843A;
   --t32:#A94442;--t64:#8B2E2E;--t128:#6b4c32;--t256:#4A3520;
   --t512:#2E1F10;--t1024:#1A1210;--t2048:#0A0806;
+  --t2-fg:#3A322D;--t4-fg:#3A322D;--t-hi-fg:#FFFFFF;--t2048-fg:#6b4c32;
+  --chart-line:#6b4c32; --chart-grid:#F5F2EB; --chart-dot:#3A322D; --chart-label:#8A827B;
 }
-body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+/* ── Dark Theme ── */
+:root[data-theme="dark"]{
+  --bg:#1A1614; --panel-bg:#25201E; --text-main:#EAE3D5; --text-dim:#A29990;
+  --border-color:#C5A059; --bd:#3A322D; --bd2:#4A3F3A; --ac:#C5A059; --as:rgba(197,160,89,.08);
+  --nav-bg:rgba(26,22,20,.92);
+  --overlay-bg:rgba(26,22,20,.90);
+  --bg-cell:rgba(58,50,45,0.6);
+  --board-bg:#3A322D;
+  --t2:#3A322D;--t4:#4A3F3A;--t8:#C5A059;--t16:#B8843A;
+  --t32:#E26D6D;--t64:#C94040;--t128:#8A5C32;--t256:#6b4c32;
+  --t512:#4A3520;--t1024:#2E1F10;--t2048:#C5A059;
+  --t2-fg:#EAE3D5;--t4-fg:#EAE3D5;--t-hi-fg:#1A1614;--t2048-fg:#1A1614;
+  --chart-line:#C5A059; --chart-grid:#3A322D; --chart-dot:#EAE3D5; --chart-label:#A29990;
+}
+
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;align-items:center;letter-spacing:1px;transition:background .3s,color .3s;}
 
 /* ── Nav ── */
-.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;}
+.site-nav{
+  position:fixed;top:0;left:0;width:100%;
+  background:var(--nav-bg);
+  backdrop-filter:blur(20px) saturate(1.6);
+  border-bottom:1px solid var(--bd);
+  z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 32px;height:48px;
+  animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;
+  transition:background .3s,border-color .3s;
+}
 @keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
-.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-logo{position:absolute;left:32px;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color .2s;}
 .nav-logo:hover{color:var(--ac);}
-.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
-.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
-.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
-.nav-links a:hover,.nav-links a.active{color:var(--text);}
-.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+.nav-center{display:flex;gap:20px;list-style:none;flex-wrap:wrap;align-items:center;justify-content:center;}
+.nav-center a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color .2s;position:relative;}
+.nav-center a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-center a:hover,.nav-center a.active{color:var(--text-main);}
+.nav-center a:hover::after,.nav-center a.active::after{transform:scaleX(1);}
+.nav-right{position:absolute;right:32px;display:flex;align-items:center;gap:8px;}
+.theme-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--bd);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .2s;}
+.theme-btn:hover{background:var(--as);border-color:var(--ac);color:var(--ac);}
+.hub-link{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--ac);background:var(--as);color:var(--ac);text-decoration:none;transition:all .2s;}
+.hub-link:hover{background:var(--ac);color:var(--bg);}
 
 /* ── Page ── */
 .page{width:100%;max-width:560px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;gap:0;}
 .eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
-.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;letter-spacing:.02em;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;letter-spacing:.02em;color:var(--text-main);}
 .page-title em{font-style:italic;color:var(--ac);}
-.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:20px;}
+.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text-dim);letter-spacing:.08em;margin-bottom:20px;}
 
 /* ── Size Selector ── */
 .size-row{display:flex;gap:8px;margin-bottom:20px;width:100%;}
-.size-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;flex:1;}
-.size-btn:hover,.size-btn.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.size-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;border:1px solid var(--bd);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .2s;flex:1;}
+.size-btn:hover,.size-btn.on{background:var(--text-main);color:var(--bg);border-color:var(--text-main);}
 
 /* ── Score bar ── */
 .score-row{display:flex;gap:12px;width:100%;margin-bottom:20px;}
-.score-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;}
+.score-box{flex:1;background:var(--panel-bg);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;transition:background .3s,border-color .3s;}
 .score-box.main{border-color:var(--ac);}
-.score-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
-.score-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);}
+.score-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;}
+.score-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text-main);}
 .score-box.main .score-val{color:var(--ac);}
 
 /* ── Buttons ── */
 .btn-row{display:flex;gap:10px;margin-bottom:20px;width:100%;}
-.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
-.btn:hover{background:var(--text);color:var(--bg);}
-.btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
+.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--bd2);background:transparent;color:var(--text-main);cursor:pointer;transition:all .2s;flex:1;}
+.btn:hover{background:var(--text-main);color:var(--bg);}
+.btn.primary{background:var(--text-main);color:var(--bg);border-color:var(--text-main);}
 .btn.primary:hover{background:var(--ac);border-color:var(--ac);}
 
-/* ── Board & Animations ── */
+/* ── Board ── */
 .board-wrap{width:100%;position:relative;margin-bottom:20px;}
-.board{position:relative;background:var(--bd);padding:10px;width:100%;aspect-ratio:1;user-select:none;}
-.grid-bg-container {display:grid;gap:10px;width:100%;height:100%;position:absolute;top:10px;left:10px;width:calc(100% - 20px);height:calc(100% - 20px);z-index:1;}
-.bg-cell{background:rgba(234,227,213,0.5);width:100%;height:100%;}
+.board{position:relative;background:var(--board-bg);padding:10px;width:100%;aspect-ratio:1;user-select:none;transition:background .3s;}
+.grid-bg-container{display:grid;gap:10px;position:absolute;top:10px;left:10px;width:calc(100% - 20px);height:calc(100% - 20px);z-index:1;}
+.bg-cell{background:var(--bg-cell);width:100%;height:100%;transition:background .3s;}
 .tile-container{position:absolute;top:10px;left:10px;width:calc(100% - 20px);height:calc(100% - 20px);z-index:2;}
 
-.tile{position:absolute;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;transition:transform .12s cubic-bezier(0.1, 0.7, 0.1, 1);will-change:transform;}
-.tile-inner {width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:background-color .12s, color .12s;}
+.tile{position:absolute;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;transition:transform .12s cubic-bezier(0.1,0.7,0.1,1);will-change:transform;}
+.tile-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:background-color .12s,color .12s;}
 .tile.pop .tile-inner{animation:pop .12s ease-out;}
 @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
 .tile.new .tile-inner{animation:appear .15s ease-out both;}
 @keyframes appear{0%{transform:scale(0);opacity:0}80%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 
-/* tile colours */
-.tile[data-v="2"] .tile-inner{background:var(--t2);color:var(--text);}
-.tile[data-v="4"] .tile-inner{background:var(--t4);color:var(--text);}
-.tile[data-v="8"] .tile-inner{background:var(--t8);color:#fff;}
-.tile[data-v="16"] .tile-inner{background:var(--t16);color:#fff;}
-.tile[data-v="32"] .tile-inner{background:var(--t32);color:#fff;}
-.tile[data-v="64"] .tile-inner{background:var(--t64);color:#fff;}
-.tile[data-v="128"] .tile-inner{background:var(--t128);color:#fff;}
-.tile[data-v="256"] .tile-inner{background:var(--t256);color:#fff;}
-.tile[data-v="512"] .tile-inner{background:var(--t512);color:#fff;}
-.tile[data-v="1024"] .tile-inner{background:var(--t1024);color:#fff;}
-.tile[data-v="2048"] .tile-inner{background:var(--t2048);color:var(--ac);border:2px solid var(--ac);}
-.tile[data-v="4096"] .tile-inner{background:#000;color:#fff;}
+/* tile colours — driven by CSS vars */
+.tile[data-v="2"] .tile-inner{background:var(--t2);color:var(--t2-fg);}
+.tile[data-v="4"] .tile-inner{background:var(--t4);color:var(--t4-fg);}
+.tile[data-v="8"] .tile-inner{background:var(--t8);color:var(--t-hi-fg);}
+.tile[data-v="16"] .tile-inner{background:var(--t16);color:var(--t-hi-fg);}
+.tile[data-v="32"] .tile-inner{background:var(--t32);color:var(--t-hi-fg);}
+.tile[data-v="64"] .tile-inner{background:var(--t64);color:var(--t-hi-fg);}
+.tile[data-v="128"] .tile-inner{background:var(--t128);color:var(--t-hi-fg);}
+.tile[data-v="256"] .tile-inner{background:var(--t256);color:var(--t-hi-fg);}
+.tile[data-v="512"] .tile-inner{background:var(--t512);color:var(--t-hi-fg);}
+.tile[data-v="1024"] .tile-inner{background:var(--t1024);color:var(--t-hi-fg);}
+.tile[data-v="2048"] .tile-inner{background:var(--t2048);color:var(--t2048-fg);border:2px solid var(--ac);}
+.tile[data-v="4096"] .tile-inner{background:#000;color:var(--ac);}
 
 /* ── Overlay ── */
-.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.9);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:10;}
+.overlay{display:none;position:absolute;inset:0;background:var(--overlay-bg);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:10;transition:background .3s;}
 .overlay.show{display:flex;}
-.overlay-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
+.overlay-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text-main);}
 .overlay-title em{font-style:italic;color:var(--ac);}
-.overlay-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;}
+.overlay-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text-dim);letter-spacing:.1em;}
 
 /* ── Stats Chart ── */
-.chart-card {width:100%;border:1px solid var(--bd);background:var(--panel);padding:16px;margin-bottom:20px;}
-.chart-title {font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
-canvas#statsChart {width:100%;height:140px;background:#fff;display:block;}
+.chart-card{width:100%;border:1px solid var(--bd);background:var(--panel-bg);padding:16px;margin-bottom:20px;transition:background .3s,border-color .3s;}
+.chart-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;}
+canvas#statsChart{width:100%;height:140px;display:block;}
 
 /* ── Hint ── */
 .hint-row{display:flex;gap:16px;width:100%;}
-.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;}
+.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel-bg);padding:12px 14px;transition:background .3s,border-color .3s;}
 .hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
-.hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--dim);line-height:1.7;}
+.hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--text-dim);line-height:1.7;}
 
-/* ── Share Notification ── */
-.toast {position:fixed;bottom:20px;background:var(--text);color:var(--bg);font-family:'DM Mono',monospace;font-size:11px;padding:8px 16px;letter-spacing:1px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;}
+/* ── Toast ── */
+.toast{position:fixed;bottom:20px;background:var(--text-main);color:var(--bg);font-family:'DM Mono',monospace;font-size:11px;padding:8px 16px;letter-spacing:1px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;}
 
-/* ── Responsive ── */
 @media(max-width:500px){
-  .site-nav{padding:0 16px;}
-  .nav-links{display:none;}
+  .site-nav{padding:0 12px;}
+  .nav-center{display:none;}
+  .nav-logo{left:12px;}
+  .nav-right{right:12px;}
   .page{padding:70px 16px 40px;}
-  .hint-row {flex-direction:column;gap:12px;}
+  .hint-row{flex-direction:column;gap:12px;}
 }
 </style>
 </head>
@@ -118,7 +158,7 @@ canvas#statsChart {width:100%;height:140px;background:#fff;display:block;}
 
 <nav class="site-nav">
   <a href="index.html" class="nav-logo">LYZ.dev</a>
-  <ul class="nav-links">
+  <ul class="nav-center">
     <li><a href="index.html">Home</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="game.html">Game</a></li>
@@ -131,6 +171,10 @@ canvas#statsChart {width:100%;height:140px;background:#fff;display:block;}
     <li><a href="game4.html">🃏 記憶卡片</a></li>
     <li><a href="game5.html">⌨ 打字測試</a></li>
   </ul>
+  <div class="nav-right">
+    <a href="gamehub.html" class="hub-link">← 大廳</a>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark</button>
+  </div>
 </nav>
 
 <div class="page">
@@ -196,9 +240,22 @@ canvas#statsChart {width:100%;height:140px;background:#fff;display:block;}
 <div class="toast" id="toast">分數已複製到剪貼簿！</div>
 
 <script>
+// ── Theme ──
+function getTheme(){ return document.documentElement.getAttribute('data-theme'); }
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('lyz-theme',t);
+  const btn=document.getElementById('themeBtn');
+  if(btn) btn.textContent = t==='dark'?'Light':'Dark';
+  drawChart();
+}
+function toggleTheme(){ applyTheme(getTheme()==='dark'?'light':'dark'); }
+applyTheme(localStorage.getItem('lyz-theme')||'light');
+window.addEventListener('storage',e=>{ if(e.key==='lyz-theme'&&e.newValue) applyTheme(e.newValue); });
+
 let SIZE = 4;
 let grid, score, best, moves, prevGrid, prevScore, prevMoves;
-let tilesData = []; // 持久記錄所有活動方塊對象供動畫追蹤
+let tilesData = [];
 
 function changeSize(s) {
   if (SIZE === s) return;
@@ -210,11 +267,10 @@ function changeSize(s) {
 
 function init() {
   grid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
-  score = 0; moves = 0; 
+  score = 0; moves = 0;
   prevGrid = null; prevScore = 0; prevMoves = 0;
   best = parseInt(localStorage.getItem(`2048-best-${SIZE}`) || '0');
-  
-  // 建立底層網格佈局
+
   const bg = document.getElementById('grid-bg');
   bg.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
   bg.innerHTML = '';
@@ -226,7 +282,7 @@ function init() {
 
   tilesData = [];
   document.getElementById('tile-container').innerHTML = '';
-  
+
   addTile(); addTile();
   render();
   drawChart();
@@ -239,12 +295,9 @@ function addTile() {
     for (let c = 0; c < SIZE; c++)
       if (grid[r][c] === 0) empty.push([r, c]);
   if (!empty.length) return;
-  
   const [r, c] = empty[Math.floor(Math.random() * empty.length)];
   const val = Math.random() < 0.85 ? 2 : 4;
   grid[r][c] = val;
-
-  // 動態建立方塊物件元素
   const id = Math.random().toString(36).substr(2, 9);
   tilesData.push({ id, r, c, val, isNew: true, isPop: false });
 }
@@ -252,7 +305,6 @@ function addTile() {
 function render() {
   const container = document.getElementById('tile-container');
   container.innerHTML = '';
-
   const cellSize = 100 / SIZE;
 
   tilesData.forEach(t => {
@@ -260,25 +312,20 @@ function render() {
     tileDiv.className = `tile`;
     if (t.isNew) tileDiv.classList.add('new');
     if (t.isPop) tileDiv.classList.add('pop');
-    
     tileDiv.setAttribute('data-v', t.val);
     tileDiv.style.width = `${cellSize}%`;
     tileDiv.style.height = `${cellSize}%`;
-    
-    // 平滑移動的核心：利用 CSS transform translate 動態計算百分比位移
     tileDiv.style.transform = `translate(${t.c * 100}%, ${t.r * 100}%)`;
 
     const inner = document.createElement('div');
     inner.className = 'tile-inner';
     inner.textContent = t.val;
-    
     const fs = SIZE === 5 ? (t.val >= 1024 ? '0.9rem' : '1.3rem') : (t.val >= 1024 ? '1.1rem' : '1.5rem');
     inner.style.fontSize = fs;
 
     tileDiv.appendChild(inner);
     container.appendChild(tileDiv);
 
-    // 渲染後標籤清理
     t.isNew = false;
     t.isPop = false;
   });
@@ -289,17 +336,13 @@ function render() {
 }
 
 function move(dir) {
-  // 快照當前狀態以便 Undo
   prevGrid = grid.map(r => [...r]);
-  prevScore = score;
-  prevMoves = moves;
+  prevScore = score; prevMoves = moves;
 
   let changed = false;
   let gained = 0;
 
-  // 定義幾何旋轉矩陣，將所有滑動方向「歸一化」為向左滑動
   const rotatedGrid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
-  
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       let targetR = r, targetC = c;
@@ -310,7 +353,6 @@ function move(dir) {
     }
   }
 
-  // 執行向左合併邏輯
   const nextRotatedGrid = Array.from({length:SIZE}, () => Array(SIZE).fill(0));
   const mergeTracker = Array.from({length:SIZE}, () => Array(SIZE).fill(false));
 
@@ -318,13 +360,11 @@ function move(dir) {
     let targetC = 0;
     for (let c = 0; c < SIZE; c++) {
       if (rotatedGrid[r][c] === 0) continue;
-      
       if (targetC > 0 && nextRotatedGrid[r][targetC - 1] === rotatedGrid[r][c] && !mergeTracker[r][targetC - 1]) {
         nextRotatedGrid[r][targetC - 1] *= 2;
         gained += nextRotatedGrid[r][targetC - 1];
         mergeTracker[r][targetC - 1] = true;
         changed = true;
-        
         updateTilePosition(r, c, r, targetC - 1, dir, nextRotatedGrid[r][targetC - 1], true);
       } else {
         nextRotatedGrid[r][targetC] = rotatedGrid[r][c];
@@ -335,12 +375,8 @@ function move(dir) {
     }
   }
 
-  if (!changed) {
-    syncTilesDataWithGrid();
-    return;
-  }
+  if (!changed) { syncTilesDataWithGrid(); return; }
 
-  // 反向寫回原本的 grid 矩陣
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       let origR = r, origC = c;
@@ -353,48 +389,36 @@ function move(dir) {
 
   score += gained; moves++;
   if (score > best) { best = score; localStorage.setItem(`2048-best-${SIZE}`, best); }
-  
   tilesData = tilesData.filter(t => !t.mergedOut);
-
-  addTile();
-  render();
-  checkEnd();
+  addTile(); render(); checkEnd();
 }
 
-// 根據滑動方向，精確反推 DOM 的起點與終點座標以利 CSS 平移
 function updateTilePosition(rotR, rotC, nextRotR, nextRotC, dir, newVal, isMerge) {
   let origR = rotR, origC = rotC;
   if (dir === 'right') { origR = rotR; origC = SIZE - 1 - rotC; }
   if (dir === 'up')    { origR = rotC; origC = rotR; }
   if (dir === 'down')  { origR = SIZE - 1 - rotC; origC = SIZE - 1 - rotR; }
-
   let destR = nextRotR, destC = nextRotC;
   if (dir === 'right') { destR = nextRotR; destC = SIZE - 1 - nextRotC; }
   if (dir === 'up')    { destR = nextRotC; destC = nextRotR; }
   if (dir === 'down')  { destR = SIZE - 1 - nextRotC; destC = SIZE - 1 - nextRotR; }
-
   const tile = tilesData.find(t => t.r === origR && t.c === origC && !t.mergedOut);
   if (tile) {
-    tile.r = destR;
-    tile.c = destC;
-    tile.val = newVal;
+    tile.r = destR; tile.c = destC; tile.val = newVal;
     if (isMerge) {
       tile.isPop = true;
-      const duplicate = tilesData.find(t => t.r === destR && t.c === destC && t.id !== tile.id && !t.mergedOut);
-      if (duplicate) duplicate.mergedOut = true;
+      const dup = tilesData.find(t => t.r === destR && t.c === destC && t.id !== tile.id && !t.mergedOut);
+      if (dup) dup.mergedOut = true;
     }
   }
 }
 
 function syncTilesDataWithGrid() {
   tilesData = [];
-  for (let r = 0; r < SIZE; r++) {
-    for (let c = 0; c < SIZE; c++) {
-      if (grid[r][c] > 0) {
+  for (let r = 0; r < SIZE; r++)
+    for (let c = 0; c < SIZE; c++)
+      if (grid[r][c] > 0)
         tilesData.push({ id: Math.random().toString(36).substr(2, 9), r, c, val: grid[r][c], isNew: false, isPop: false });
-      }
-    }
-  }
 }
 
 function checkEnd() {
@@ -402,20 +426,13 @@ function checkEnd() {
   for (let r = 0; r < SIZE; r++)
     for (let c = 0; c < SIZE; c++)
       if (grid[r][c] === 2048) win = true;
-
-  if (win) { 
-    showOverlay('You Win!', '— 恭喜拼出 2048 🏆 —'); 
-    saveGameToHistory();
-    return; 
-  }
-
+  if (win) { showOverlay('You Win!', '— 恭喜拼出 2048 🏆 —'); saveGameToHistory(); return; }
   for (let r = 0; r < SIZE; r++)
     for (let c = 0; c < SIZE; c++) {
       if (grid[r][c] === 0) return;
       if (r + 1 < SIZE && grid[r][c] === grid[r+1][c]) return;
       if (c + 1 < SIZE && grid[r][c] === grid[r][c+1]) return;
     }
-    
   showOverlay('Game Over', '— 沒有可移動的方塊 —');
   saveGameToHistory();
 }
@@ -426,23 +443,34 @@ function showOverlay(title, sub) {
   document.getElementById('overlay').classList.add('show');
 }
 
-// ── 歷史數據儲存與圖表繪製 ──
 function saveGameToHistory() {
   let history = JSON.parse(localStorage.getItem(`2048-history-${SIZE}`) || '[]');
   history.push({ score, date: new Date().toLocaleDateString(), moves });
-  if (history.length > 10) history.shift(); // 只保留最近 10 次
+  if (history.length > 10) history.shift();
   localStorage.setItem(`2048-history-${SIZE}`, JSON.stringify(history));
   drawChart();
 }
 
 function drawChart() {
   const canvas = document.getElementById('statsChart');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // 讀取 CSS 變數色彩
+  const style = getComputedStyle(document.documentElement);
+  const lineColor  = style.getPropertyValue('--chart-line').trim();
+  const gridColor  = style.getPropertyValue('--chart-grid').trim();
+  const dotColor   = style.getPropertyValue('--chart-dot').trim();
+  const labelColor = style.getPropertyValue('--chart-label').trim();
+  const bgColor    = style.getPropertyValue('--panel-bg').trim();
+
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   const history = JSON.parse(localStorage.getItem(`2048-history-${SIZE}`) || '[]');
   if (history.length === 0) {
-    ctx.font = '11px "DM Mono"'; ctx.fillStyle = '#8A827B'; ctx.textAlign = 'center';
+    ctx.font = '11px "DM Mono"'; ctx.fillStyle = labelColor; ctx.textAlign = 'center';
     ctx.fillText('NO GAME DATA YET. COMPLETE A GAME TO TRACK TRENDS.', canvas.width/2, canvas.height/2);
     return;
   }
@@ -450,50 +478,41 @@ function drawChart() {
   const padding = 30;
   const chartW = canvas.width - padding * 2;
   const chartH = canvas.height - padding * 2;
-  
   const scores = history.map(h => h.score);
   const maxScore = Math.max(...scores, 100);
 
-  // 繪製格線襯底
-  ctx.strokeStyle = '#F5F2EB'; ctx.lineWidth = 1;
+  ctx.strokeStyle = gridColor; ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(padding, padding); ctx.lineTo(padding + chartW, padding);
   ctx.moveTo(padding, padding + chartH/2); ctx.lineTo(padding + chartW, padding + chartH/2);
   ctx.moveTo(padding, padding + chartH); ctx.lineTo(padding + chartW, padding + chartH);
   ctx.stroke();
 
-  // 繪製數據折線軌跡
-  ctx.strokeStyle = '#6b4c32'; ctx.lineWidth = 2;
+  ctx.strokeStyle = lineColor; ctx.lineWidth = 2;
   ctx.beginPath();
-  
   const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
-
-  history.forEach((h, index) => {
-    const x = padding + index * stepX;
+  history.forEach((h, i) => {
+    const x = padding + i * stepX;
     const y = padding + chartH - (h.score / maxScore) * chartH;
-    if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   });
   ctx.stroke();
 
-  // 繪製數據節點標籤
-  history.forEach((h, index) => {
-    const x = padding + index * stepX;
+  history.forEach((h, i) => {
+    const x = padding + i * stepX;
     const y = padding + chartH - (h.score / maxScore) * chartH;
-    
-    ctx.fillStyle = '#3A322D'; ctx.beginPath();
+    ctx.fillStyle = dotColor; ctx.beginPath();
     ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();
-
-    ctx.font = '9px "DM Mono"'; ctx.fillStyle = '#8A827B'; ctx.textAlign = 'center';
+    ctx.font = '9px "DM Mono"'; ctx.fillStyle = labelColor; ctx.textAlign = 'center';
     ctx.fillText(h.score, x, y - 8);
-    ctx.fillText(`G${index+1}`, x, padding + chartH + 14);
+    ctx.fillText(`G${i+1}`, x, padding + chartH + 14);
   });
 }
 
-// ── 分享成績功能 ──
 document.getElementById('shareBtn').addEventListener('click', () => {
   const text = `🕹️ LYZ · 2048 (${SIZE}x${SIZE} 模式)\n我的最新戰績：${score} 分！總步數：${moves} 步。\n快來挑戰看看吧！`;
   if (navigator.share) {
-    navigator.share({ title: 'LYZ · 2048 Achievement', text: text }).catch(() => {});
+    navigator.share({ title: 'LYZ · 2048 Achievement', text }).catch(() => {});
   } else {
     navigator.clipboard.writeText(text).then(() => {
       const toast = document.getElementById('toast');
@@ -503,14 +522,11 @@ document.getElementById('shareBtn').addEventListener('click', () => {
   }
 });
 
-// Keyboard
-const KEYS = {ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',
-              KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down'};
+const KEYS = {ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down'};
 document.addEventListener('keydown', e => {
   if (KEYS[e.code]) { e.preventDefault(); move(KEYS[e.code]); }
 });
 
-// Touch swipe
 let tx, ty;
 document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
 document.addEventListener('touchend', e => {
@@ -523,22 +539,17 @@ document.addEventListener('touchend', e => {
   tx = null; ty = null;
 }, {passive:true});
 
-// Undo
 document.getElementById('undoBtn').addEventListener('click', () => {
   if (!prevGrid) return;
-  grid = prevGrid.map(r => [...r]); 
-  score = prevScore;
-  moves = prevMoves;
-  prevGrid = null;
-  syncTilesDataWithGrid();
-  render();
+  grid = prevGrid.map(r => [...r]);
+  score = prevScore; moves = prevMoves; prevGrid = null;
+  syncTilesDataWithGrid(); render();
   document.getElementById('overlay').classList.remove('show');
 });
 
 document.getElementById('newBtn').addEventListener('click', () => { saveGameToHistory(); init(); });
 document.getElementById('overlay-btn').addEventListener('click', init);
 
-// 首次加載
 init();
 </script>
 </body>
