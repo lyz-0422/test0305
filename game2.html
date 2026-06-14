@@ -1,125 +1,163 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>LYZ · Breakout</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script>(function(){var t=localStorage.getItem('lyz-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
-  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
-  --red:#A94442;--gold:#C5A059;
+
+/* ── Light Theme ── */
+:root[data-theme="light"]{
+  --bg:#F5F2EB; --panel-bg:#FFFFFF; --text-main:#3A322D; --text-dim:#8A827B;
+  --border-color:#3A322D; --bd:#d8cfc2; --bd2:#c9bfb0; --ac:#6b4c32; --as:rgba(107,76,50,.09);
+  --canvas-bg:#FFFFFF; --canvas-grid:#F5F2EB;
+  --nav-bg:rgba(245,242,235,.92);
+  --red:#A94442; --gold:#C5A059;
+  --overlay-bg:rgba(245,242,235,.88);
+  --paddle:#3A322D; --ball:#3A322D; --power-col:#A94442;
+}
+/* ── Dark Theme ── */
+:root[data-theme="dark"]{
+  --bg:#1A1614; --panel-bg:#25201E; --text-main:#EAE3D5; --text-dim:#A29990;
+  --border-color:#C5A059; --bd:#3A322D; --bd2:#4A3F3A; --ac:#C5A059; --as:rgba(197,160,89,.08);
+  --canvas-bg:#1E1A16; --canvas-grid:#252018;
+  --nav-bg:rgba(26,22,20,.92);
+  --red:#E26D6D; --gold:#DFD5BF;
+  --overlay-bg:rgba(26,22,20,.90);
+  --paddle:#EAE3D5; --ball:#EAE3D5; --power-col:#E26D6D;
 }
 
-/* ── 完美對齊 David 蛇的深色模式變數 ── */
-[data-theme="dark"] {
-  --bg:#1A1A1A;--panel:#242424;--text:#F5F5F5;--dim:#AAAAAA;
-  --bd:#333333;--bd2:#444444;--ac:#FF6B6B;--ac2:#FF8787;
-  --red:#FF6B6B;--gold:#FFD93D;
-}
-
-body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s, color .3s;}
+body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;align-items:center;letter-spacing:1px;transition:background .3s,color .3s;}
 
 /* ── Nav ── */
-.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245, 242, 235, 0.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;transition:background .3s, border-color .3s;}
-[data-theme="dark"] .site-nav { background: rgba(26, 26, 26, 0.92); }
+.site-nav{
+  position:fixed;top:0;left:0;width:100%;
+  background:var(--nav-bg);
+  backdrop-filter:blur(20px) saturate(1.6);
+  border-bottom:1px solid var(--bd);
+  z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 32px;height:48px;
+  animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;
+  transition:background .3s,border-color .3s;
+}
 @keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
-.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
-.nav-logo:hover{color:var(--ac);}
-.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
-.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
-.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
-.nav-links a:hover,.nav-links a.active{color:var(--text);}
-.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
 
-/* 右側控制群 */
-.nav-right { display: flex; align-items: center; gap: 16px; }
-.theme-btn { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; background:transparent; border:1px solid var(--bd2); color:var(--text); padding:4px 8px; cursor:pointer; transition:all .2s; }
-.theme-btn:hover { background:var(--text); color:var(--bg); }
+/* 左側 logo 絕對定位，讓 nav-center 可以真的置中 */
+.nav-logo{
+  position:absolute;left:32px;
+  font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text-dim);text-decoration:none;transition:color .2s;
+}
+.nav-logo:hover{color:var(--ac);}
+
+/* 中間連結群 */
+.nav-center{display:flex;gap:20px;list-style:none;flex-wrap:wrap;align-items:center;justify-content:center;}
+.nav-center a{
+  font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-dim);text-decoration:none;transition:color .2s;position:relative;
+}
+.nav-center a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-center a:hover,.nav-center a.active{color:var(--text-main);}
+.nav-center a:hover::after,.nav-center a.active::after{transform:scaleX(1);}
+
+/* 右側工具按鈕絕對定位 */
+.nav-right{position:absolute;right:32px;display:flex;align-items:center;gap:8px;}
+.theme-btn{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 12px;border:1px solid var(--bd);background:transparent;color:var(--text-dim);
+  cursor:pointer;transition:all .2s;
+}
+.theme-btn:hover{background:var(--as);border-color:var(--ac);color:var(--ac);}
+.hub-link{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 12px;border:1px solid var(--ac);background:var(--as);color:var(--ac);
+  text-decoration:none;transition:all .2s;
+}
+.hub-link:hover{background:var(--ac);color:var(--bg);}
 
 /* ── Page ── */
 .page{width:100%;max-width:660px;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;}
 .eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px;}
-.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;}
+.page-title{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;margin-bottom:8px;color:var(--text-main);}
 .page-title em{font-style:italic;color:var(--ac);}
-.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:28px;}
+.page-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--text-dim);letter-spacing:.08em;margin-bottom:28px;}
 
 /* ── HUD ── */
 .hud{display:flex;gap:12px;width:100%;margin-bottom:16px;}
-.hud-box{flex:1;background:var(--panel);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;transition:background .3s, border-color .3s;}
+.hud-box{flex:1;background:var(--panel-bg);border:1px solid var(--bd);padding:10px 16px;display:flex;flex-direction:column;gap:4px;transition:background .3s,border-color .3s;}
 .hud-box.accent{border-color:var(--ac);}
-.hud-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
-.hud-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);}
+.hud-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;}
+.hud-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text-main);}
 .hud-box.accent .hud-val{color:var(--ac);}
 
 /* ── Btn row ── */
 .btn-row{display:flex;gap:10px;margin-bottom:16px;width:100%;}
-.btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:10px 24px;border:1px solid var(--bd2);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;flex:1;}
-.btn:hover,.btn.primary{background:var(--text);color:var(--bg);}
-.btn.primary{border-color:var(--text);}
+.btn{
+  font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:10px 24px;border:1px solid var(--bd2);background:transparent;color:var(--text-main);
+  cursor:pointer;transition:all .2s;flex:1;
+}
+.btn:hover{background:var(--text-main);color:var(--bg);}
+.btn.primary{background:var(--text-main);color:var(--bg);border-color:var(--text-main);}
 .btn.primary:hover{background:var(--ac);border-color:var(--ac);}
 
 /* ── Canvas wrapper ── */
-.canvas-wrap{width:100%;position:relative;border:1px solid var(--text);background:var(--panel);overflow:hidden;transition:border-color .3s, background .3s;}
+.canvas-wrap{width:100%;position:relative;border:1px solid var(--border-color);background:var(--canvas-bg);overflow:hidden;transition:background .3s,border-color .3s;}
 canvas{display:block;width:100%;height:auto;}
 
 /* ── Overlay ── */
-.overlay{display:none;position:absolute;inset:0;background:rgba(245,242,235,.88);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:10;transition:background .3s;}
-[data-theme="dark"] .overlay { background: rgba(26,26,26,.88); }
+.overlay{
+  display:none;position:absolute;inset:0;
+  background:var(--overlay-bg);
+  backdrop-filter:blur(4px);
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;z-index:10;transition:background .3s;
+}
 .overlay.show{display:flex;}
-.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text);}
+.ov-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--text-main);}
 .ov-title em{font-style:italic;color:var(--ac);}
-.ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--dim);letter-spacing:.1em;}
+.ov-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text-dim);letter-spacing:.1em;}
 
 /* ── Level badges ── */
 .level-row{display:flex;gap:8px;margin-top:16px;width:100%;}
-.level-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 0;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;flex:1;}
-.level-btn:hover,.level-btn.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.level-btn{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 0;border:1px solid var(--bd);background:transparent;color:var(--text-dim);
+  cursor:pointer;transition:all .2s;flex:1;
+}
+.level-btn:hover,.level-btn.on{background:var(--text-main);color:var(--bg);border-color:var(--text-main);}
 
 /* ── Mobile Control Pad ── */
-#mobile-ctrl-row {
-  display: none;
-  width: 100%;
-  gap: 12px;
-  margin-top: 16px;
+#mobile-ctrl-row{display:none;width:100%;gap:12px;margin-top:16px;}
+.touch-btn{
+  flex:1;height:60px;background:var(--panel-bg);border:1px solid var(--text-main);
+  color:var(--text-main);font-family:'DM Mono',monospace;font-size:18px;font-weight:bold;
+  display:flex;align-items:center;justify-content:center;
+  user-select:none;-webkit-user-select:none;cursor:pointer;transition:background .2s,color .2s;
 }
-.touch-btn {
-  flex: 1;
-  height: 60px;
-  background: var(--panel);
-  border: 1px solid var(--text);
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  font-size: 18px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: pointer;
-}
-.touch-btn:active {
-  background: var(--text);
-  color: var(--bg);
-}
+.touch-btn:active{background:var(--text-main);color:var(--bg);}
 
 /* ── Hint ── */
 .hint-row{display:flex;gap:12px;margin-top:16px;width:100%;}
-.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel);padding:12px 14px;transition:background .3s, border-color .3s;}
+.hint-card{flex:1;border:1px solid var(--bd);background:var(--panel-bg);padding:12px 14px;transition:background .3s,border-color .3s;}
 .hint-title{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
-.hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--dim);line-height:1.7;}
+.hint-text{font-family:'Noto Sans TC',sans-serif;font-size:.8rem;color:var(--text-dim);line-height:1.7;}
 
 @media(max-width:600px){
-  .site-nav{padding:0 16px;}
-  .nav-links{display: none;}
+  .site-nav{padding:0 12px;}
+  .nav-center{display:none;}
+  .nav-logo{left:12px;}
+  .nav-right{right:12px;}
   .page{padding:68px 12px 40px;}
-  #mobile-ctrl-row { display: flex; }
-  .hint-row { flex-direction: column; }
+  #mobile-ctrl-row{display:flex;}
+  .hint-row{flex-direction:column;}
 }
 </style>
 </head>
@@ -127,16 +165,22 @@ canvas{display:block;width:100%;height:auto;}
 
 <nav class="site-nav">
   <a href="index.html" class="nav-logo">LYZ.dev</a>
-  <ul class="nav-links">
+  <ul class="nav-center">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="game.html">Game</a></li>
+    <li><a href="notes.html">Notes</a></li>
+    <li><a href="exercise.html">Exercises</a></li>
     <li><a href="gamehub.html">🎮 遊戲大廳</a></li>
     <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
+    <li><a href="game2.html" class="active">🧱 Breakout</a></li>
     <li><a href="game3.html">🕹️ 2048</a></li>
     <li><a href="game4.html">🃏 記憶卡片</a></li>
     <li><a href="game5.html">⌨ 打字測試</a></li>
   </ul>
   <div class="nav-right">
-    <a href="gamehub.html" class="nav-logo" style="letter-spacing:0.05em;">← 大廳</a>
-    <button class="theme-btn" id="themeToggle">DARK</button>
+    <a href="gamehub.html" class="hub-link">← 大廳</a>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark</button>
   </div>
 </nav>
 
@@ -204,44 +248,48 @@ canvas{display:block;width:100%;height:auto;}
 </div>
 
 <script>
-// ==========================================
-// 1. 全局狀態與變數宣告 (必須在最上層，解決 initialization 錯誤)
-// ==========================================
-let currentTheme = 'light';
-let level = 0;
-let state = 'idle'; 
-let score, best, lives;
-let paddle, balls = [], bricks = [], powers = [], raf;
-let keys = {};
-let paddleWidthTimer = 0;
+// ── Theme ──
+function getTheme(){ return document.documentElement.getAttribute('data-theme'); }
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('lyz-theme',t);
+  const btn=document.getElementById('themeBtn');
+  if(btn) btn.textContent = t==='dark'?'Light':'Dark';
+  // 若遊戲正在靜態渲染，重繪一次以反映新色
+  if(typeof drawBG==='function'&&(typeof state==='undefined'||state==='idle')){
+    drawBG(); drawBricks(); drawPaddle(); drawBalls();
+  }
+}
+function toggleTheme(){ applyTheme(getTheme()==='dark'?'light':'dark'); }
+applyTheme(localStorage.getItem('lyz-theme')||'light');
+window.addEventListener('storage',e=>{ if(e.key==='lyz-theme'&&e.newValue) applyTheme(e.newValue); });
+
+// ── 動態取 Canvas 色盤（依 theme） ──
+function PAL(){
+  const dark = getTheme()==='dark';
+  return {
+    bg:      dark?'#1E1A16':'#FFFFFF',
+    grid:    dark?'#252018':'#F5F2EB',
+    paddle:  dark?'#EAE3D5':'#3A322D',
+    ball:    dark?'#EAE3D5':'#3A322D',
+    bricks: dark ? [
+      ['#3A322D','#EAE3D5'],['#4A3F3A','#EAE3D5'],['#C5A059','#1A1614'],
+      ['#B8843A','#1A1614'],['#E26D6D','#1A1614'],['#8A5C32','#EAE3D5'],
+    ] : [
+      ['#EAE3D5','#3A322D'],['#DFD5BF','#3A322D'],['#C5A059','#FFFFFF'],
+      ['#B8843A','#FFFFFF'],['#A94442','#FFFFFF'],['#6b4c32','#FFFFFF'],
+    ],
+    text:  dark?'#EAE3D5':'#3A322D',
+    dim:   dark?'#A29990':'#8A827B',
+    ac:    dark?'#C5A059':'#6b4c32',
+    power: dark?'#E26D6D':'#A94442',
+    overlayBg: dark?'rgba(26,22,20,.90)':'rgba(245,242,235,.88)',
+  };
+}
 
 const cvs = document.getElementById('cvs');
 const ctx = cvs.getContext('2d');
 const W = 600, H = 480;
-
-// ==========================================
-// 2. 亮暗色系動態色盤定義
-// ==========================================
-function getCanvasColors() {
-  const isDark = currentTheme === 'dark';
-  return {
-    bg:     isDark ? '#242424' : '#FFFFFF',
-    grid:   isDark ? '#2A2A2A' : '#F5F2EB',
-    paddle: isDark ? '#F5F5F5' : '#3A322D',
-    ball:   isDark ? '#FF6B6B' : '#3A322D',
-    text:   isDark ? '#F5F5F5' : '#3A322D',
-    dim:    isDark ? '#AAAAAA' : '#8A827B',
-    ac:     isDark ? '#FF6B6B' : '#6b4c32',
-    power:  isDark ? '#FF6B6B' : '#A94442',
-    bricks: isDark ? [
-      ['#3A3A3A','#F5F5F5'], ['#4A4A4A','#F5F5F5'], ['#FF6B6B','#FFFFFF'],
-      ['#FF8787','#FFFFFF'], ['#FFD93D','#333333'], ['#6B4C32','#FFFFFF'],
-    ] : [
-      ['#EAE3D5','#3A322D'], ['#DFD5BF','#3A322D'], ['#C5A059','#FFFFFF'],
-      ['#B8843A','#FFFFFF'], ['#A94442','#FFFFFF'], ['#6b4c32','#FFFFFF'],
-    ]
-  };
-}
 
 // ── Web Audio API 復古音效引擎 ──
 const Sound = {
@@ -280,41 +328,25 @@ const COLS = 10, ROWS = 6;
 const BRICK_W = 52, BRICK_H = 18, BRICK_GAD = 5;
 const BRICK_OX = (W - (COLS * (BRICK_W + BRICK_GAD) - BRICK_GAD)) / 2;
 const BRICK_OY = 52;
-const PADDLE_H = 10, PADDLE_W_BASE = 90;
+const PADDLE_H = 10;
 const BALL_R = 7;
 
 const LAYOUTS = [
   [
-    [0,0,0,1,1,1,1,0,0,0],
-    [0,0,1,1,1,1,1,1,0,0],
-    [0,1,1,1,2,1,1,1,1,0],
-    [1,1,1,1,1,1,2,1,1,1],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0]
+    [0,0,0,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,0,0],[0,1,1,1,2,1,1,1,1,0],
+    [1,1,1,1,1,1,2,1,1,1],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]
   ],
   [
-    [1,1,1,1,1,1,1,1,1,1],
-    [1,0,2,0,1,1,0,2,0,1],
-    [1,1,1,1,1,1,1,1,1,1],
-    [0,1,0,1,0,1,0,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1],
-    [0,0,0,0,0,0,0,0,0,0]
+    [1,1,1,1,1,1,1,1,1,1],[1,0,2,0,1,1,0,2,0,1],[1,1,1,1,1,1,1,1,1,1],
+    [0,1,0,1,0,1,0,1,0,1],[1,1,1,1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0,0,0]
   ],
   [
-    [1,1,1,0,0,0,0,1,1,1],
-    [1,2,1,0,1,1,0,1,2,1],
-    [1,1,1,1,1,1,1,1,1,1],
-    [0,1,1,2,1,1,2,1,1,0],
-    [0,0,1,1,1,1,1,1,0,0],
-    [0,0,0,1,1,1,1,0,0,0]
+    [1,1,1,0,0,0,0,1,1,1],[1,2,1,0,1,1,0,1,2,1],[1,1,1,1,1,1,1,1,1,1],
+    [0,1,1,2,1,1,2,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,0,0,0]
   ],
   [
-    [1,1,1,1,1,1,1,1,1,1],
-    [1,2,0,0,1,1,0,0,2,1],
-    [1,1,1,2,0,0,2,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1],
-    [1,0,1,0,1,1,0,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1]
+    [1,1,1,1,1,1,1,1,1,1],[1,2,0,0,1,1,0,0,2,1],[1,1,1,2,0,0,2,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1],[1,0,1,0,1,1,0,1,0,1],[1,1,1,1,1,1,1,1,1,1]
   ]
 ];
 
@@ -325,6 +357,13 @@ const LEVELS = [
   { speed: 8.2, paddleW: 60,  label:'Expert' },
 ];
 
+let level = 0;
+let state = 'idle';
+let score, best, lives;
+let paddle, balls = [], bricks = [], powers = [], raf;
+let keys = {};
+let paddleWidthTimer = 0;
+
 function setLevel(lv) {
   level = lv - 1;
   document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('on', parseInt(b.dataset.lv) === lv));
@@ -332,22 +371,23 @@ function setLevel(lv) {
 }
 
 function makeBricks() {
+  const C = PAL();
   const arr = [];
   const map = LAYOUTS[level];
-  const PAL = getCanvasColors();
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const type = map[r][c];
-      if (type === 0) continue; 
-      
+      if (type === 0) continue;
       const isPower = type === 2 || Math.random() < 0.15;
       const pType = isPower ? (Math.random() < 0.5 ? 'W' : 'M') : null;
-
       arr.push({
         x: BRICK_OX + c * (BRICK_W + BRICK_GAD),
         y: BRICK_OY + r * (BRICK_H + BRICK_GAD),
         alive: true,
         row: r,
+        color: pType ? C.power : C.bricks[r][0],
+        textColor: pType ? (getTheme()==='dark'?'#1A1614':'#FFFFFF') : C.bricks[r][1],
+        pts: (ROWS - r) * 10,
         powerType: pType
       });
     }
@@ -358,16 +398,13 @@ function makeBricks() {
 function reset() {
   const cfg = LEVELS[level];
   paddle = { x: W/2 - cfg.paddleW/2, y: H - 36, w: cfg.paddleW, h: PADDLE_H, baseW: cfg.paddleW };
-  
   const angle = -Math.PI/2 + (Math.random() - 0.5) * 0.6;
   balls = [{
     x: W/2, y: H - 60,
     vx: cfg.speed * Math.cos(angle),
     vy: cfg.speed * Math.sin(angle),
-    launch: false,
-    trail: []
+    launch: false, trail: []
   }];
-  
   bricks = makeBricks();
   powers = [];
   paddleWidthTimer = 0;
@@ -388,73 +425,70 @@ function updateHUD() {
   document.getElementById('hLives').textContent = hearts || '💀';
 }
 
-// ── Drawing (全部改為實時讀取 getCanvasColors()) ──
+// ── Drawing ──
 function drawBG() {
-  const PAL = getCanvasColors();
-  ctx.fillStyle = PAL.bg; ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = PAL.grid; ctx.lineWidth = 1;
+  const C = PAL();
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
   for (let x = 0; x <= W; x += 20) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
   for (let y = 0; y <= H; y += 20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
 }
 
 function drawBricks() {
-  const PAL = getCanvasColors();
+  const C = PAL();
   bricks.forEach(b => {
     if (!b.alive) return;
-    const colorPair = PAL.bricks[b.row % PAL.bricks.length];
-    const brickColor = b.powerType ? PAL.power : colorPair[0];
-    const textColor = b.powerType ? '#FFFFFF' : colorPair[1];
+    // 更新 brick 色彩以反映當前 theme
+    const isPower = !!b.powerType;
+    b.color = isPower ? C.power : C.bricks[b.row][0];
+    b.textColor = isPower ? (getTheme()==='dark'?'#1A1614':'#FFFFFF') : C.bricks[b.row][1];
 
-    ctx.fillStyle = brickColor; ctx.fillRect(b.x, b.y, BRICK_W, BRICK_H);
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+    ctx.fillStyle = b.color; ctx.fillRect(b.x, b.y, BRICK_W, BRICK_H);
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
     ctx.strokeRect(b.x+.5, b.y+.5, BRICK_W-1, BRICK_H-1);
-    
-    ctx.fillStyle = textColor;
+    ctx.fillStyle = b.textColor;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (b.powerType) {
       ctx.font = 'bold 11px "DM Mono", monospace';
       ctx.fillText(`[${b.powerType}]`, b.x + BRICK_W/2, b.y + BRICK_H/2);
     } else {
       ctx.font = '500 9px "DM Mono", monospace';
-      ctx.fillText((ROWS - b.row) * 10, b.x + BRICK_W/2, b.y + BRICK_H/2);
+      ctx.fillText(b.pts, b.x + BRICK_W/2, b.y + BRICK_H/2);
     }
   });
 }
 
 function drawPaddle() {
-  const PAL = getCanvasColors();
-  ctx.fillStyle = PAL.paddle;
+  const C = PAL();
+  ctx.fillStyle = C.paddle;
   ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
-  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
   ctx.fillRect(paddle.x+2, paddle.y+2, paddle.w-4, 3);
 }
 
 function drawBalls() {
-  const PAL = getCanvasColors();
+  const C = PAL();
   balls.forEach(ball => {
     ball.trail.forEach((t, i) => {
       const a = (i / ball.trail.length) * 0.22;
       ctx.beginPath(); ctx.arc(t.x, t.y, BALL_R * (i/ball.trail.length), 0, Math.PI*2);
-      ctx.fillStyle = isDarkTheme() ? `rgba(245,245,245,${a})` : `rgba(58,50,45,${a})`; ctx.fill();
+      ctx.fillStyle = getTheme()==='dark'?`rgba(234,227,213,${a})`:`rgba(58,50,45,${a})`; ctx.fill();
     });
     ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI*2);
-    ctx.fillStyle = PAL.ball; ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillStyle = C.ball; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
     ctx.beginPath(); ctx.arc(ball.x-2, ball.y-2, BALL_R*0.35, 0, Math.PI*2); ctx.fill();
   });
 }
 
-function isDarkTheme() { return currentTheme === 'dark'; }
-
 function drawPowers() {
-  const PAL = getCanvasColors();
+  const C = PAL();
   powers.forEach(p => {
-    ctx.fillStyle = PAL.power;
+    ctx.fillStyle = C.power;
     ctx.fillRect(p.x - 10, p.y - 10, 20, 20);
-    ctx.strokeStyle = PAL.paddle; ctx.lineWidth = 1;
+    ctx.strokeStyle = C.paddle; ctx.lineWidth = 1;
     ctx.strokeRect(p.x - 10, p.y - 10, 20, 20);
-    
-    ctx.fillStyle = '#FFFFFF';
+    ctx.fillStyle = getTheme()==='dark'?'#1A1614':'#FFFFFF';
     ctx.font = 'bold 11px "DM Mono", monospace';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(p.type, p.x, p.y);
@@ -462,10 +496,10 @@ function drawPowers() {
 }
 
 function drawCountdown() {
-  const PAL = getCanvasColors();
   if (balls.length === 1 && !balls[0].launch) {
+    const C = PAL();
     ctx.font = '300 11px "DM Mono", monospace';
-    ctx.fillStyle = PAL.dim; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = C.dim; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('SPACE · CLICK TO LAUNCH BALL', W/2, H - 16);
   }
 }
@@ -473,111 +507,70 @@ function drawCountdown() {
 // ── Physics ──
 function update() {
   if (state !== 'playing') return;
-
   const cfg = LEVELS[level];
-
   if (keys['ArrowLeft'] || keys['KeyA'] || keys['MobileLeft']) paddle.x = Math.max(0, paddle.x - 7);
   if (keys['ArrowRight'] || keys['KeyD'] || keys['MobileRight']) paddle.x = Math.min(W - paddle.w, paddle.x + 7);
-
   if (paddleWidthTimer > 0) {
     paddleWidthTimer--;
     if (paddleWidthTimer <= 0) paddle.w = paddle.baseW;
   }
-
   for (let i = powers.length - 1; i >= 0; i--) {
     const p = powers[i];
     p.y += 2.2;
-
     if (p.y + 10 >= paddle.y && p.y - 10 <= paddle.y + paddle.h && p.x >= paddle.x && p.x <= paddle.x + paddle.w) {
       Sound.playPower();
-      if (p.type === 'W') {
-        paddle.w = paddle.baseW * 1.5;
-        paddleWidthTimer = 450; 
-      } else if (p.type === 'M') {
+      if (p.type === 'W') { paddle.w = paddle.baseW * 1.5; paddleWidthTimer = 450; }
+      else if (p.type === 'M') {
         const baseBall = balls[0] || { x: paddle.x + paddle.w/2, y: paddle.y - 10 };
         for (let k = 0; k < 2; k++) {
           const a = -Math.PI/2 + (Math.random() - 0.5) * 1.2;
-          balls.push({
-            x: baseBall.x, y: Math.min(baseBall.y, paddle.y - 10),
-            vx: cfg.speed * Math.cos(a), vy: cfg.speed * Math.sin(a),
-            launch: true, trail: []
-          });
+          balls.push({ x: baseBall.x, y: Math.min(baseBall.y, paddle.y - 10), vx: cfg.speed * Math.cos(a), vy: cfg.speed * Math.sin(a), launch: true, trail: [] });
         }
       }
-      powers.splice(i, 1);
-      continue;
+      powers.splice(i, 1); continue;
     }
     if (p.y - 10 > H) powers.splice(i, 1);
   }
-
   for (let i = balls.length - 1; i >= 0; i--) {
     const ball = balls[i];
-
-    if (!ball.launch) {
-      ball.x = paddle.x + paddle.w / 2;
-      continue;
-    }
-
+    if (!ball.launch) { ball.x = paddle.x + paddle.w / 2; continue; }
     ball.trail.push({x: ball.x, y: ball.y});
     if (ball.trail.length > 6) ball.trail.shift();
-
     ball.x += ball.vx; ball.y += ball.vy;
-
     if (ball.x - BALL_R < 0) { ball.x = BALL_R; ball.vx *= -1; Sound.playHit(); }
     if (ball.x + BALL_R > W) { ball.x = W-BALL_R; ball.vx *= -1; Sound.playHit(); }
     if (ball.y - BALL_R < 0) { ball.y = BALL_R; ball.vy *= -1; Sound.playHit(); }
-
     if (ball.y - BALL_R > H) {
       balls.splice(i, 1);
       if (balls.length === 0) {
-        lives--;
-        Sound.playLose();
-        updateHUD();
+        lives--; Sound.playLose(); updateHUD();
         if (lives <= 0) { endGame(false); return; }
-        
-        paddle.w = paddle.baseW;
-        paddleWidthTimer = 0;
+        paddle.w = paddle.baseW; paddleWidthTimer = 0;
         const angle = -Math.PI/2 + (Math.random()-0.5)*0.6;
-        balls = [{
-          x: paddle.x + paddle.w/2, y: paddle.y - BALL_R - 2,
-          vx: cfg.speed * Math.cos(angle), vy: cfg.speed * Math.sin(angle),
-          launch: false, trail: []
-        }];
+        balls = [{ x: paddle.x + paddle.w/2, y: paddle.y - BALL_R - 2, vx: cfg.speed * Math.cos(angle), vy: cfg.speed * Math.sin(angle), launch: false, trail: [] }];
         powers = [];
       }
       continue;
     }
-
     if (ball.y + BALL_R >= paddle.y && ball.y - BALL_R <= paddle.y + paddle.h &&
         ball.x >= paddle.x && ball.x <= paddle.x + paddle.w && ball.vy > 0) {
-      ball.vy *= -1;
-      Sound.playHit();
+      ball.vy *= -1; Sound.playHit();
       const hit = (ball.x - (paddle.x + paddle.w/2)) / (paddle.w/2);
       ball.vx = hit * cfg.speed * 1.15;
-      
       const spd = Math.hypot(ball.vx, ball.vy);
       const factor = cfg.speed / spd;
       ball.vx *= factor; ball.vy *= factor;
       ball.y = paddle.y - BALL_R - 1;
     }
-
     for (const b of bricks) {
       if (!b.alive) continue;
       const dx = Math.max(b.x - ball.x, 0, ball.x - (b.x + BRICK_W));
       const dy = Math.max(b.y - ball.y, 0, ball.y - (b.y + BRICK_H));
-      
       if (dx * dx + dy * dy < BALL_R * BALL_R) {
-        b.alive = false;
-        score += (ROWS - b.row) * 10;
-        Sound.playBrick();
-
+        b.alive = false; score += b.pts; Sound.playBrick();
         if (score > best) { best = score; localStorage.setItem('bko-best', best); }
         updateHUD();
-
-        if (b.powerType) {
-          powers.push({ x: b.x + BRICK_W/2, y: b.y + BRICK_H, type: b.powerType });
-        }
-
+        if (b.powerType) powers.push({ x: b.x + BRICK_W/2, y: b.y + BRICK_H, type: b.powerType });
         const fromLeft  = ball.x < b.x;
         const fromRight = ball.x > b.x + BRICK_W;
         if (fromLeft || fromRight) ball.vx *= -1; else ball.vy *= -1;
@@ -585,7 +578,6 @@ function update() {
       }
     }
   }
-
   if (bricks.length > 0 && bricks.every(b => !b.alive)) { endGame(true); }
 }
 
@@ -636,35 +628,6 @@ function pause() {
   }
 }
 
-// ── 主題切換引擎 (完美對齊 David 蛇) ──
-const themeToggle = document.getElementById('themeToggle');
-
-function initTheme() {
-  const savedTheme = localStorage.getItem('lyz-theme') || 'light';
-  currentTheme = savedTheme;
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  themeToggle.textContent = savedTheme.toUpperCase();
-  if(state !== 'playing') { drawBG(); drawBricks(); drawPaddle(); drawBalls(); }
-}
-
-themeToggle.addEventListener('click', () => {
-  const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
-  currentTheme = nextTheme;
-  document.documentElement.setAttribute('data-theme', nextTheme);
-  localStorage.setItem('lyz-theme', nextTheme);
-  themeToggle.textContent = nextTheme.toUpperCase();
-  if(state !== 'playing') { drawBG(); drawBricks(); drawPaddle(); drawBalls(); }
-});
-
-window.addEventListener('storage', (e) => {
-  if (e.key === 'lyz-theme' && e.newValue) {
-    currentTheme = e.newValue;
-    document.documentElement.setAttribute('data-theme', e.newValue);
-    themeToggle.textContent = e.newValue.toUpperCase();
-    if(state !== 'playing') { drawBG(); drawBricks(); drawPaddle(); drawBalls(); }
-  }
-});
-
 // ── 滑鼠控制 ──
 document.getElementById('cvs').addEventListener('mousemove', e => {
   if (state !== 'playing') return;
@@ -674,7 +637,6 @@ document.getElementById('cvs').addEventListener('mousemove', e => {
   paddle.x = Math.max(0, Math.min(W - paddle.w, mx - paddle.w/2));
 });
 
-// ── 手機滑動與觸控控制 ──
 document.getElementById('cvs').addEventListener('touchmove', e => {
   e.preventDefault();
   if (state !== 'playing') return;
@@ -685,9 +647,7 @@ document.getElementById('cvs').addEventListener('touchmove', e => {
 }, {passive:false});
 
 document.getElementById('cvs').addEventListener('click', () => {
-  if (state === 'playing') {
-    balls.forEach(b => { if(!b.launch) b.launch = true; });
-  }
+  if (state === 'playing') balls.forEach(b => { if(!b.launch) b.launch = true; });
 });
 
 document.getElementById('ctrl-left').addEventListener('touchstart', (e) => { e.preventDefault(); keys['MobileLeft'] = true; }, {passive:false});
@@ -717,8 +677,7 @@ document.getElementById('ovBtn').addEventListener('click', () => {
   else if (state === 'paused') pause();
 });
 
-// 頁面初次靜態加載與渲染
-initTheme();
+// 頁面初次靜態加載渲染
 init();
 drawBG(); drawBricks(); drawPaddle(); drawBalls();
 </script>
