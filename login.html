@@ -40,8 +40,7 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .btn-login:hover{background:var(--ac);border-color:var(--ac);color:#fff;}
 .btn-login:disabled{opacity:0.5;cursor:not-allowed;}
 
-/* 💡 新增：返回首頁按鈕的樣式 */
-.btn-back-home{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:10px;border:1px solid var(--bd);background:transparent;color:var(--ts);cursor:pointer;transition:all .2s;text-align:center;width:100%;text-decoration:none;margin-top:-4px;}
+.btn-back-home{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:10px;border:1px solid var(--bd);background:transparent;color:var(--text);cursor:pointer;transition:all .2s;text-align:center;width:100%;text-decoration:none;margin-top:-4px;}
 .btn-back-home:hover{background:var(--bg);border-color:var(--text);color:var(--text);}
 
 .error-msg{color:var(--red);font-size:.75rem;display:none;text-align:center;line-height:1.4;}
@@ -129,7 +128,7 @@ const loginBtn = document.getElementById('loginBtn');
 const errorEl = document.getElementById('errorMsg');
 const loadingOverlay = document.getElementById('loadingOverlay');
 
-// 💡 核心修改：確認登入狀態後，導向 index.html 而非 gamehub.html
+// 💡 登入頁核心分流：如果早就是登入狀態，直接送使用者回 index.html，不重現表單
 auth.onAuthStateChanged(function(user) {
   if (user) {
     window.location.href = 'index.html';
@@ -156,7 +155,7 @@ function executeFirebaseLogin() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(function(userCredential) {
-      // 驗證成功後，會由上面的 onAuthStateChanged 自動帶去 index.html
+      // 成功後，上面的 onAuthStateChanged 監聽會自動處理跳轉到 index.html
     })
     .catch(function(error) {
       loginBtn.disabled = false;
