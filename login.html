@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>LYZ · Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script>(function(){var t=localStorage.getItem('lyz-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root[data-theme="light"]{
+  --bg:#F5F2EB;--panel:#FFFFFF;--text:#3A322D;--dim:#8A827B;
+  --bd:#D0C9BC;--bd2:#c9bfb0;--ac:#6b4c32;--ac2:#7d5a3c;
+  --as:rgba(107,76,50,.09);--red:#A94442;--green:#4a7c59;
+  --nav-bg:rgba(245,242,235,.92);--noise-op:.025;
+}
+:root[data-theme="dark"]{
+  --bg:#1A1614;--panel:#25201E;--text:#EAE3D5;--dim:#A29990;
+  --bd:#3A322D;--bd2:#4A3F3A;--ac:#C5A059;--ac2:#DFD5BF;
+  --as:rgba(197,160,89,.08);--red:#E26D6D;--green:#6dbf7e;
+  --nav-bg:rgba(26,22,20,.92);--noise-op:.04;
+}
+
+body{
+  font-family:'Noto Sans TC',sans-serif;font-weight:300;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:background .3s,color .3s;
+  position:relative;overflow:hidden;
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity:var(--noise-op);
+}
+
+/* ── Nav ── */
+.site-nav{
+  position:fixed;top:0;left:0;width:100%;
+  background:var(--nav-bg);backdrop-filter:blur(20px) saturate(1.6);
+  border-bottom:1px solid var(--bd);z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:48px;
+  animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;
+  transition:background .3s,border-color .3s;
+}
+@keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-logo:hover{color:var(--ac);}
+.theme-btn{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--bd);background:transparent;color:var(--dim);cursor:pointer;transition:all .2s;}
+.theme-btn:hover{background:var(--as);border-color:var(--ac);color:var(--ac);}
+
+/* ── Login Card ── */
+.login-wrap{
+  position:relative;z-index:1;
+  width:100%;max-width:440px;
+  padding:24px;
+  margin-top:48px;
+}
+
+.login-eyebrow{
+  font-family:'DM Mono',monospace;font-size:.62rem;color:var(--ac);
+  letter-spacing:.24em;text-transform:uppercase;
+  margin-bottom:10px;text-align:center;
+}
+.login-title{
+  font-family:'Playfair Display',serif;font-weight:400;
+  font-size:2.2rem;line-height:1;text-align:center;
+  margin-bottom:6px;
+}
+.login-title em{font-style:italic;color:var(--ac);}
+.login-sub{
+  font-family:'DM Mono',monospace;font-size:.6rem;
+  color:var(--dim);letter-spacing:.08em;
+  text-align:center;margin-bottom:32px;
+}
+
+.login-card{
+  background:var(--panel);border:1px solid var(--bd);
+  padding:32px;display:flex;flex-direction:column;gap:18px;
+  transition:background .3s,border-color .3s;
+  animation:cardIn .6s .2s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ── Test account hint ── */
+.test-hint{
+  background:var(--as);border:1px solid var(--bd);
+  padding:12px 14px;display:flex;flex-direction:column;gap:6px;
+}
+.test-hint-title{
+  font-family:'DM Mono',monospace;font-size:.55rem;
+  color:var(--ac);letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:2px;
+}
+.test-row{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.test-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.06em;}
+.test-val{
+  font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text);
+  letter-spacing:.04em;display:flex;align-items:center;gap:6px;
+}
+.copy-btn{
+  font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:2px 7px;border:1px solid var(--bd);
+  background:transparent;color:var(--dim);cursor:pointer;transition:all .15s;
+}
+.copy-btn:hover{background:var(--ac);color:var(--bg);border-color:var(--ac);}
+.fill-btn{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:6px 0;width:100%;
+  border:1px dashed var(--bd2);background:transparent;color:var(--dim);
+  cursor:pointer;transition:all .2s;
+}
+.fill-btn:hover{border-color:var(--ac);color:var(--ac);background:var(--as);}
+
+/* ── Form ── */
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;}
+.form-input{
+  background:var(--bg);border:1px solid var(--bd);
+  border-top:2px solid var(--ac);
+  color:var(--text);padding:11px 14px;
+  font-family:'DM Mono',monospace;font-size:.85rem;
+  letter-spacing:.04em;outline:none;transition:border-color .2s;
+  width:100%;
+}
+.form-input:focus{border-color:var(--ac);}
+.form-input::placeholder{color:var(--bd2);}
+
+/* ── Error ── */
+.error-msg{
+  font-family:'DM Mono',monospace;font-size:.62rem;
+  color:var(--red);letter-spacing:.04em;
+  padding:8px 12px;border:1px solid rgba(226,109,109,.3);
+  background:rgba(226,109,109,.06);display:none;
+}
+.error-msg.show{display:block;}
+
+/* ── Buttons ── */
+.btn-login{
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:13px;width:100%;background:var(--ac);color:var(--bg);
+  border:1px solid var(--ac);cursor:pointer;transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.btn-login:hover{background:var(--ac2);border-color:var(--ac2);}
+.btn-login:disabled{opacity:.5;cursor:not-allowed;}
+
+.divider{display:flex;align-items:center;gap:12px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bd);}
+.divider-text{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;}
+
+.btn-google{
+  font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:12px;width:100%;background:transparent;color:var(--text);
+  border:1px solid var(--bd);cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-google:hover{background:var(--as);border-color:var(--ac);}
+.btn-google:disabled{opacity:.5;cursor:not-allowed;}
+.google-icon{width:18px;height:18px;flex-shrink:0;}
+
+/* ── Loading spinner ── */
+.spinner{
+  display:none;width:16px;height:16px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;
+  margin-right:8px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-login.loading .spinner{display:inline-block;}
+.btn-login.loading .btn-text{opacity:.7;}
+
+/* ── Links ── */
+.form-links{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.form-link{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.06em;text-decoration:none;cursor:pointer;transition:color .2s;background:none;border:none;}
+.form-link:hover{color:var(--ac);}
+
+/* ── Success overlay ── */
+.success-overlay{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:var(--bg);flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;
+}
+.success-overlay.show{display:flex;}
+.success-icon{font-size:3rem;animation:popIn .5s cubic-bezier(.16,1,.3,1);}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.success-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;}
+.success-title em{font-style:italic;color:var(--ac);}
+.success-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.1em;}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:var(--text);color:var(--bg);
+  font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;
+  padding:.6rem 1.4rem;z-index:600;pointer-events:none;
+  opacity:0;transition:opacity .3s,transform .3s;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── Register form (hidden by default) ── */
+.register-section{display:none;}
+.register-section.show{display:contents;}
+
+@media(max-width:480px){
+  .site-nav{padding:0 16px;}
+  .login-wrap{padding:16px;}
+  .login-card{padding:24px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">LYZ.dev</a>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark</button>
+</nav>
+
+<!-- Login Card -->
+<div class="login-wrap">
+  <div class="login-eyebrow">Member Area · 會員系統</div>
+  <h1 class="login-title">Welcome <em>Back</em></h1>
+  <p class="login-sub">登入以追蹤遊戲成就與個人排行榜</p>
+
+  <div class="login-card" id="loginCard">
+
+    <!-- Test account hint -->
+    <div class="test-hint" id="testHint">
+      <div class="test-hint-title">🧪 測試帳號 / Test Account</div>
+      <div class="test-row">
+        <span class="test-label">Email</span>
+        <span class="test-val">
+          test@lyz.dev
+          <button class="copy-btn" onclick="copyText('test@lyz.dev')">Copy</button>
+        </span>
+      </div>
+      <div class="test-row">
+        <span class="test-label">Password</span>
+        <span class="test-val">
+          test123456
+          <button class="copy-btn" onclick="copyText('test123456')">Copy</button>
+        </span>
+      </div>
+      <button class="fill-btn" onclick="fillTestAccount()">↓ 自動填入測試帳號</button>
+    </div>
+
+    <!-- Error message -->
+    <div class="error-msg" id="errorMsg"></div>
+
+    <!-- Email login form -->
+    <div class="form-group" id="loginSection">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="emailInput" type="email" placeholder="your@email.com" autocomplete="email"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="passwordInput" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <!-- Register fields (hidden until toggled) -->
+    <div class="register-section" id="registerSection">
+      <div class="form-group">
+        <label class="form-label">確認密碼 / Confirm Password</label>
+        <input class="form-input" id="confirmInput" type="password" placeholder="••••••••"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">顯示名稱 / Display Name</label>
+        <input class="form-input" id="displayNameInput" type="text" placeholder="Player Name" maxlength="20"/>
+      </div>
+    </div>
+
+    <button class="btn-login" id="submitBtn" onclick="handleSubmit()">
+      <span class="spinner" id="spinner"></span>
+      <span class="btn-text" id="btnText">登入 / Sign In</span>
+    </button>
+
+    <div class="divider"><span class="divider-text">or</span></div>
+
+    <button class="btn-google" id="googleBtn" onclick="handleGoogle()">
+      <svg class="google-icon" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      使用 Google 帳號登入
+    </button>
+
+    <div class="form-links">
+      <button class="form-link" id="toggleModeBtn" onclick="toggleMode()">還沒有帳號？立即註冊</button>
+      <button class="form-link" onclick="handleForgot()">忘記密碼？</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">✦</div>
+  <div class="success-title">Welcome <em>Back</em></div>
+  <div class="success-sub" id="successSub">正在載入...</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toastEl"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  updateProfile,
+  onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+// ── Firebase Config ──
+const firebaseConfig = {
+  apiKey: "AIzaSyAo47TW_vtnuYofYpJLE_nA3sSlVx5Tww0",
+  authDomain: "project-c2422dde-c78e-4e74-aa5.firebaseapp.com",
+  databaseURL: "https://project-c2422dde-c78e-4e74-aa5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "project-c2422dde-c78e-4e74-aa5",
+  storageBucket: "project-c2422dde-c78e-4e74-aa5.firebasestorage.app",
+  messagingSenderId: "390756352133",
+  appId: "1:390756352133:web:ba3f45819ec356d0a669ec",
+  measurementId: "G-TC4FRF0BSZ"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// ── 若已登入直接跳轉 ──
+onAuthStateChanged(auth, user => {
+  if (user) redirectAfterLogin(user);
+});
+
+// ── 登入 / 註冊切換 ──
+let isRegisterMode = false;
+
+window.toggleMode = function() {
+  isRegisterMode = !isRegisterMode;
+  const reg = document.getElementById('registerSection');
+  const btn = document.getElementById('toggleModeBtn');
+  const submit = document.getElementById('btnText');
+  const hint = document.getElementById('testHint');
+  reg.classList.toggle('show', isRegisterMode);
+  btn.textContent  = isRegisterMode ? '已有帳號？返回登入' : '還沒有帳號？立即註冊';
+  submit.textContent = isRegisterMode ? '註冊 / Register' : '登入 / Sign In';
+  hint.style.display = isRegisterMode ? 'none' : 'flex';
+  clearError();
+};
+
+// ── 主要送出邏輯 ──
+window.handleSubmit = async function() {
+  const email    = document.getElementById('emailInput').value.trim();
+  const password = document.getElementById('passwordInput').value;
+
+  if (!email || !password) { showError('請填寫 Email 與密碼'); return; }
+
+  setLoading(true);
+  clearError();
+
+  try {
+    if (isRegisterMode) {
+      const confirm = document.getElementById('confirmInput').value;
+      const name    = document.getElementById('displayNameInput').value.trim() || 'Player';
+      if (password !== confirm) { showError('兩次密碼不一致'); setLoading(false); return; }
+      if (password.length < 6)  { showError('密碼至少需要 6 個字元'); setLoading(false); return; }
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(cred.user, { displayName: name });
+      redirectAfterLogin(cred.user);
+    } else {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      redirectAfterLogin(cred.user);
+    }
+  } catch (e) {
+    setLoading(false);
+    showError(translateError(e.code));
+  }
+};
+
+// ── Google 登入 ──
+window.handleGoogle = async function() {
+  clearError();
+  document.getElementById('googleBtn').disabled = true;
+  try {
+    const result = await signInWithPopup(auth, provider);
+    redirectAfterLogin(result.user);
+  } catch (e) {
+    document.getElementById('googleBtn').disabled = false;
+    if (e.code !== 'auth/popup-closed-by-user') showError(translateError(e.code));
+  }
+};
+
+// ── 忘記密碼 ──
+window.handleForgot = async function() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email) { showError('請先在上方輸入你的 Email'); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showToast('✉️ 重設密碼信件已寄出，請檢查信箱');
+  } catch (e) {
+    showError(translateError(e.code));
+  }
+};
+
+// ── 跳轉 ──
+function redirectAfterLogin(user) {
+  const overlay = document.getElementById('successOverlay');
+  const sub = document.getElementById('successSub');
+  const name = user.displayName || user.email.split('@')[0];
+  sub.textContent = `歡迎回來，${name}！正在跳轉...`;
+  overlay.classList.add('show');
+  setTimeout(() => { window.location.href = 'gamehub.html'; }, 1400);
+}
+
+// ── Error 翻譯 ──
+function translateError(code) {
+  const map = {
+    'auth/user-not-found':      '找不到此帳號，請確認 Email 是否正確',
+    'auth/wrong-password':      '密碼錯誤，請重新輸入',
+    'auth/invalid-email':       'Email 格式不正確',
+    'auth/email-already-in-use':'此 Email 已被註冊，請直接登入',
+    'auth/weak-password':       '密碼強度不足，請使用至少 6 個字元',
+    'auth/too-many-requests':   '登入嘗試過多，請稍後再試',
+    'auth/network-request-failed':'網路連線異常，請檢查網路',
+    'auth/invalid-credential':  '帳號或密碼錯誤，請重新輸入',
+    'auth/popup-blocked':       '彈出視窗被封鎖，請允許後再試',
+  };
+  return map[code] || `登入失敗（${code}）`;
+}
+
+// ── UI helpers ──
+function setLoading(on) {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = on;
+  btn.classList.toggle('loading', on);
+  document.getElementById('googleBtn').disabled = on;
+}
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg; el.classList.add('show');
+}
+function clearError() {
+  document.getElementById('errorMsg').classList.remove('show');
+}
+</script>
+
+<script>
+// ── Theme ──
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('lyz-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? 'Light' : 'Dark';
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+applyTheme(localStorage.getItem('lyz-theme') || 'light');
+window.addEventListener('storage', e => { if (e.key === 'lyz-theme' && e.newValue) applyTheme(e.newValue); });
+
+// ── Test account helpers ──
+function fillTestAccount() {
+  document.getElementById('emailInput').value    = 'test@lyz.dev';
+  document.getElementById('passwordInput').value = 'test123456';
+  showToast('✓ 測試帳號已填入');
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('✓ 已複製到剪貼簿'));
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// Enter key submit
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const active = document.activeElement;
+    if (['emailInput','passwordInput','confirmInput','displayNameInput'].includes(active?.id)) {
+      window.handleSubmit();
+    }
+  }
+});
+</script>
+</body>
+</html>
