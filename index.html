@@ -83,7 +83,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content
 #live-clock .clock-dot{width:5px;height:5px;border-radius:50%;background:#6dbf7e;animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 
-main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3rem;position:relative;margin-top:64px;z-index:2;gap:4rem;}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3rem;position:relative;margin-top:48px;z-index:2;gap:4rem;}
 .stage{max-width:680px;width:100%;}
 
 .deco-line{display:flex;align-items:center;gap:1rem;margin-bottom:1.6rem;overflow:hidden;}
@@ -126,14 +126,15 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 .btn-about{display:inline-flex;align-items:center;gap:.6rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tm);background:transparent;border:none;padding:.85rem 0;text-decoration:none;transition:color .2s;}
 .btn-about:hover{color:var(--ac);}
 
-.ornament-wrap{flex-shrink:0;position:relative;width:220px;height:220px;perspective:600px;animation:slideUp .8s .45s cubic-bezier(.16,1,.3,1) both;}
+/* 💡 樣式調整：微調右側元件在畫面上的最高極限高度，防止被視窗切掉 */
+.ornament-wrap{flex-shrink:0;position:relative;width:210px;height:210px;perspective:600px;animation:slideUp .8s .45s cubic-bezier(.16,1,.3,1) both;margin-top:-20px;}
 .ornament-3d{width:100%;height:100%;transform-style:preserve-3d;animation:float3d 8s ease-in-out infinite;}
-@keyframes float3d{0%,100%{transform:rotateX(10deg) rotateY(0deg) translateY(0)}25%{transform:rotateX(5deg) rotateY(15deg) translateY(-8px)}50%{transform:rotateX(-5deg) rotateY(0deg) translateY(-14px)}75%{transform:rotateX(5deg) rotateY(-15deg) translateY(-8px)}}
+@keyframes float3d{0%,100%{transform:rotateX(10deg) rotateY(0deg) translateY(0)}25%{transform:rotateX(5deg) rotateY(15deg) translateY(-6px)}50%{transform:rotateX(-5deg) rotateY(0deg) translateY(-10px)}75%{transform:rotateX(5deg) rotateY(-15deg) translateY(-6px)}}
 .ornament-face{position:absolute;inset:0;border-radius:50%;border:1px solid var(--bd);opacity:.35;}
-.ornament-face:nth-child(2){inset:20px;border-style:dashed;border-color:var(--bd2);animation:spin 18s linear infinite;}
-.ornament-face:nth-child(3){inset:42px;border-color:var(--ac);opacity:.25;animation:spin 10s linear infinite reverse;}
+.ornament-face:nth-child(2){inset:18px;border-style:dashed;border-color:var(--bd2);animation:spin 18s linear infinite;}
+.ornament-face:nth-child(3){inset:38px;border-color:var(--ac);opacity:.25;animation:spin 10s linear infinite reverse;}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.ornament-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;}
+.ornament-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;}
 .oc-label{font-family:'DM Mono',monospace;font-size:.46rem;letter-spacing:.2em;color:var(--tm);text-transform:uppercase;}
 .oc-num{font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--ac);line-height:1;font-weight:600;}
 .oc-sub{font-family:'DM Mono',monospace;font-size:.44rem;letter-spacing:.15em;color:var(--tm);text-transform:uppercase;}
@@ -163,7 +164,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
   .nav-links.open{display:flex;}
   .nav-hamburger{display:flex;}
   main{flex-direction:column;align-items:flex-start;padding:2rem 1.5rem 4rem;margin-top:64px;}
-  .ornament-wrap{align-self:center;width:120px;height:120px;}
+  .ornament-wrap{align-self:center;width:120px;height:120px;margin-top:10px;}
   .big-name{font-size:clamp(2.4rem,12vw,3.5rem);}
   .cta-row{flex-direction:column;align-items:stretch;gap:.8rem;}
   .btn-enter,.btn-notes,.btn-food,.btn-about{justify-content:center;}
@@ -237,7 +238,9 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
-// ── 💡 核心安全攔截：監聽 Firebase 登入狀態
+// ── 💡 核心變數初始化：確保下方 Canvas 連線功能不報錯 ──
+let currentTheme = localStorage.getItem('lyz-theme') || 'light';
+
 const auth = firebase.auth();
 let isUserLoggedIn = false;
 
@@ -415,7 +418,7 @@ function countUp(el, n, dur = 1800) {
   })(0);
 }
 
-// ── 💡 修正處：非同步 fetch 讀取 about.html 的真實專案卡片數量 ──
+// ── 💡 異步 fetch 讀取 about.html 的真實專案卡片數量 ──
 setTimeout(async () => {
   const cnumEl = document.getElementById('cnum');
   try {
@@ -426,11 +429,9 @@ setTimeout(async () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlText, 'text/html');
 
-    // 精準匹配你在 about.html 裡面設定的 6 個核心專案錨點連結
     const projectCards = doc.querySelectorAll('a[href*="App_Inventor"], a[href*="MATLAB"], a[href*="ListView"], a[href*="PCB"], a[href*="Soldering"], a[href*="Streamlit"]');
     let realCount = projectCards.length;
     
-    // 保底防錯機制：如果因為環境路徑解析不到，保底呈現 6
     if (realCount === 0) realCount = 6;
     countUp(cnumEl, realCount);
   } catch (error) {
@@ -481,7 +482,6 @@ document.getElementById('hbg').addEventListener('click', () => {
   document.getElementById('navlm').classList.toggle('open');
 });
 
-let currentTheme = 'light';
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('lyz-theme', theme);
