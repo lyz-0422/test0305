@@ -29,7 +29,7 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .brand-section{text-align:center;}
 .eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:8px;}
 .brand-title{font-family:'Playfair Display',serif;font-weight:400;font-size:2rem;line-height:1;margin-bottom:6px;}
-.brand-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;}
+.brand-sub">font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;}
 
 .form-group{display:flex;flex-direction:column;gap:6px;}
 .form-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
@@ -42,7 +42,28 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 
 .error-msg{color:var(--red);font-size:.75rem;display:none;text-align:center;line-height:1.4;}
 
-/* 讀取遮罩層：優化 Firebase 檢查時的視覺體驗 */
+/* 新增測試憑據提示區塊樣式 */
+.test-credentials {
+  border-top: 1px dashed var(--bd);
+  padding-top: 16px;
+  margin-top: 8px;
+  text-align: center;
+}
+.test-hint-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.test-hint-body {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text);
+}
+
+/* 讀取遮罩層 */
 .loading-overlay {
   position: absolute; inset:0; background:var(--panel); display:flex; 
   flex-direction:column; align-items:center; justify-content:center; 
@@ -75,6 +96,11 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
     </div>
     <div class="error-msg" id="errorMsg">❌ 帳號密碼錯誤或該帳號尚未在 Firebase 註冊</div>
     <button class="btn-login" id="loginBtn">Sign In</button>
+
+    <div class="test-credentials">
+      <div class="test-hint-title">Demo Account / 測試憑據</div>
+      <div class="test-hint-body">test@example.com</div>
+    </div>
   </div>
 </div>
 
@@ -82,7 +108,6 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
 <script>
-// 使用你提供的 Config 初始化 Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAo47TW_vtnuYofYpJLE_nA3sSlVx5Tww0",
   authDomain: "project-c2422dde-c78e-4e74-aa5.firebaseapp.com",
@@ -100,18 +125,14 @@ const loginBtn = document.getElementById('loginBtn');
 const errorEl = document.getElementById('errorMsg');
 const loadingOverlay = document.getElementById('loadingOverlay');
 
-// ── 1. 核心守衛：自動檢查狀態 ──
 auth.onAuthStateChanged(function(user) {
   if (user) {
-    // 如果發現本來就已經登入成功，直接跳轉大廳，不留人
     window.location.href = 'gamehub.html';
   } else {
-    // 未登入，移除遮罩，顯示登入表單
     loadingOverlay.classList.add('hide');
   }
 });
 
-// ── 2. 登入事件觸獲 ──
 loginBtn.addEventListener('click', executeFirebaseLogin);
 document.addEventListener('keydown', e => { if(e.key === 'Enter' && !loginBtn.disabled) executeFirebaseLogin(); });
 
@@ -124,18 +145,15 @@ function executeFirebaseLogin() {
     return;
   }
 
-  // 停用按鈕，防止重複點擊
   loginBtn.disabled = true;
   loginBtn.textContent = "VERIFYING...";
   errorEl.style.display = 'none';
 
-  // 呼叫 Firebase 驗證 API
   auth.signInWithEmailAndPassword(email, password)
     .then(function(userCredential) {
-      // 驗證成功，onAuthStateChanged 會自動觸發跳轉大廳
+      // 成功後會經由 onAuthStateChanged 跳轉到 gamehub.html
     })
     .catch(function(error) {
-      // 驗證失敗，解析錯誤訊息並呈現
       loginBtn.disabled = false;
       loginBtn.textContent = "SIGN IN";
       
