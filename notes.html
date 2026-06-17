@@ -285,9 +285,9 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
       <div class="note-card">
         <div class="note-card-title">陣列方法鏈式操作</div>
         <p class="note-p"><code>map()</code> 轉換每個元素、<code>filter()</code> 篩選、<code>reduce()</code> 累積。可以鏈式組合使用。</p>
-        <div class="code-block">[<span class="c-nm">1</span>,<span class="c-nm">2</span>,<span class="c-nm">3</span>,<span class="c-nm">4</span>,<span class="c-nm">5</span>]
-  .<span class="c-fn">filter</span>(x <span class="c-pu">=&gt;</span> x <span class="c-pu">%</span> <span class="c-nm">2</span> <span class="c-pu">===</span> <span class="c-nm">0</span>)   <span class="c-cm">// [2, 4]</span>
-  .<span class="c-fn">map</span>(x <span class="c-pu">=&gt;</span> x <span class="c-pu">*</span> <span class="c-nm">3</span>)            <span class="c-cm">// [6, 12]</span></div>
+        <div class="code-block">[<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>]
+  .<span class="c-fn">filter</span>(x <span class="c-pu">=&gt;</span> x <span class="c-pu">%</span> <span class="nm">2</span> <span class="c-pu">===</span> <span class="nm">0</span>)   <span class="c-cm">// [2, 4]</span>
+  .<span class="c-fn">map</span>(x <span class="c-pu">=&gt;</span> x <span class="c-pu">*</span> <span class="nm">3</span>)            <span class="c-cm">// [6, 12]</span></div>
       </div>
     </div>
 
@@ -316,7 +316,7 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
   <span class="c-fn">justify-content</span>: <span class="c-st">space-between</span>; <span class="c-cm">/* 主軸 */</span>
   <span class="c-fn">align-items</span>: <span class="c-st">center</span>;         <span class="c-cm">/* 交叉軸 */</span>
   <span class="c-fn">flex-wrap</span>: <span class="c-st">wrap</span>;               <span class="c-cm">/* 換行 */</span>
-  <span class="c-fn">gap</span>: <span class="c-nm">1rem</span>;
+  <span class="c-fn">gap</span>: <span class="nm">1rem</span>;
 }</div>
       </div>
     </div>
@@ -324,10 +324,10 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
       <div class="note-header"><span class="note-num">CSS · 02</span><span class="note-title">Grid · RWD · Animation</span></div>
       <div class="note-card">
         <div class="note-card-title">Grid + clamp() + @keyframes</div>
-        <div class="code-block">.grid { <span class="c-fn">display</span>:<span class="c-st">grid</span>; <span class="c-fn">grid-template-columns</span>:<span class="c-fn">repeat</span>(<span class="c-nm">3</span>,<span class="c-nm">1fr</span>); <span class="c-fn">gap</span>:<span class="c-nm">1rem</span>; }
+        <div class="code-block">.grid { <span class="c-fn">display</span>:<span class="c-st">grid</span>; <span class="c-fn">grid-template-columns</span>:<span class="c-fn">repeat</span>(<span class="nm">3</span>,<span class="nm">1fr</span>); <span class="c-fn">gap</span>:<span class="nm">1rem</span>; }
 <span class="c-cm">/* clamp(最小值, 偏好值, 最大值) */</span>
-<span class="c-fn">font-size</span>: <span class="c-fn">clamp</span>(<span class="c-nm">1rem</span>, <span class="c-nm">4vw</span>, <span class="c-nm">3rem</span>);
-<span class="c-at">@keyframes</span> fadeUp { <span class="c-kw">from</span>{<span class="c-fn">opacity</span>:<span class="c-nm">0</span>;transform:translateY(<span class="c-nm">20px</span>)} <span class="c-kw">to</span>{<span class="c-fn">opacity</span>:<span class="c-nm">1</span>} }</div>
+<span class="c-fn">font-size</span>: <span class="c-fn">clamp</span>(<span class="nm">1rem</span>, <span class="nm">4vw</span>, <span class="nm">3rem</span>);
+<span class="c-at">@keyframes</span> fadeUp { <span class="c-kw">from</span>{<span class="c-fn">opacity</span>:<span class="nm">0</span>;transform:translateY(<span class="nm">20px</span>)} <span class="c-kw">to</span>{<span class="c-fn">opacity</span>:<span class="nm">1</span>} }</div>
       </div>
     </div>
 
@@ -377,8 +377,8 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
         <p class="note-p">Vue 的 <code class="vue">.vue</code> 檔案由三個區塊組成，清晰分離結構、邏輯、樣式。</p>
         <div class="code-block vue-top"><span class="c-tg">&lt;script setup&gt;</span>
 <span class="c-kw">import</span> { ref, computed, onMounted } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
-<span class="c-kw">const</span> count <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-nm">0</span>)
-<span class="c-kw">const</span> doubled <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> count.value <span class="c-pu">*</span> <span class="c-nm">2</span>)
+<span class="c-kw">const</span> count <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="nm">0</span>)
+<span class="c-kw">const</span> doubled <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> count.value <span class="c-pu">*</span> <span class="nm">2</span>)
 <span class="c-tg">&lt;/script&gt;</span></div>
       </div>
     </div>
@@ -398,6 +398,152 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
       </div>
     </div>
 
+    <div class="unit-header" id="unit06">
+      <span class="unit-badge badge-vue">Unit 06</span>
+      <span class="unit-name">Composables 組合式函數</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-vue">COMP · 01</span><span class="note-title">高內聚、低耦合的邏輯複用</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-vue">用 導出機制 封裝狀態</div>
+        <p class="note-p">將具備特定功能的響應式數據（如 `ref`）與方法打包。依據慣例，Composables 函數命名稱通常以 <code>use</code> 開頭。</p>
+        <div class="code-block vue-top"><span class="c-kw">import</span> { ref } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
+<span class="c-kw">export function</span> <span class="c-fn">useToggle</span>(initialValue <span class="c-pu">=</span> <span class="c-kw">false</span>) {
+  <span class="c-kw">const</span> state <span class="c-pu">=</span> <span class="c-fn">ref</span>(initialValue)
+  <span class="c-kw">const</span> <span class="c-fn">toggle</span> <span class="c-pu">=</span> () <span class="c-pu">=&gt;</span> state.value <span class="c-pu">=</span> <span class="c-pu">!</span>state.value
+  <span class="c-kw">return</span> { state, toggle }
+}</div>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit07">
+      <span class="unit-badge badge-vue">Unit 07</span>
+      <span class="unit-name">Todo App 實戰開發</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-vue">APP · 01</span><span class="note-title">響應式渲染、雙向綁定與過濾</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-vue">v-model 與動態樣式綁定</div>
+        <p class="note-p">在實戰中串接陣列與資料表，利用 <code>v-model</code> 實現輸入框與資料層同步，並使用 <code>v-for</code> 渲染陣列。</p>
+        <div class="code-block vue-top"><span class="c-tg">&lt;li</span> <span class="c-at">v-for</span><span class="c-pu">=</span><span class="c-st">"todo in filteredTodos"</span> <span class="c-at">:key</span><span class="c-pu">=</span><span class="c-st">"todo.id"</span><span class="c-tg">&gt;</span>
+  <span class="c-tg">&lt;input</span> <span class="c-at">type</span><span class="c-pu">=</span><span class="c-st">"checkbox"</span> <span class="c-at">v-model</span><span class="c-pu">=</span><span class="c-st">"todo.completed"</span><span class="c-tg">&gt;</span>
+  <span class="c-tg">&lt;span</span> <span class="c-at">:class</span><span class="c-pu">=</span><span class="c-st">"{ done: todo.completed }"</span><span class="c-tg">&gt;</span>{{ todo.text }}<span class="c-tg">&lt;/span&gt;</span>
+<span class="c-tg">&lt;/li&gt;</span></div>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit08">
+      <span class="unit-badge badge-tw">Unit 08</span>
+      <span class="unit-name">Tailwind CSS 原子化語法</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-tw">TW · 01</span><span class="note-title">Utility-First 核心架構</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-tw">摒棄傳統 CSS 命名類名</div>
+        <p class="note-p">直接在 HTML 標籤內疊加微小的原子化類名（如 <code>flex</code>, <code>bg-white</code>, <code>p-4</code>），大幅減少打包後的樣式體積，且內建響應式前綴（如 <code>md:grid-cols-2</code>）。</p>
+        <div class="hl-box hl-box-tw"><strong>優勢：</strong>不需在 CSS 與 HTML 檔案間反覆切換切，加速版面成型。</div>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit09">
+      <span class="unit-badge badge-tw">Unit 09</span>
+      <span class="unit-name">UI Framework 前端元件庫</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-tw">UI · 01</span><span class="note-title">提升企業級系統開發效率</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-tw">高可用組件抽離</div>
+        <p class="note-p">為了解決手寫彈窗、分頁、日曆等複雜元件的痛點，整合開源的前端 UI 元件庫（如 PrimeVue, Element Plus），提供豐富的無障礙（Accessibility）預建組件。</p>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit10">
+      <span class="unit-badge badge-pv">Unit 10</span>
+      <span class="unit-name">PrimeVue 組件整合</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-pv">PV · 01</span><span class="note-title">企業級 DataTable 與資料綁定</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-pv">引入高性能組件</div>
+        <p class="note-p">PrimeVue 具備非常強大的非結構化資料展示能力，只需透過 <code>value</code> 屬性即可直接灌入陣列，並自動解鎖過濾、排序與分頁功能。</p>
+        <div class="code-block pv-top"><span class="c-tg">&lt;DataTable</span> <span class="c-at">:value</span><span class="c-pu">=</span><span class="c-st">"users"</span> <span class="c-at">paginator</span> <span class="c-at">:rows</span><span class="c-pu">=</span><span class="c-st">"10"</span><span class="c-tg">&gt;</span>
+  <span class="c-tg">&lt;Column</span> <span class="c-at">field</span><span class="c-pu">=</span><span class="c-st">"name"</span> <span class="c-at">header</span><span class="c-pu">=</span><span class="c-st">"姓名"</span><span class="c-tg">&gt;&lt;/Column&gt;</span>
+  <span class="c-tg">&lt;Column</span> <span class="c-at">field</span><span class="c-pu">=</span><span class="c-st">"email"</span> <span class="c-at">header</span><span class="c-pu">=</span><span class="c-st">"信箱"</span><span class="c-tg">&gt;&lt;/Column&gt;
+&lt;/DataTable&gt;</span></div>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit11">
+      <span class="unit-badge badge-pv">Unit 11</span>
+      <span class="unit-name">Tailwind + PrimeVue 雙劍合璧</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-pv">MIX · 01</span><span class="note-title">Unstyled 模式與樣式自訂</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-pv">用 Tailwind 接管 PrimeVue 的外觀</div>
+        <p class="note-p">在 `PrimeVue` 配置中啟用 <code>unstyled: true</code>，讓組件完全剝離預設的樣式外殼，緊接著使用 Tailwind 的原子化類名自訂專屬你的視覺風格。</p>
+        <div class="hl-box hl-box-pv">這正是你的雲端遊戲大廳（LYZ · Game Hub）能夠保持優雅極簡、毫無套版感的視覺核心秘訣！</div>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit12">
+      <span class="unit-badge badge-vue">Unit 12</span>
+      <span class="unit-name">Vue Router 單頁應用路由</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-vue">ROUT · 01</span><span class="note-title">全端路由、狀態守衛與攔截</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-vue">beforeEach 導航守衛</div>
+        <p class="note-p">實現無重新整理頁面切換（SPA）。為了防止未登入的使用者偷看敏感頁面，可以在路由守衛中利用 Firebase 檢測狀態：</p>
+        <div class="code-block vue-top">router.<span class="c-fn">beforeEach</span>((to, from, next) <span class="c-pu">=&gt;</span> {
+  <span class="c-kw">const</span> requiresAuth <span class="c-pu">=</span> to.matched.<span class="c-fn">some</span>(record <span class="c-pu">=&gt;</span> record.meta.requiresAuth)
+  <span class="c-kw">const</span> isAuthenticated <span class="c-pu">=</span> firebase.<span class="c-fn">auth</span>().currentUser
+  <span class="c-kw">if</span> (requiresAuth <span class="c-pu">&amp;&amp; !</span>isAuthenticated) <span class="c-fn">next</span>(<span class="c-st">'/login'</span>)
+  <span class="c-kw">else</span> <span class="c-fn">next</span>()
+})</div>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit13">
+      <span class="unit-badge badge-vue">Unit 13</span>
+      <span class="unit-name">Pinia 全域狀態管理</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-vue">PINIA · 01</span><span class="note-title">打通組件間的「血脈」跨頁面通信</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-vue">DefineStore 與響應式解構</div>
+        <p class="note-p">淘汰舊版 Vuex，Pinia 改用極致輕量化的 Composition API 語法。利用 <code>defineStore</code> 建立全域單一資料源，打破 Props/Emits 的逐層傳遞限制。</p>
+        <div class="code-block vue-top"><span class="c-kw">import</span> { defineStore } <span class="c-kw">from</span> <span class="c-st">'pinia'</span>
+<span class="c-kw">export const</span> useAuthStore <span class="c-pu">=</span> <span class="c-fn">defineStore</span>(<span class="c-st">'auth'</span>, () <span class="c-pu">=&gt;</span> {
+  <span class="c-kw">const</span> user <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-kw">null</span>)
+  <span class="c-kw">const</span> <span class="c-fn">login</span> <span class="c-pu">=</span> (userData) <span class="c-pu">=&gt;</span> user.value <span class="c-pu">=</span> userData
+  <span class="c-kw">return</span> { user, login }
+})</div>
+      </div>
+    </div>
+
+    <div class="unit-header" id="unit14">
+      <span class="unit-badge badge-vrc">Unit 14</span>
+      <span class="unit-name">Vercel 前端自動化部署</span>
+      <div class="unit-line"></div>
+    </div>
+    <div class="note-section">
+      <div class="note-header"><span class="note-num note-num-vrc">VRC · 01</span><span class="note-title">CI/CD 工作流與環境變數管理</span></div>
+      <div class="note-card">
+        <div class="note-card-title note-card-title-vrc">Git Push 即部署</div>
+        <p class="note-p">將本地程式碼庫推送到 GitHub 後，Vercel 會瞬間啟動雲端自動編譯工作流，不到 10 秒即派發高性能全網 CDN 網址。</p>
+        <div class="hl-box hl-box-vrc"><strong>環境變數（Environment Variables）：</strong>切記將 Firebase API Key 等敏感金鑰配置在 Vercel 後台的 Environment Variables 中，絕對不能強行 commit 進公開的 Git 儲存庫，以此保障雲端專案的安全！</div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -413,7 +559,7 @@ auth.onAuthStateChanged(function(user) {
     isUserLoggedIn = true;
     // 若已登入，將大廳進入點動態美化優化
     document.querySelectorAll('.dynamic-game-gate').forEach(el => {
-      el.textContent = "GAME HUB";
+      el.textContent = "Game Hub";
     });
   } else {
     isUserLoggedIn = false;
