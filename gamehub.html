@@ -5,14 +5,38 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>LYZ · Game Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
 <script>
+  // 1. 優先套用亮暗主題與防閃爍
   (function() {
     const savedTheme = localStorage.getItem('lyz-theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
   })();
+
+  // 2. 使用你的專屬 Config 初始化 Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAo47TW_vtnuYofYpJLE_nA3sSlVx5Tww0",
+    authDomain: "project-c2422dde-c78e-4e74-aa5.firebaseapp.com",
+    databaseURL: "https://project-c2422dde-c78e-4e74-aa5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "project-c2422dde-c78e-4e74-aa5",
+    storageBucket: "project-c2422dde-c78e-4e74-aa5.firebasestorage.app",
+    messagingSenderId: "390756352133",
+    appId: "1:390756352133:web:ba3f45819ec356d0a669ec",
+    measurementId: "G-TC4FRF0BSZ"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  // 3. 核心安全攔截守衛：若發現未驗證登入，0.01 秒內直接強制跳轉 login.html
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user) {
+      window.location.href = 'login.html';
+    }
+  });
 </script>
 
 <style>
@@ -28,8 +52,8 @@
 
 /* ── 💡 網頁深色主題配置 (Dark Theme) ── */
 :root[data-theme="dark"] {
-  --bg:#1A1614;--panel:#25201E;--text:#EAE3D5;--dim:#A29990;
-  --bd:#3A322D;--bd2:#4A3F3A;--ac:#C5A059;--ac2:#DFD5BF;
+  --bg:#1A1A1A;--panel:#242424;--text:#F5F5F5;--dim:#AAAAAA;
+  --bd:#333333;--bd2:#444444;--ac:#FF6B6B;--ac2:#DFD5BF;
   --as:rgba(197,160,89,.08);--gold:#DFD5BF;--red:#E26D6D;
   --noise-opacity: .04;
 }
@@ -38,24 +62,34 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");opacity:var(--noise-opacity);}
 
-/* ── Nav ── */
-.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;transition:background-color 0.3s, border-color 0.3s;}
+/* ── Nav 核心置中與左右絕對定位佈局 ── */
+.site-nav{position:fixed;top:0;left:0;width:100%;background:rgba(245,242,235,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bd);z-index:200;display:flex;align-items:center;justify-content:center;padding:0 32px;height:48px;animation:navIn .7s cubic-bezier(.16,1,.3,1) forwards;transition:background-color 0.3s, border-color 0.3s;}
 :root[data-theme="dark"] .site-nav { background: rgba(26, 22, 20, 0.9); }
 @keyframes navIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
-.nav-logo{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
-.nav-logo:hover{color:var(--ac);}
-.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;align-items:center;}
 
-/* 💡 第 45 行已修正完畢：移除中途卡入的 Suspend 亂碼 */
+/* 左側絕對定位 Logo */
+.nav-logo{position:absolute;left:32px;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-logo:hover{color:var(--ac);}
+
+/* 中央置中選單 */
+.nav-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;align-items:center;}
 .nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1rem;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;position:relative;}
 .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
 
+/* 右側控制元件群並排（Dark 與登出按鈕完美貼合） */
+.nav-right { position: absolute; right: 32px; display: flex; align-items: center; gap: 12px; }
+.logout-btn {
+  font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:5px 12px; border:1px solid var(--bd); background:transparent; color:var(--text-dim);
+  cursor:pointer; transition:all .2s;
+}
+.logout-btn:hover { background:var(--as); border-color:var(--red); color:var(--red); }
 .theme-toggle-btn {
   background: transparent; border: 1px solid var(--bd); color: var(--text);
   font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 10px;
-  cursor: pointer; transition: all 0.2s; margin-left: 8px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s; text-transform: uppercase;
 }
 .theme-toggle-btn:hover { background: var(--as); border-color: var(--ac); }
 
@@ -123,7 +157,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .score-game{font-size:1.4rem;margin-bottom:2px;}
 .score-label{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;}
 .score-val{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--ac);}
-.score-none{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--bd2);}
 
 /* 分享工具列 */
 .share-action-row {
@@ -151,7 +184,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .footer-link:hover{color:var(--ac);}
 
 .reset-btn {font-family:'DM Mono',monospace;font-size:.55rem;color:var(--red);background:transparent;border:1px dashed rgba(169,68,66,0.4);padding:4px 10px;cursor:pointer;transition:all 0.2s;letter-spacing:1px;}
-.reset-btn:hover {background:rgba(169,68,66,0.08);border-color:var(--red);}
+.reset-btn:hover {background:rgba(169,66,66,0.08);border-color:var(--red);}
 
 @media(max-width:760px){
   .game-grid{grid-template-columns:repeat(2,1fr);}
@@ -160,13 +193,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .strip-item{min-width:50%;}
 }
 @media(max-width:500px){
-  .site-nav{padding:0 16px;}
+  .site-nav{padding:0 16px; justify-content: space-between;}
+  .nav-logo{position: static;}
   .nav-links{display:none;}
   .page{padding:68px 16px 40px;}
   .game-grid{grid-template-columns:1fr;}
   .scores-grid{grid-template-columns:repeat(2,1fr);}
   .hub-footer{flex-direction:column;gap:12px;text-align:center;}
   .share-action-row { padding: 0 16px; }
+  .nav-right { position: static; }
 }
 </style>
 </head>
@@ -180,8 +215,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <li><a href="gamehub.html" class="active">Games</a></li>
     <li><a href="notes.html">Notes</a></li>
     <li><a href="exercise.html">Exercises</a></li>
-    <li><button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">Dark</button></li>
   </ul>
+  <div class="nav-right">
+    <button class="logout-btn" id="logoutBtn">🚪 LOGOUT</button>
+    <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">Dark</button>
+  </div>
 </nav>
 
 <div class="page">
@@ -614,6 +652,15 @@ function resetAllScores() {
     window.location.reload();
   }
 }
+
+// ── 登出功能實作 ──
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  firebase.auth().signOut().then(() => {
+    window.location.href = 'login.html';
+  }).catch((error) => {
+    alert('登出發生錯誤：' + error.message);
+  });
+});
 
 const initialTheme = localStorage.getItem('lyz-theme') || 'light';
 applyTheme(initialTheme);
