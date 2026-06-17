@@ -41,10 +41,10 @@
   --noise-op: .025;
 }
 
-/* ── 💡 網頁深色主題配置 (同步 about.html) ── */
+/* ── 💡 網頁深色主題配置 ── */
 :root[data-theme="dark"] {
   --bg:#16130f; --bg2:#1e1a14; --sf:#26211a;
-  --bd:#3a3028; --bd2:#443e33;
+  --bd:#3a3028; --bd2:#4a3e33;
   --tp:#f0ebe3; --ts:#b0a090; --tm:#7a6e62;
   --ac:#c49a6c; --ac2:#d4aa7c; --as:rgba(196,154,108,.12);
   --noise-op: .04;
@@ -147,7 +147,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 .ticker-wrap{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--bd);background:rgba(244,239,230,.92);backdrop-filter:blur(14px);overflow:hidden;height:32px;display:flex;align-items:center;z-index:100;transition:background-color .35s, border-color .35s;}
 :root[data-theme="dark"] .ticker-wrap { background: rgba(30, 26, 20, 0.92); }
 .ticker{display:flex;gap:0;white-space:nowrap;animation:tickerAnim 40s linear infinite;}
-.ticker-item{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;padding:0 2.4rem;border-right:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;transition:color .2s;}
+.ticker-item{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--tm);letter-spacing:.14em;text-transform:uppercase;padding:0 2.4rem;border-right:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;}
 .ticker-item:hover{color:var(--ac);}
 .ticker-dot{width:3px;height:3px;border-radius:50%;background:var(--ac);opacity:.6;}
 
@@ -237,14 +237,13 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
-// 💡 核心安全攔截：監聽 Firebase 登入狀態
+// ── 💡 核心安全攔截：監聽 Firebase 登入狀態
 const auth = firebase.auth();
 let isUserLoggedIn = false;
 
 auth.onAuthStateChanged(function(user) {
   if (user) {
     isUserLoggedIn = true;
-    // 如果已經登入，將頁面上的登入按鈕文字優化改為「進入大廳」
     document.querySelectorAll('.dynamic-game-gate').forEach(el => {
       if (el.tagName === 'A') {
         el.innerHTML = el.classList.contains('btn-notes') ? "🎮 進入遊戲大廳" : "Game Hub";
@@ -255,21 +254,18 @@ auth.onAuthStateChanged(function(user) {
   }
 });
 
-// 建立安全導向機制
 function handleGameGateRoute(e) {
-  e.preventDefault(); // 阻止 HTML 原生的 login.html 直接跳轉
+  e.preventDefault(); 
   if (isUserLoggedIn) {
-    window.location.href = 'gamehub.html'; // 已登入直接去大廳
+    window.location.href = 'gamehub.html';
   } else {
-    window.location.href = 'login.html'; // 未登入才去登入頁面
+    window.location.href = 'login.html';
   }
 }
 
-// 綁定按鈕與選單的門衛監聽器
 document.querySelectorAll('.dynamic-game-gate').forEach(link => {
   link.addEventListener('click', handleGameGateRoute);
 });
-
 
 const dot = document.getElementById('cur-dot');
 const ring = document.getElementById('cur-ring');
@@ -338,7 +334,7 @@ skillsData.forEach(skill => {
   tag.addEventListener('click', (e) => {
     const gameSkills = ["Firebase", "Firestore", "Vue 3", "Pinia", "Tailwind CSS", "Composables", "Vercel部署"];
     if (gameSkills.includes(skill.name)) {
-      handleGameGateRoute(e); // 💡 點擊核心標籤時同樣套用分流守衛
+      handleGameGateRoute(e); 
     } else {
       window.location.href = 'notes.html';
     }
@@ -373,7 +369,7 @@ setInterval(() => {
     bar.textContent = '🕹️ 網頁經典街機大廳已全新落成！點擊此處立刻刷榜挑戰 ⚡';
     bar.style.display = 'block';
     bar.style.cursor = 'pointer';
-    bar.onclick = (e) => { handleGameGateRoute(e); }; // 💡 頂部公告列同樣套用分流守衛
+    bar.onclick = (e) => { handleGameGateRoute(e); }; 
     setTimeout(() => { bar.style.display = 'none'; }, 6500);
   }
 }, 1000);
@@ -418,7 +414,30 @@ function countUp(el, n, dur = 1800) {
     else el.textContent = n;
   })(0);
 }
-setTimeout(() => countUp(document.getElementById('cnum'), 6), 1300);
+
+// ── 💡 修正處：非同步 fetch 讀取 about.html 的真實專案卡片數量 ──
+setTimeout(async () => {
+  const cnumEl = document.getElementById('cnum');
+  try {
+    const response = await fetch('about.html');
+    if (!response.ok) throw new Error('無法讀取 about.html');
+    
+    const htmlText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, 'text/html');
+
+    // 精準匹配你在 about.html 裡面設定的 6 個核心專案錨點連結
+    const projectCards = doc.querySelectorAll('a[href*="App_Inventor"], a[href*="MATLAB"], a[href*="ListView"], a[href*="PCB"], a[href*="Soldering"], a[href*="Streamlit"]');
+    let realCount = projectCards.length;
+    
+    // 保底防錯機制：如果因為環境路徑解析不到，保底呈現 6
+    if (realCount === 0) realCount = 6;
+    countUp(cnumEl, realCount);
+  } catch (error) {
+    console.warn('專案數量連動失敗，啟用保底機制:', error);
+    countUp(cnumEl, 6);
+  }
+}, 1300);
 
 const phrases = [
   "深度學習研究者", "電機工程系學生", "Android App Developer",
