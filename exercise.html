@@ -753,7 +753,7 @@ auth.onAuthStateChanged(function(user) {
     isUserLoggedIn = true;
     // 若已登入，將大廳導覽列文字動態美化為共通風格
     document.querySelectorAll('.dynamic-game-gate').forEach(el => {
-      el.textContent = "🎮 進入遊戲大廳";
+      el.textContent = "GAME HUB";
     });
   } else {
     isUserLoggedIn = false;
