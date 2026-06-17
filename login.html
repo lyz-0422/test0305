@@ -29,7 +29,9 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 .brand-section{text-align:center;}
 .eyebrow{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--ac);letter-spacing:.24em;text-transform:uppercase;margin-bottom:8px;}
 .brand-title{font-family:'Playfair Display',serif;font-weight:400;font-size:2rem;line-height:1;margin-bottom:6px;}
-.brand-sub">font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;}
+
+/* 修正後的第 32 行與 34 行 */
+.brand-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:.08em;}
 
 .form-group{display:flex;flex-direction:column;gap:6px;}
 .form-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
@@ -42,7 +44,7 @@ body{font-family:'Noto Sans TC',sans-serif;font-weight:300;background:var(--bg);
 
 .error-msg{color:var(--red);font-size:.75rem;display:none;text-align:center;line-height:1.4;}
 
-/* 新增測試憑據提示區塊樣式 */
+/* 測試憑據提示區塊樣式 */
 .test-credentials {
   border-top: 1px dashed var(--bd);
   padding-top: 16px;
@@ -151,7 +153,7 @@ function executeFirebaseLogin() {
 
   auth.signInWithEmailAndPassword(email, password)
     .then(function(userCredential) {
-      // 成功後會經由 onAuthStateChanged 跳轉到 gamehub.html
+      // 成功後會經由 onAuthStateChanged 跳轉
     })
     .catch(function(error) {
       loginBtn.disabled = false;
@@ -167,6 +169,7 @@ function executeFirebaseLogin() {
     });
 }
 
+// 修正後的錯誤訊息呈現函式
 function showError(msg) {
   errorEl.textContent = msg;
   errorEl.style.display = 'block';
