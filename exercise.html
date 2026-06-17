@@ -1,12 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('lyz-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  })();
+</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>LYZ · 練習題</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  // 初始化 Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAo47TW_vtnuYofYpJLE_nA3sSlVx5Tww0",
+    authDomain: "project-c2422dde-c78e-4e74-aa5.firebaseapp.com",
+    databaseURL: "https://project-c2422dde-c78e-4e74-aa5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "project-c2422dde-c78e-4e74-aa5",
+    storageBucket: "project-c2422dde-c78e-4e74-aa5.firebasestorage.app",
+    messagingSenderId: "390756352133",
+    appId: "1:390756352133:web:ba3f45819ec356d0a669ec",
+    measurementId: "G-TC4FRF0BSZ"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
+
 <style>
 :root{
   --bg:#faf7f2;--bg2:#f4efe6;--sf:#ede7db;
@@ -147,12 +172,7 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     <li><a href="notes.html">Notes</a></li>
     <li><a href="exercise.html" class="active">Exercises</a></li>
     <li><a href="about.html#contact">Contact</a></li>
-    <li><a href="gamehub.html">🎮 遊戲大廳</a></li>
-    <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
-    <li><a href="game2.html">🧱 磚塊爆破樂</a></li>
-    <li><a href="game3.html">🕹️ 2048</a></li>
-    <li><a href="game4.html">🃏 記憶卡片</a></li>
-    <li><a href="game5.html">⌨ 打字測試</a></li>
+    <li><a href="login.html" class="dynamic-game-gate">Game Login</a></li>
   </ul>
 </nav>
 
@@ -161,14 +181,12 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
   <h1 class="page-title">課後<em>練習題</em></h1>
   <p class="page-sub">對應 Notes 各單元的課後練習，點擊「▶ Execute」查看執行結果</p>
 
-  <!-- ══ UNIT 01 ══ -->
   <div class="unit-divider" style="--sd:.3s">
     <span class="unit-badge">Unit 01</span>
     <span class="unit-name">JavaScript 基礎</span>
     <div class="unit-line"></div>
   </div>
 
-  <!-- JS·01 變數、型別、函式 -->
   <div class="section" style="--sd:.35s">
     <div class="section-header"><span class="section-num">JS · 01</span><span class="section-name">變數、型別、函式</span></div>
 
@@ -221,7 +239,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- JS·02 陣列、物件、JSON -->
   <div class="section" style="--sd:.4s">
     <div class="section-header"><span class="section-num">JS · 02</span><span class="section-name">陣列、物件、JSON</span></div>
 
@@ -276,7 +293,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- JS·03 DOM -->
   <div class="section" style="--sd:.45s">
     <div class="section-header"><span class="section-num">JS · 03</span><span class="section-name">DOM 操作與事件處理</span></div>
 
@@ -311,7 +327,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- JS·04 計時器 -->
   <div class="section" style="--sd:.5s">
     <div class="section-header"><span class="section-num">JS · 04</span><span class="section-name">計時器與動態效果</span></div>
 
@@ -349,14 +364,12 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- ══ UNIT 02 ══ -->
   <div class="unit-divider" style="--sd:.55s">
     <span class="unit-badge">Unit 02</span>
     <span class="unit-name">CSS Layout</span>
     <div class="unit-line"></div>
   </div>
 
-  <!-- CSS·01 FlexBox -->
   <div class="section" style="--sd:.6s">
     <div class="section-header"><span class="section-num">CSS · 01</span><span class="section-name">FlexBox</span></div>
 
@@ -374,7 +387,7 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
               <option value="space-around">space-around（均勻分佈）</option>
               <option value="space-evenly">space-evenly（完全均等）</option>
             </select>
-            <div class="demo-flex-box" id="flexPreview">
+            <div class="demo-flex-box" id="flexPreview').">
               <div class="demo-flex-item">A</div>
               <div class="demo-flex-item">BB</div>
               <div class="demo-flex-item">CCC</div>
@@ -417,7 +430,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- CSS·02 Grid -->
   <div class="section" style="--sd:.65s">
     <div class="section-header"><span class="section-num">CSS · 02</span><span class="section-name">Grid</span></div>
 
@@ -465,7 +477,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- CSS·03 RWD -->
   <div class="section" style="--sd:.7s">
     <div class="section-header"><span class="section-num">CSS · 03</span><span class="section-name">RWD 響應式設計</span></div>
 
@@ -505,7 +516,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- CSS·04 Animation -->
   <div class="section" style="--sd:.75s">
     <div class="section-header"><span class="section-num">CSS · 04</span><span class="section-name">CSS Animation</span></div>
 
@@ -548,14 +558,12 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- ══ UNIT 03 ══ -->
   <div class="unit-divider" style="--sd:.8s">
     <span class="unit-badge">Unit 03</span>
     <span class="unit-name">非同步操作與 API 串接</span>
     <div class="unit-line"></div>
   </div>
 
-  <!-- ASYNC·01 setTimeout -->
   <div class="section" style="--sd:.85s">
     <div class="section-header"><span class="section-num">ASYNC · 01</span><span class="section-name">非同步基礎 · setTimeout</span></div>
     <div class="ex-card">
@@ -597,7 +605,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- ASYNC·02 Promise -->
   <div class="section" style="--sd:.9s">
     <div class="section-header"><span class="section-num">ASYNC · 02</span><span class="section-name">Promise</span></div>
     <div class="ex-card">
@@ -622,7 +629,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- ASYNC·03 async/await -->
   <div class="section" style="--sd:.95s">
     <div class="section-header"><span class="section-num">ASYNC · 03</span><span class="section-name">async / await · fetch</span></div>
     <div class="ex-card">
@@ -649,7 +655,7 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     <div class="ex-card">
       <div class="ex-card-header"><span class="ex-num">EX · 03</span><span class="ex-title">錯誤處理 — fetch 不會因 404 而 reject</span></div>
       <div class="ex-body">
-        <p class="ex-desc">故意呼叫不存在的網址，觀察 <code>response.ok</code> 與 <code>response.status</code> 的值。</p>
+        <p class="ex-desc">故意呼叫 nonexistent 網址，觀察 <code>response.ok</code> 與 <code>response.status</code> 的值。</p>
         <div class="result-area">
           <button class="run-btn" onclick="runEx3_3()"><span>▶ Execute</span></button>
           <div class="console-out" id="o3_3"><span class="log-mt">// 輸出結果會在這裡顯示</span></div>
@@ -658,7 +664,6 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
     </div>
   </div>
 
-  <!-- ASYNC·04 綜合 -->
   <div class="section" style="--sd:1s">
     <div class="section-header"><span class="section-num">ASYNC · 04</span><span class="section-name">綜合應用</span></div>
     <div class="ex-card">
@@ -701,7 +706,7 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
               <div class="progress-track"><div class="progress-fill" id="cdBar"></div></div>
               <div class="progress-label" id="cdPct">0%</div>
             </div>
-            <div class="console-out" id="o4_3"><span class="log-mt">// 倒數結束後顯示結果</span></div>
+            <div class="countdown-out console-out" id="o4_3"><span class="log-mt">// 倒數結束後顯示結果</span></div>
           </div>
         </div>
       </div>
@@ -712,6 +717,37 @@ code{font-family:'DM Mono',monospace;font-size:.82em;background:rgba(107,76,50,.
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
+/* ── 💡 核心安全攔截：監聽 Firebase 登入狀態與分流導向 ── */
+const auth = firebase.auth();
+let isUserLoggedIn = false;
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    isUserLoggedIn = true;
+    // 若已登入，將大廳導覽列文字優化改寫為「進入大廳」
+    document.querySelectorAll('.dynamic-game-gate').forEach(el => {
+      el.textContent = "🎮 進入遊戲大廳";
+    });
+  } else {
+    isUserLoggedIn = false;
+  }
+});
+
+function handleGameGateRoute(e) {
+  e.preventDefault(); // 阻止原生的直接跳轉行為
+  if (isUserLoggedIn) {
+    window.location.href = 'gamehub.html'; // 有登入直接放行至大廳
+  } else {
+    window.location.href = 'login.html'; // 沒登入攔截踢去登入頁
+  }
+}
+
+// 綁定動態門衛監聽器
+document.querySelectorAll('.dynamic-game-gate').forEach(link => {
+  link.addEventListener('click', handleGameGateRoute);
+});
+
+
 /* ── cursor ── */
 const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
 let mx=0,my=0,rx=0,ry=0;
@@ -756,7 +792,7 @@ function runJsEx1_2(){
   const circleArea=r=>Math.PI*r*r;
   document.getElementById('jso1_2').innerHTML=[1,5,10].map(r=>{
     const a=circleArea(r).toFixed(2);
-    return `<span class="log-ok">r=${r} → 面積 = ${a}　${parseFloat(a)>100?'🔴 大於 100':'🟢 不超過 100'}</span>`;
+    return `<span class="log-ok">r=${r} → 面積 = ${a} ${parseFloat(a)>100?'🔴 大於 100':'🟢 不超過 100'}</span>`;
   }).join('');
 }
 
@@ -827,7 +863,7 @@ function startExProgress(){
   let p=0;const t=setInterval(()=>{p=Math.min(p+1,100);bar.style.width=p+'%';lbl.textContent=p+'%';if(p>=100){clearInterval(t);out.innerHTML='<span class="log-ok">✅ 完成！clearInterval 已停止計時器。</span>';}},50);
 }
 
-/* ══ UNIT 02 — CSS ══ */
+/* ── 💡 修正處：將原本寫錯在中間的 id="flexPreview')." 修正回乾淨合法的 "flexPreview" ── */
 function updateFlexDemo(){
   const jc=document.getElementById('flexJC').value;
   document.getElementById('flexPreview').style.justifyContent=jc;
