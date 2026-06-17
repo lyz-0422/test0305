@@ -11,8 +11,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>LYZ · 學習筆記</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  // 初始化 Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAo47TW_vtnuYofYpJLE_nA3sSlVx5Tww0",
+    authDomain: "project-c2422dde-c78e-4e74-aa5.firebaseapp.com",
+    databaseURL: "https://project-c2422dde-c78e-4e74-aa5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "project-c2422dde-c78e-4e74-aa5",
+    storageBucket: "project-c2422dde-c78e-4e74-aa5.firebasestorage.app",
+    messagingSenderId: "390756352133",
+    appId: "1:390756352133:web:ba3f45819ec356d0a669ec",
+    measurementId: "G-TC4FRF0BSZ"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
+
 <style>
 /* ── 💡 網頁亮色主題配置 (Light Theme) ── */
 :root[data-theme="light"] {
@@ -20,15 +39,10 @@
   --bd:#d8cfc2;--bd2:#c9bfb0;
   --tp:#1c1814;--ts:#5c5147;--tm:#9c9080;
   --ac:#6b4c32;--ac2:#7d5a3c;--as:rgba(107,76,50,.09);
-  /* Vue green accent */
   --vue:#41b883;--vue2:#35495e;--vue-bg:rgba(65,184,131,.08);
-  /* Firebase orange */
   --fire:#ff9800;--fire-bg:rgba(255,152,0,.08);
-  /* Tailwind sky */
   --tw:#0ea5e9;--tw-bg:rgba(14,165,233,.08);
-  /* PrimeVue purple */
   --pv:#8b5cf6;--pv-bg:rgba(139,92,246,.08);
-  /* Vercel dark */
   --vrc:#000;--vrc-bg:rgba(0,0,0,.05);
   --noise-op: .025;
 }
@@ -39,15 +53,10 @@
   --bd:#3a3028;--bd2:#4a3e33;
   --tp:#f0ebe3;--ts:#b0a090;--tm:#7a6e62;
   --ac:#c49a6c;--as:rgba(196,154,108,.12);
-  /* Vue green accent */
   --vue:#41b883;--vue-bg:rgba(65,184,131,.12);
-  /* Firebase orange */
   --fire:#ff9800;--fire-bg:rgba(255,152,0,.12);
-  /* Tailwind sky */
   --tw:#0ea5e9;--tw-bg:rgba(14,165,233,.12);
-  /* PrimeVue purple */
   --pv:#8b5cf6;--pv-bg:rgba(139,92,246,.12);
-  /* Vercel dark */
   --vrc:#fff;--vrc-bg:rgba(255,255,255,.08);
   --noise-op: .04;
 }
@@ -147,8 +156,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .code-block.tw-top{border-top-color:var(--tw);}
 .code-block.pv-top{border-top-color:var(--pv);}
 .c-kw{color:#c792ea;}.c-fn{color:#82aaff;}.c-st{color:#c3e88d;}
-.c-nm{color:#f78c6c;}.c-cm{color:#546e7a;font-style:italic;}
-.c-pu{color:#89ddff;}.c-tg{color:#f07178;}.c-at{color:#ffcb6b;}
+.c-nm{color:#f78c6c;}.c-pu{color:#89ddff;}.c-tg{color:#f07178;}.c-at{color:#ffcb6b;}
 
 /* Concept tags */
 .concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin:.6rem 0;}
@@ -170,7 +178,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content
 .td-tw{color:var(--tw);}
 .td-pv{color:var(--pv);}
 
-/* 💡 第 174 行已修正：成功移除非法 span 標籤，還原純 CSS 單位 */
 .hl-box{padding:.8rem 1.1rem;margin:.6rem 0;font-size:.84rem;color:var(--ts);line-height:1.8;}
 .hl-box-vue{background:var(--vue-bg);border-left:3px solid var(--vue);}
 .hl-box-fire{background:var(--fire-bg);border-left:3px solid var(--fire);}
@@ -207,7 +214,6 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
   .concept-grid{grid-template-columns:1fr 1fr;}
 }
 
-/* ── 💡 修正第 2 點：手機平板端自動隔離自訂游標 ── */
 @media (pointer: coarse) {
   * { cursor: auto !important; }
   #cur-dot, #cur-ring { display: none !important; }
@@ -230,12 +236,7 @@ code.pv{color:var(--pv);background:var(--pv-bg);}
     <li><a href="about.html">Portfolio</a></li>
     <li><a href="notes.html" class="active">Notes</a></li>
     <li><a href="exercise.html">Exercises</a></li>
-    <li><a href="gamehub.html">🎮 遊戲大廳</a></li>
-    <li><a href="game.html">🐍 誰是DAVID蛇</a></li>
-    <li><a href="game2.html">🧱 磚塊爆破樂</a></li>
-    <li><a href="game3.html">🕹️ 2048</a></li>
-    <li><a href="game4.html">🃏 記憶卡片</a></li>
-    <li><a href="game5.html">⌨ 打字測試</a></li>
+    <li><a href="login.html" class="dynamic-game-gate">Game Login</a></li>
   </ul>
 </nav>
 
@@ -377,7 +378,7 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
         <div class="code-block vue-top"><span class="c-tg">&lt;script setup&gt;</span>
 <span class="c-kw">import</span> { ref, computed, onMounted } <span class="c-kw">from</span> <span class="c-st">'vue'</span>
 <span class="c-kw">const</span> count <span class="c-pu">=</span> <span class="c-fn">ref</span>(<span class="c-nm">0</span>)
-<span class="c-kw">const</span> doubled <span class="c-pu">=</span> <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> count.value <span class="c-pu">*</span> <span class="c-nm">2</span>)
+<span class="c-kw">const</span> doubled <span class="c-fn">computed</span>(() <span class="c-pu">=&gt;</span> count.value <span class="c-pu">*</span> <span class="c-nm">2</span>)
 <span class="c-tg">&lt;/script&gt;</span></div>
       </div>
     </div>
@@ -403,6 +404,37 @@ el.classList.<span class="c-fn">toggle</span>(<span class="c-st">'active'</span>
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
+// ── 💡 核心安全攔截：監聽 Firebase 登入狀態與分流導向 ──
+const auth = firebase.auth();
+let isUserLoggedIn = false;
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    isUserLoggedIn = true;
+    // 若已登入，將大廳進入點動態美化優化
+    document.querySelectorAll('.dynamic-game-gate').forEach(el => {
+      el.textContent = "🎮 進入遊戲大廳";
+    });
+  } else {
+    isUserLoggedIn = false;
+  }
+});
+
+function handleGameGateRoute(e) {
+  e.preventDefault(); // 阻斷原生 HTML 跳轉
+  if (isUserLoggedIn) {
+    window.location.href = 'gamehub.html'; // 放行大廳
+  } else {
+    window.location.href = 'login.html'; // 擋信引導登入
+  }
+}
+
+// 綁定動態安全門衛
+document.querySelectorAll('.dynamic-game-gate').forEach(link => {
+  link.addEventListener('click', handleGameGateRoute);
+});
+
+
 const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
