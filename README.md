@@ -1,9 +1,14 @@
+以下是為你量身打造、完美整合全站 11 個頁面（包含 **Firebase 雲端驗證、14單元技術沙盒、以及 5 大高性能街機與 Canvas 折線圖/鍵盤熱圖引擎**）的完整版 `README.md` 代碼。
+
+你可以直接複製下方區塊內的代碼，並完整覆蓋你原本的 `README.md` 檔案：
+
+```markdown
 # README
 
 <div align="center">
 
 # ✦ &nbsp; L · Y · Z &nbsp; ✦
-### Personal Portfolio Website
+### Full-Stack Portfolio & Cloud Arcade Hub (2026)
 
 <br>
 
@@ -13,408 +18,199 @@
 
 <br>
 
-[![index](https://img.shields.io/badge/首頁-index.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/index.html)&nbsp;
-[![about](https://img.shields.io/badge/作品集-about.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/about.html)&nbsp;
-[![notes](https://img.shields.io/badge/學習筆記-notes.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/notes.html)&nbsp;
-[![exercise](https://img.shields.io/badge/練習題-exercise.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/exercise.html)&nbsp;
-[![decide](https://img.shields.io/badge/今日決策-decide.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/decide.html)&nbsp;
-[![weekend](https://img.shields.io/badge/週末去哪-weekend.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/weekend.html)
+[![index](https://img.shields.io/badge/大廳首頁-index.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/index.html)&nbsp;
+[![about](https://img.shields.io/badge/個人作品集-about.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/about.html)&nbsp;
+[![notes](https://img.shields.io/badge/全棧筆記-notes.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/notes.html)&nbsp;
+[![exercise](https://img.shields.io/badge/技術沙盒-exercise.html-c9bfb0?style=flat-square)](https://lyz-0422.github.io/test0305/exercise.html)&nbsp;
+[![login](https://img.shields.io/badge/雲端登入-login.html-ac?style=flat-square)](https://lyz-0422.github.io/test0305/login.html)&nbsp;
+[![gamehub](https://img.shields.io/badge/數據大廳-gamehub.html-gold?style=flat-square)](https://lyz-0422.github.io/test0305/gamehub.html)
 
 <br>
 
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Vue3](https://img.shields.io/badge/Vue%203-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white)](https://vuejs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com/)
 
 <br>
 
 > 電機工程系學生 · 深度學習研究者 · Android 開發者  
-> 純靜態前端 · 零框架依賴 · 直接部署
+> 整合雲端 BaaS 身分驗證 · 5 大高階原生街機遊戲系統 · Vercel 自動化自動部署
 
 </div>
 
 ---
 
-## 目錄
+## 📋 目錄
 
 - [專案簡介](#-專案簡介)
-- [網頁結構](#-網頁結構)
-- [功能特色](#-功能特色)
-- [技術堆疊](#-技術堆疊)
-- [專題一覽](#-專題一覽)
-- [如何使用](#-如何使用)
-- [自訂說明](#-自訂說明)
-- [聯絡方式](#-聯絡方式)
-- [授權說明](#-授權說明)
+- [技術堆疊與全站架構亮點](#-技術堆疊與全站架構亮點)
+- [11 大網頁結構與底層架構解析](#-11-大網頁結構與底層架構解析)
+- [🎮 數據大廳與 5 大核心街機解密](#-數據大廳與-5-大核心街機解密)
+- [🗂 課程與畢業專題一覽](#-課程與畢業專題一覽)
+- [🚀 如何使用與憑證](#-如何使用與憑證)
+- [📬 聯絡方式](#-聯絡方式)
+- [📄 授權說明](#-授權說明)
 
 ---
 
 ## 📖 專案簡介
 
-這是 **LYZ**（呂尹筑）的個人作品集網站，以純 HTML / CSS / JavaScript 打造，**無框架依賴、零後端需求**，可直接靜態部署至 GitHub Pages。
+這是 **LYZ**（呂尹筑）的個人全棧作品集與高階街機遊戲大廳。本專案將**電機/通訊工程硬體實作經驗**與**現代網頁全棧開發（Vue 3 生態圈 + Firebase 雲端服務）**進行深度整合。
 
-網站涵蓋三大核心：個人學術背景與技術能力的展示、六個代表性課程專題的深度介紹，以及可互動操作的前端課程學習筆記。整體視覺以 **Warm Parchment（暖色調紙張質感）** 為主軸，融合現代排版美學與豐富的 CSS / JS 動畫效果。
+網站不僅包含結構清晰的 SPA 作品展示牆與技術沙盒，更建構了一個完整的**雲端身分驗證門戶**。通過安全性守衛攔截，解鎖內置的 5 款完全由底層原生 JavaScript、HTML5 Canvas 及 Web Audio API 驅動的高性能復古街機遊戲，並具備全數據分析看板與戰績圖卡自動生成引擎。
+
 
 ```
-🎓  學歷  逢甲大學通訊工程系 → 中原大學電機工程系
-🤖  專長  深度學習 · PyTorch · Android · MATLAB · PCB 設計
-🏆  成果  腦腫瘤 MRI 分類 F1-Score 97.54%（DenseNet121）
+
+🎓 學歷： 逢甲大學通訊工程系 → 中原大學電機工程系
+🤖 專長： 深度學習 · PyTorch · Firebase · Vue 3 · Android · PCB 設計
+🏆 成果： 腦腫瘤 MRI 分類 F1-Score 97.54% (DenseNet121) / 綜合 APM 戰力指標解鎖
+
 ```
 
 ---
 
-## 🗺 網頁結構
+## 🛠️ 技術堆疊與全站架構亮點
+
+* **雲端身分驗證守衛 (BaaS Identity Guard)**：整合 Firebase Authentication 雲端安全憑證，在純前端環境實作非同步全域安全路由守衛，嚴格分流攔截非法入侵，保障刷榜環境安全性。
+* **多源數據即時動態聚合演算法 (Data Aggregation)**：大廳能動態跨模組解析高達 20+ 組結構各異的 `localStorage` 排行榜與難度 JSON 字典，加算輸出綜合戰力極限（APM-X Index）。
+* **純原生數位音訊合成器 (Synth Audio Engine)**：全站遊戲**零外部音訊檔案依賴**，純粹利用 HTML5 `AudioContext` 建立音訊振盪器（`OscillatorNode`），在運行期即時生成 8-bit 復古街機電子音效。
+* **自製圖卡生成引擎 (Scorecard Generator)**：不依賴任何第三方圖像庫，純手寫 HTML5 Canvas 2D 矩陣調用繪圖上下文，具備雙重主題色彩配置矩陣，一鍵渲染出高畫質戰績圖卡下載。
+* **全域主題同步與防閃爍 (Theme Sync & Anti-FOUC)**：利用立即執行函式 (IIFE) 阻斷深色模式載入前的畫面白光閃爍；實作 `window.storage` 監聽器，達成多視窗分頁主題瞬間即時同步。
+
+---
+
+## 🗺 11 大網頁結構與底層架構解析
+
 
 ```
+
 test0305/
 │
-├── index.html          ← 首頁 Landing Page
-│   └── 磁性游標 / 粒子背景 Canvas / 打字機 / 3D 裝飾圓 / 跑馬燈
+├── index.html          ← 個人首頁入口導覽大廳
+├── about.html          ← 作品集與專案詳情頁（SPA 多重檢視架構）
+├── notes.html          ← 網頁全棧架構技術筆記（高階滾動目錄監聽）
+├── exercise.html       ← 課後實作沙盒主控台（封閉式互動 UI Console）
+├── login.html          ← 雲端身分驗證安全門戶（Firebase Auth 連線）
+├── gamehub.html        ← 雲端街機數據大廳（中央調度與戰力聚合中心）
 │
-├── about.html          ← 作品集主頁（SPA 單頁架構）
-│   ├── #hero           英雄區塊（個人卡片 + 統計數據）
-│   ├── #about          學術背景介紹
-│   ├── #skills         六張 3D 翻轉技能卡
-│   ├── #projects       六個專題列表 → 各自詳情頁（JS 切換）
-│   └── #contact        四種聯絡管道
-│
-├── notes.html          ← 課程學習筆記（互動式 Demo）
-│   ├── Unit 01         JavaScript 基礎（JS·01 ~ JS·04）
-│   ├── Unit 02         CSS Layout（CSS·01 ~ CSS·04）
-│   └── Unit 03         非同步操作與 API 串接（ASYNC·01 ~ ASYNC·04）
-│
-├── exercise.html       ← 課後練習題（對應 Notes 各單元）
-│   ├── JS · 01–04      型別偵測 · 陣列操作 · DOM · 計時器
-│   ├── CSS · 01–04     FlexBox · Grid · RWD · Animation
-│   └── ASYNC · 01–04   setTimeout · Promise · fetch · 綜合應用
-│
-├── decide.html         ← 今日決策中心（轉盤 + localStorage）
-│   ├── 🍜 吃什麼       依人數 / 預算 / 用餐時間篩選
-│   ├── 👗 穿什麼       依天氣 / 場合 / 個人風格篩選
-│   └── 🎬 看什麼       依時間 / 心情 / 類型篩選
-│
-└── weekend.html        ← 週末去哪玩（景點推薦 + 轉盤 + 願望清單）
-    ├── 條件設定         距離 / 預算 / 室內外 / 人數
-    ├── 景點卡片         篩選後最多顯示 6 個推薦
-    ├── 轉盤             隨機從推薦景點中選一個
-    └── 願望清單         加入 + 管理（localStorage）
+├── game.html           ← 街機 01：誰是 DAVID 蛇 🐍（雙人對戰/蟲洞傳送/極限模式）
+├── game2.html          ← 街機 02：Breakout 磚塊爆破 🧱（多球殘影/雙向道具機制）
+├── game3.html          ← 街機 03：2048 數字矩陣 🔢（旋轉通解算法/歷史趨勢圖/無限 Undo）
+├── game4.html          ← 街機 04：Memory Card 翻牌記憶 🃏（3D 翻轉/高壓倒數/Combo 加乘）
+└── game5.html          ← 街機 05：Typing Speed 打字速度 ⌨️（NPC 競速/手殘紅色鍵盤熱圖）
+
 ```
 
-### `index.html` — 首頁
+### `index.html` — 個人首頁入口導覽大廳
+* **非同步數據連動**：利用 `fetch()` 異步讀取 `about.html` 源碼，透過 `DOMParser` 即時檢索解析專案卡片數量，搭配動態三階貝氏曲線數字增加動畫（CountUp）渲染於 3D 浮動裝飾球中。
+* **動態 Canvas 網格**：Canvas 繪製粒子星網，滑鼠靠近時粒子受磁性引力偏移，並在間距小於 180 像素時觸發流暢的動態連線特效。
 
-全螢幕固定高度 Landing Page，作為整個作品集的視覺入口。
+### `about.html` — 個人簡介與專案詳情頁
+* **SPA 視圖調度器**：同一頁面包含首頁（`#home-view`）、專題詳情（`#detail-view`）、技能詳情（`#skill-view`）三個 View，由 JavaScript 控制顯示切換，無需重新載入頁面。支援 URL 查詢參數（`?project=ai`）達成深度連結分流。
+* **指標視覺化進度條**：在觸發專案注入後，利用定時器延遲動態將資料集屬性 `dataset.pct` 賦予給 CSS 的 `width` 屬性，觸發流暢的 CSS `transition` 硬體加速動畫。
 
-| 元件 | 說明 |
-|------|------|
-| 磁性游標 | 點狀 + 環狀雙層游標，hover 元素時放大並改色 |
-| 粒子背景 | Canvas 繪製 65 顆粒子，滑鼠靠近時粒子受吸引偏移，粒子間距內連線 |
-| 字母進場 | 標題 `L · Y · Z` 逐字以 3D `rotateX(-45deg)` 翻轉進場 |
-| 打字機 | 六個身份標籤循環顯示，帶有游標閃爍效果 |
-| 3D 裝飾圓 | 三層同心圓 + `preserve-3d` 浮動旋轉，中心顯示計數動畫 |
-| 跑馬燈 | 固定在底部的技術標籤無縫滾動列 |
-| 液態按鈕 | hover 時圓形背景從底部液態上升 |
+### `notes.html` — 網頁全棧架構技術筆記
+* **高階滾動監聽目錄 (Scroll-Linked TOC)**：利用原生 `Intersection Observer` 監聽筆記中 14 個單元的標頭元素，當使用者滾動筆記時，以 40% 的可視閾值精準捕獲當前區段，即時動態點亮左側 TOC 目錄。
+* **全棧技術範疇**：完整收錄 JavaScript 基礎、CSS Layout、非同步 Promise、Vue 3 Ecosystem (Composition API, Composables, Setup Store)、Firebase Firestore CRUD 即時監聽與 Vercel 自動化自動部署（CI/CD）環境變數防護安全策略。
 
-### `about.html` — 作品集主頁
+### `exercise.html` — 課後實作沙盒主控台
+* **全封閉式網頁虛擬主控台**：客製化黑客風格的輸出容器，利用 JS 結合自訂的語意化狀態類別（`.log-ok`, `.log-wa`, `.log-er`），將沙盒代碼的運算結果與 Bug 分析直觀呈現。
+* **計時器緒安全防護**：實作了嚴格的計時器指針防範機制（`if(exClockIv) return`），徹底杜絕重複點擊按鈕時，背景 `setInterval` 疊加產生的記憶體洩漏與執行緒卡死 Bug。
 
-採用 **SPA 單頁應用** 架構，同一頁面包含首頁（`#home-view`）、專題詳情（`#detail-view`）、技能詳情（`#skill-view`）三個 View，由 JavaScript 控制顯示切換，無需重新載入頁面。
-
-| 區塊 | 主要內容 |
-|------|---------|
-| **01 — About** | 就讀學校、研究興趣、個人介紹 |
-| **02 — Skills** | 六張翻轉卡：深度學習 · 程式開發 · 資料科學 · 應用部署 · 硬體實作 · 開發工具 |
-| **03 — Projects** | 六個專題列表，點擊展開詳情頁，含完整技術說明、元件表、研究成果 |
-| **04 — Contact** | Email · GitHub · Instagram · Threads |
-
-### `notes.html` — 課程學習筆記
-
-互動式學習筆記，點擊卡片展開，提供可操作的即時 Demo。
-
-| 單元 | 篇號 | 主題 | Demo 功能 |
-|------|------|------|-----------|
-| Unit 01 | JS·01 | 變數、型別、函式 | 四則運算計算機 |
-| Unit 01 | JS·02 | 陣列、物件、JSON | Push / Map 陣列操作面板 |
-| Unit 01 | JS·03 | DOM 操作與事件 | 動態待辦事項列表 |
-| Unit 01 | JS·04 | 計時器與動態效果 | 碼錶（Start / Pause / Reset） |
-| Unit 02 | CSS·01 | FlexBox | `justify-content` 即時調整預覽 |
-| Unit 02 | CSS·02 | Grid | `grid-template-columns` 即時切換 |
-| Unit 02 | CSS·03 | RWD 響應式設計 | 手機 / 電腦版面切換模擬 |
-| Unit 02 | CSS·04 | CSS Animation | Spin / Bounce / Pulse 動畫選擇器 |
-| Unit 03 | ASYNC·01 | 同步與非同步 | Event Loop 執行順序視覺化 |
-| Unit 03 | ASYNC·02 | Callback 與 Promise | Promise 鏈狀態即時追蹤 |
-| Unit 03 | ASYNC·03 | fetch 與 async/await | 呼叫 JSONPlaceholder 公開 API |
-| Unit 03 | ASYNC·04 | 多個請求與整合 | Promise.all 並行 vs 序列比較 |
-
-### `exercise.html` — 課後練習題
-
-對應 Notes 各單元的課後練習，點擊「▶ Execute」即時執行並顯示輸出，部分題目附有互動 UI 可直接操作。
-
-### `decide.html` — 今日決策中心
-
-三分類轉盤決策工具，依條件篩選後隨機抽選，結果可儲存至決策紀錄（`localStorage['decideHist']`，最多 12 筆）。
-
-### `weekend.html` — 週末去哪玩
-
-台灣景點推薦系統，依距離 / 預算 / 室內外 / 人數篩選，轉盤隨機選擇，可加入願望清單（`localStorage['weekendWishlist']`，最多 9 筆）。
+### `login.html` — 雲端身分驗證安全門戶
+* **Firebase Auth 連線驗證**：引進 Firebase Web SDK，實作 `signInWithEmailAndPassword` 非同步驗證。直接連線 Google 雲端身分資料庫，達成符合業界標準的密碼加密雜湊與安全比對。
+* **防禦鎖定狀態機**：點擊登入後立即鎖定按鈕（`disabled = true`）並變更文字，防止使用者因重複點擊發送多路多重請求。
 
 ---
 
-## ✨ 功能特色
+## 🎮 數據大廳與 5 大核心街機解密
 
-### 🎨 視覺設計
+### 數據調度中心 (`gamehub.html`)
+大廳實作安全路由攔截守衛，判定未登入者過導向登入頁。右上角貼心並排 **🚪 LOGOUT** 登出按鈕與主題快切鍵。中央綜合看板具備 **Gamer Rank 稱號動態計算** 與 **純 Canvas 2D 雙重主題色彩配置卡片生成器**，是一體化街機系統的控制核心。
 
-- **Warm Parchment 色系**：統一暖色調紙張質感，配色柔和不刺眼
-- **噪點紋理**：以 SVG `feTurbulence` fractalNoise 疊加全頁輕微噪點，強化紙質感
-- **三字型系統**：Playfair Display（標題）、DM Mono（數據/標籤）、Noto Sans TC（中文正文）
-- **mix-blend-mode**：游標點以 `multiply` 混合模式與背景融合
+### 01. 誰是 DAVID 蛇 🐍 (`game.html`)
+* **雙線程獨立步長控制器**：在同一個 `requestAnimationFrame` 主迴圈中，根據玩家的加速狀態（`boosted`），為 P1（WASD 鍵）與 P2（方向鍵）計算獨立的更新時間步長。支援行動端**虛擬四向按鍵 D-Pad 觸控優化**。
+* **蟲洞傳送與極限模式**：實作二維座標加算公式，當蛇頭進入 A 蟲洞會自動捕獲，並從 B 蟲洞的相對切線方向傳出。16 顆星星全部吃完後解鎖隱藏極限模式，5 秒後全程強行鎖定在極速衝刺狀態。
 
-### 🎬 動畫系統
+### 02. Breakout 磚塊爆破 🧱 (`game2.html`)
+* **多球與軌跡淡入殘影**：球體物件內部維護一個上限為 6 幀的歷史座標佇列，利用 `shift()` 與 `push()` 持續汰換更新，並在 Canvas 上以 `rgba` 指數級遞減透明度繪製出流暢的彗星尾跡特效。
+* **複合式隨機道具**：打碎特定方塊會掉落 `[W]`（擋板加寬 1.5 倍狀態鎖）與 `[M]`（多球分身，瞬間向外爆發分裂出 2 顆全新的實體球，獨立享有碰撞解算）。
 
-- **進場動畫**：`charIn`（字母 3D 翻轉）、`slideUp`（向上滑入）、`navIn`（導覽列下滑）
-- **Scroll 觸發**：`IntersectionObserver` 監聽 `.reveal` 元素，滾動進入視窗才播放動畫
-- **Hover 特效**：按鈕液態填充、專題行左側指示條 `scaleY`、技能卡 `rotateY(180deg)` 3D 翻轉
-- **持續動畫**：Canvas 粒子系統、3D 浮動裝飾圓、跑馬燈無縫循環、磁性游標跟隨
+### 03. 2048 數字矩陣 🔢 (`game3.html`)
+* **通用矩陣旋轉解算器**：無論玩家往哪個方向滑動，JS 會先將當前二維陣列旋轉至統一的「標準左滑格式」，執行降維堆疊與相鄰元素合併後原路旋轉回對應方向。此演算法能**完全適應 4×4 經典版與 5×5 擴展版**。
+* **歷史狀態回溯快照鏈**：實作無限步「悔棋（Undo）」功能。在發送位移前進行深拷貝快照快照備份，點擊悔棋時一鍵還原，並調用 `syncTilesDataWithGrid()` 徹底排除傳統方塊重疊與視覺錯位的 Bug。
 
-### 📱 響應式設計
+### 04. Memory Card 翻牌記憶 🃏 (`game4.html`)
+* **異步指針狀態鎖**：每次翻開第二張牌時，立即將全域 `locked` 設定為 `true`，切斷所有卡片的點擊事件。若判定配對失敗，定時器延遲 850 毫秒保持曝光，隨後移除翻牌狀態並重新釋放。
+* **Combo 加乘系統**：實作動態多重加分鏈，分數依據 $\text{Score} += 100 + (\text{Combo} \times 50)$ 按階梯式劇烈暴增。搭配本機排名的數據裁剪，實作單機排行榜大名留榜功能。
 
-| 斷點 | 佈局行為 |
-|------|---------|
-| `> 1024px` | 雙欄 Grid（英雄區 / About 區）、技能卡三欄 |
-| `≤ 1024px` | 單欄堆疊、技能卡二欄 |
-| `≤ 640px` | 全單欄、漢堡選單展開、技能卡停用 3D 翻轉（避免觸控衝突） |
-
-### 🧩 SPA 深度連結
-
-`about.html` 支援 URL 查詢參數，瀏覽器直接帶 `?project=` 或 `?skill=` 即可跳至對應詳情頁：
-
-```
-about.html?project=ai      → 腦腫瘤 MRI 影像分類系統
-about.html?skill=dl        → 深度學習技能詳情
-```
+### 05. Typing Speed 打字速度 ⌨️ (`game5.html`)
+* **多人 AI 動態競速賽道**：內建即時擬真賽道系統。遊戲啟動時，系統會動態宣告兩組具有不同權重速度的虛擬 NPC 對手，隨時間推移使用微積分公式計算並同步推進對手頭像（User 蛇 🐍 / NPC 狐 🦊、獅 🦁）。
+* **字母手殘打錯機率熱圖**：系統會將打錯的字元映射至 26 鍵矩陣字典（`errorKeyMap`）。測試結束後，會自動計算最大出錯權重值，在前端渲染出高質感的**紅色熱圖虛擬鍵盤 (Heatmap Keyboard)**。
 
 ---
 
-## 🛠 技術堆疊
+## 🗂 課程與畢業專題一覽
 
-### 核心語言
-
-| 技術 | 主要用途 |
-|------|---------|
-| **HTML5** | 語意化標籤、Canvas API、`data-*` 屬性 |
-| **CSS3** | Custom Properties · Flexbox · Grid · `@keyframes` · `backdrop-filter` · `perspective` |
-| **JavaScript ES6+** | `IntersectionObserver` · `requestAnimationFrame` · `URLSearchParams` · Canvas 2D · `fetch` / `async-await` |
-| **localStorage** | 決策紀錄與景點願望清單的輕量本地儲存 |
-
-### 字型（Google Fonts）
-
-| 字型 | 用途 |
-|------|------|
-| `Playfair Display` | 大標題、章節標題、裝飾數字 |
-| `DM Mono` | 標籤、數據、程式碼風格文字 |
-| `Noto Sans TC` | 中文正文、說明段落 |
-
-### 設計色彩變數
-
-```css
-:root {
-  --bg:  #faf7f2;             /* 暖白底色       */
-  --bg2: #f4efe6;             /* 次要底色       */
-  --sf:  #ede7db;             /* 表面色         */
-  --bd:  #d8cfc2;             /* 邊框色         */
-  --bd2: #c9bfb0;             /* 次要邊框       */
-  --tp:  #1c1814;             /* 主文字色       */
-  --ts:  #5c5147;             /* 次要文字       */
-  --tm:  #9c9080;             /* 輔助文字       */
-  --ac:  #6b4c32;             /* 主色（咖啡棕） */
-  --ac2: #7d5a3c;             /* 主色 hover     */
-  --as:  rgba(107,76,50,.09); /* 主色透明背景   */
-}
-```
-
-### 無外部依賴
-
-本專案完全不依賴任何第三方 JavaScript 套件或 CSS 框架（jQuery、Bootstrap、React 等），所有互動效果、動畫、版面均以 **原生 Web API** 實作。
-
----
-
-## 🗂 專題一覽
-
-| # | 專題名稱 | 課程 / 學年 | 主要技術 |
+| # | 專題名稱 | 課程 / 學年 | 主要技術與亮點表現 |
 |---|---------|------------|---------|
-| 01 | 藍芽遙控自走車 | 逢甲通訊系 · 大一專題 | `Arduino` `HC-05` `L298N` `App Inventor` |
-| 02 | 卷積的三種實現方式 | 逢甲通訊系 · 數位信號處理 | `MATLAB` `FFT` `線性卷積` `循環卷積` |
-| 03 | Android 程式設計 Final | 逢甲通訊系 · Android 程式設計 | `Android Studio` `Java` `ListView` `GridView` |
-| 04 | PCB 電路板製作 | 逢甲 · 電子學 | `PCB蝕刻` `曝光顯影` `焊接` `示波器` |
-| 05 | 聲控 LED 旋律套件 | 逢甲 · 電子學 | `EAGLE` `BJT放大器` `PCB Layout` `焊接` |
-| 06 | 腦腫瘤 MRI 影像分類系統 | 逢甲通訊系 · 大四畢業專題 | `PyTorch` `DenseNet121` `Streamlit` `CUDA` |
+| 01 | 藍芽遙控自走車 | 逢甲通訊系 · 大一專題 | `Arduino` `HC-05 藍芽` `L298N` `App Inventor` 軟硬體整合 |
+| 02 | 卷積的三種實現方式 | 逢甲通訊系 · 數位信號處理 | `MATLAB` `FFT` 線性、循環、頻域卷積演算法等效性驗證 |
+| 03 | Android 程式設計 Final | 逢甲通訊系 · Android 程式設計 | `Android Studio` `Java` `ListView` 追星主題 App 架構建構 |
+| 04 | PCB 電路板製作 | 逢甲 · 電子學專題 | 手工曝光顯影、蝕刻、鑽孔全流程，示波器失效根因分析除錯 |
+| 05 | 聲控 LED 旋律套件 | 逢甲 · 電子學小專題 | `EAGLE` 佈線、BJT 串級放大電路分析、手工精密焊接演練 |
+| 06 | 腦腫瘤 MRI 影像分類系統 | 逢甲通訊系 · 大四畢業專題 | `PyTorch` `DenseNet121` `Streamlit` **模型最高 F1 達 97.54%** |
 
 <details>
-<summary><b>🏆 畢業專題詳情：腦腫瘤 MRI 影像分類系統</b></summary>
+<summary><b>🏆 畢業專題詳情：腦腫瘤 MRI 影像分類系統 (點擊展開)</b></summary>
 
 <br>
 
-**研究目的**  
-比較三種深度學習模型在四類腦腫瘤 MRI 影像分類的最佳表現，並部署至 Streamlit 網頁平台輔助醫學生判讀。
+**研究目的** 比較三種高階卷積神經網路模型在四類腦腫瘤 MRI 影像分類上的最佳化表現，並建構醫學生輔助學習推論平台。
 
-**資料集**  
-Kaggle Brain Tumor MRI Dataset — 4 類 × 1,605 張，共 **6,420 張** MRI 影像，resize 至 224×224，搭配隨機水平翻轉資料擴增。
+**資料集與預處理** 採用 Kaggle 大數據 Brain Tumor MRI Dataset — 共計 **6,420 張** 高解析度 MRI 影像，影像統一 Resize 至 224×224，並套用隨機水平翻轉進行資料增強。
 
-**實驗設定**
+**模型比較與關鍵成果** 系統性導入 **3 折交叉驗證 (3-Fold Cross Validation)** 搭配早停法（Early Stopping）防止過擬合：
+* ★ **DenseNet121**：**平均 F1-Score 達到 97.54% 的極致精準度 (獲選為最終部署核心)**。
+* EfficientNetB0：平均 F1-Score 為 96.98%。
+* ResNet50：平均 F1-Score 為 96.42%。
 
-| 參數 | 設定值 |
-|------|--------|
-| 交叉驗證 | 3-Fold Cross Validation |
-| 學習率 | 0.00005 |
-| 批次大小 | 32 |
-| 優化器 | Adam |
-| 損失函數 | Cross Entropy Loss |
-| 早停法 | ✓ |
-
-**模型比較結果**
-
-| 模型 | 平均 F1-Score |
-|------|--------------|
-| ★ **DenseNet121** | **97.54%** |
-| EfficientNetB0 | 96.98% |
-| ResNet50 | 96.42% |
-
-**DenseNet121 指標（最終模型）**
-
-| Accuracy | Precision | Recall | F1-Score |
-|----------|-----------|--------|----------|
-| 97.54% | 97.56% | 97.54% | 97.54% |
-
-**硬體環境**  
-`Windows 11` · `Intel i7-13620H` · `RTX 4060` · `32GB RAM` · `CUDA 12.1` · `Python 3.8`
+**實驗環境硬體配置** `Windows 11` · `Intel i7-13620H` · `RTX 4060 GPU` · `32GB RAM` · `CUDA 12.1` · `Python 3.8`
 
 </details>
 
 ---
 
-## 🚀 如何使用
+## 🚀 如何使用與憑證
 
-### 線上瀏覽（推薦）
-
-直接點擊連結，無需任何安裝：
-
-| 頁面 | 網址 |
-|------|------|
-| 🏠 首頁 | https://lyz-0422.github.io/test0305/index.html |
-| 📁 作品集 | https://lyz-0422.github.io/test0305/about.html |
-| 📝 學習筆記 | https://lyz-0422.github.io/test0305/notes.html |
-| 🧪 課後練習 | https://lyz-0422.github.io/test0305/exercise.html |
-| 🎯 今日決策 | https://lyz-0422.github.io/test0305/decide.html |
-| 🗺 週末去哪 | https://lyz-0422.github.io/test0305/weekend.html |
-
-### 本地執行
+### 本地開啟沙盒環境
 
 ```bash
 # Step 1：Clone 此儲存庫
-git clone https://github.com/lyz-0422/test0305.git
+git clone [https://github.com/lyz-0422/test0305.git](https://github.com/lyz-0422/test0305.git)
 
 # Step 2：進入目錄
 cd test0305
+
 ```
 
-選擇以下任一方式啟動本地伺服器：
+選擇以下任一方式啟動本地伺服器以確保異步 Fetch 與 Firebase SDK 的權杖載入完整：
 
 ```bash
-# ── 方法 A：Python（推薦，通常已內建）──
+# 使用 Python 啟動本地埠口
 python -m http.server 8080
 # 瀏覽器開啟 → http://localhost:8080
 
-# ── 方法 B：Node.js ──
-npx serve .
-# 瀏覽器開啟 → http://localhost:3000
-
-# ── 方法 C：VS Code ──
-# 安裝 Live Server 擴充 → index.html 右鍵 → Open with Live Server
 ```
 
-> **注意**：建議使用本地伺服器而非直接以 `file://` 開啟，以確保字型載入、粒子動畫等效果完整運作。
-
----
-
-## 🎨 自訂說明
-
-### 1. 個人資訊
-
-搜尋並替換 `about.html` 中的以下文字：
-
-```html
-<!-- 英雄區塊介紹 -->
-<p class="hero-p">電機工程系學生 · 深度學習研究者。...</p>
-
-<!-- About 段落 -->
-<p class="about-p">我目前就讀於 <span class="hl">中原大學電機工程學系</span>...</p>
-
-<!-- 統計數字 -->
-<div class="stat-num">6</div>     <!-- 專題數量 -->
-<div class="stat-num">97%+</div>  <!-- 代表成果 -->
-```
-
-### 2. 打字機文字
-
-修改 `index.html` 中的身份標籤陣列：
-
-```javascript
-const phrases = [
-  "深度學習研究者",
-  "電機工程系學生",
-  "Android App Developer",
-  // 替換成您自己的身份標籤 ...
-];
-```
-
-### 3. 新增專題
-
-在 `about.html` 的 `PROJECTS` 物件中加入新條目：
-
-```javascript
-myproject: {
-  num:      "Project 07 · 課程名稱",
-  title:    ["專題標題第一行", "第二行（斜體）"],
-  sub:      "一行簡短說明。",
-  tags:     ["技術標籤1", "技術標籤2"],
-  meta:     [{ label: "學校 / 課程", val: "XXX 大學 · 課程名稱" }],
-  sections: [{ h: "章節標題", p: "段落內容。" }],
-  sidebar:  [{ title: "側邊卡片", rows: [["Key", "Value"]] }]
-}
-```
-
-並在 `.proj-list` 區塊加入對應按鈕：
-
-```html
-<button class="proj-row reveal" onclick="showDetail('myproject')">
-  <span class="proj-n">07</span>
-  <div>
-    <div class="proj-year">大X · 課程名稱</div>
-    <div class="proj-title">專題標題</div>
-    <div class="proj-desc">一行簡短說明</div>
-  </div>
-  <div class="proj-tags"><span class="proj-tag">標籤</span></div>
-  <span class="proj-arrow">↗</span>
-</button>
-```
-
-### 4. 更換主色調
-
-僅需修改三支檔案的 `:root` 中兩個變數，即可全站換色：
-
-```css
-:root {
-  --ac:  #6b4c32;  /* 主色，改此即可 */
-  --ac2: #7d5a3c;  /* hover 主色     */
-}
-```
-
-### 5. 聯絡方式
-
-修改 `about.html` 中的聯絡連結：
-
-```html
-<a class="contact-link reveal" href="mailto:your@email.com">...</a>
-<a class="contact-link reveal" href="https://github.com/yourusername">...</a>
-```
+> 🔐 **全站通用 Demo 測試登入帳密**
+> * **測試 Email / 帳號**：`test@example.com`
+> * **測試 Password / 密碼**：`123456`
+> 
+> 
 
 ---
 
@@ -423,11 +219,13 @@ myproject: {
 <div align="center">
 
 | 平台 | 帳號 / 連結 |
-|------|------------|
+| --- | --- |
 | 📧 Email | [zoe920422@gmail.com](mailto:zoe920422@gmail.com) |
 | 🐙 GitHub | [@lyz-0422](https://github.com/lyz-0422) |
 | 📸 Instagram | [@lyzzz_0422](https://www.instagram.com/lyzzz_0422/) |
 | 🧵 Threads | [@lyzzz_0422](https://www.threads.com/@lyzzz_0422) |
+
+**✦   Designed & Built by LYZ   ✦** <sub>逢甲大學通訊工程學系 → 中原大學電機工程學系  ·  2026</sub>
 
 </div>
 
@@ -435,23 +233,11 @@ myproject: {
 
 ## 📄 授權說明
 
-- ✅ 可改作自己的作品集
-- ✅ 可學習程式碼結構與動畫實作方式
-- ❌ 請勿直接複製個人簡介、學術資歷、專題內容等個人資料
-- ❌ 請勿冒充作者身份對外展示
+* ✅ 可改作自己的作品集
+* ✅ 可學習程式碼結構與動畫實作方式
+* ❌ 請勿直接複製個人簡介、學術資歷、專題內容等個人資料
+* ❌ 請勿冒充作者身份對外展示
 
----
+```
 
-<div align="center">
-
-<br>
-
-**✦ &nbsp; Designed & Built by LYZ &nbsp; ✦**
-
-<sub>逢甲大學通訊工程學系 → 中原大學電機工程學系 &nbsp;·&nbsp; 2026</sub>
-
-<br>
-
-[![GitHub](https://img.shields.io/badge/GitHub-lyz--0422-1c1814?style=flat-square&logo=github)](https://github.com/lyz-0422)
-
-</div>
+```
