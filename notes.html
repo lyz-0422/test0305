@@ -413,7 +413,7 @@ auth.onAuthStateChanged(function(user) {
     isUserLoggedIn = true;
     // 若已登入，將大廳進入點動態美化優化
     document.querySelectorAll('.dynamic-game-gate').forEach(el => {
-      el.textContent = "🎮 進入遊戲大廳";
+      el.textContent = "🎮 GAME HUB";
     });
   } else {
     isUserLoggedIn = false;
