@@ -8,11 +8,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Mono:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet"/>
 
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
 <script>
   (function() {
     const savedTheme = localStorage.getItem('lyz-theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
   })();
+
+  // 初始化 Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAo47TW_vtnuYofYpJLE_nA3sSlVx5Tww0",
+    authDomain: "project-c2422dde-c78e-4e74-aa5.firebaseapp.com",
+    databaseURL: "https://project-c2422dde-c78e-4e74-aa5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "project-c2422dde-c78e-4e74-aa5",
+    storageBucket: "project-c2422dde-c78e-4e74-aa5.firebasestorage.app",
+    messagingSenderId: "390756352133",
+    appId: "1:390756352133:web:ba3f45819ec356d0a669ec",
+    measurementId: "G-TC4FRF0BSZ"
+  };
+  firebase.initializeApp(firebaseConfig);
 </script>
 
 <style>
@@ -28,7 +44,7 @@
 /* ── 💡 網頁深色主題配置 (同步 about.html) ── */
 :root[data-theme="dark"] {
   --bg:#16130f; --bg2:#1e1a14; --sf:#26211a;
-  --bd:#3a3028; --bd2:#4a3e33;
+  --bd:#3a3028; --bd2:#443e33;
   --tp:#f0ebe3; --ts:#b0a090; --tm:#7a6e62;
   --ac:#c49a6c; --ac2:#d4aa7c; --as:rgba(196,154,108,.12);
   --noise-op: .04;
@@ -180,7 +196,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
     <li><a href="about.html#projects">Projects</a></li>
     <li><a href="notes.html">Notes</a></li>
     <li><a href="exercise.html">Exercises</a></li>
-    <li><a href="login.html">Game Login</a></li>
+    <li><a href="login.html" class="dynamic-game-gate">Game Login</a></li>
     <li><a href="about.html#contact">Contact</a></li>
   </ul>
 </nav>
@@ -199,7 +215,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
     <div class="cta-row">
       <a class="btn-enter" href="about.html"><span>查看作品集 →</span></a>
       <a class="btn-notes" href="notes.html">學習筆記 · Vue/Firebase 📝</a>
-      <a class="btn-notes" href="login.html">🎮 遊戲大廳登入</a>
+      <a class="btn-notes dynamic-game-gate" href="login.html">🎮 遊戲大廳登入</a>
       <a class="btn-about" href="about.html#about">關於我 →</a>
     </div>
   </div>
@@ -221,6 +237,40 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:0 3re
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
 
 <script>
+// 💡 核心安全攔截：監聽 Firebase 登入狀態
+const auth = firebase.auth();
+let isUserLoggedIn = false;
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    isUserLoggedIn = true;
+    // 如果已經登入，將頁面上的登入按鈕文字優化改為「進入大廳」
+    document.querySelectorAll('.dynamic-game-gate').forEach(el => {
+      if (el.tagName === 'A') {
+        el.innerHTML = el.classList.contains('btn-notes') ? "🎮 進入遊戲大廳" : "Game Hub";
+      }
+    });
+  } else {
+    isUserLoggedIn = false;
+  }
+});
+
+// 建立安全導向機制
+function handleGameGateRoute(e) {
+  e.preventDefault(); // 阻止 HTML 原生的 login.html 直接跳轉
+  if (isUserLoggedIn) {
+    window.location.href = 'gamehub.html'; // 已登入直接去大廳
+  } else {
+    window.location.href = 'login.html'; // 未登入才去登入頁面
+  }
+}
+
+// 綁定按鈕與選單的門衛監聽器
+document.querySelectorAll('.dynamic-game-gate').forEach(link => {
+  link.addEventListener('click', handleGameGateRoute);
+});
+
+
 const dot = document.getElementById('cur-dot');
 const ring = document.getElementById('cur-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
@@ -285,11 +335,10 @@ skillsData.forEach(skill => {
   tag.setAttribute('data-cat', skill.cat);
   tag.innerHTML = `<span>${skill.name}</span>`;
   tag.addEventListener('mouseenter', () => showToast(`${skill.cat === 'js' ? 'JS' : 'CSS'} · ${skill.category}`));
-  tag.addEventListener('click', () => {
+  tag.addEventListener('click', (e) => {
     const gameSkills = ["Firebase", "Firestore", "Vue 3", "Pinia", "Tailwind CSS", "Composables", "Vercel部署"];
     if (gameSkills.includes(skill.name)) {
-      // 💡 修正處 2：點擊進階核心技術標籤，一律引導至登入頁面 login.html
-      window.location.href = 'login.html'; 
+      handleGameGateRoute(e); // 💡 點擊核心標籤時同樣套用分流守衛
     } else {
       window.location.href = 'notes.html';
     }
@@ -324,8 +373,7 @@ setInterval(() => {
     bar.textContent = '🕹️ 網頁經典街機大廳已全新落成！點擊此處立刻刷榜挑戰 ⚡';
     bar.style.display = 'block';
     bar.style.cursor = 'pointer';
-    // 💡 修正處 3：頂部驚喜提示列點擊後，改為跳轉到登入頁面 login.html
-    bar.onclick = () => { window.location.href = 'login.html'; };
+    bar.onclick = (e) => { handleGameGateRoute(e); }; // 💡 頂部公告列同樣套用分流守衛
     setTimeout(() => { bar.style.display = 'none'; }, 6500);
   }
 }, 1000);
